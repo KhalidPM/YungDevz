@@ -1,20 +1,28 @@
 import actionTypes from './actionTypes';
-import {API} from 'aws-amplify'
-import awsconfig from '../../../aws-exports'
+// imports from Amplify library
+import config from '../../../aws-exports'
+import { API, graphqlOperation } from 'aws-amplify'
+// import the query
+import { createTeacher } from 'graphql/mutations'
 
-const name = awsconfig.aws_cloud_logic_custom[0].name;
-const endpoint = awsconfig.aws_cloud_logic_custom[0].endpoint;
+API.configure(config)
+
+export function saveTeacherInfo(teacherInfo) {
+  return async (dispatch) => {
+    dispatch(saveTeacherInfoToDb(teacherInfo))
+    try {
+      await API.graphql(graphqlOperation(createTeacher, {
+        input: teacherInfo
+      }))
+      console.log('item created!')
+    } catch (err) {
+      console.log('error adding teacher...', err)
+    }
+  }
+}
 
 
-// export function saveTeacherInfo(teacherInfo) {
-//   return async (dispatch, uid) => {
-//     API.put("/")
-
-//   }
-// }
-
-
-export const saveTeacherInfo = (teacherInfo) => (
+export const saveTeacherInfoToDb = (teacherInfo) => (
     {
       type: actionTypes.SAVE_TEACHER_INFO,
       teacherInfo

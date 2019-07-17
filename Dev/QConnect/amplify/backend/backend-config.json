@@ -10,5 +10,16 @@
 			"service": "Pinpoint",
 			"providerPlugin": "awscloudformation"
 		}
+	},
+	"storage": {},
+	"function": {},
+	"api": {
+		"QConnectCRUD": {
+			"service": "AppSync",
+			"providerPlugin": "awscloudformation",
+			"output": {
+				"securityType": "AMAZON_COGNITO_USER_POOLS"
+			}
+		}
 	}
 }

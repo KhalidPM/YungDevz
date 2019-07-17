@@ -1,0 +1,56 @@
+type Teacher @model {
+  id: ID!
+  name: String!
+  phoneNumber: String!
+  emailAddress: String!
+  profileImageId: Int
+  curentClassId: TeacherClass @connection(name: "TeacherClasses")
+  classes: [TeacherClass] @connection(name: "TeacherClasses")
+}
+type TeacherClass @model(queries: null) {
+  id: ID!
+  teacher: Teacher! @connection(name: "TeacherClasses")
+  class: Class! @connection(name: "ClassTeachers")
+}
+type Class @model {
+  id: ID!
+  name: String!
+  imageId: Int
+  students: [ClassStudent] @connection(name: "ClassStudents")
+  teachers: [TeacherClass] @connection(name: "ClassTeachers")
+}
+type ClassStudent @model(queries: null) {
+    id: ID!
+    class: Class! @connection(name: "ClassStudents")
+    student: Student! @connection(name: "StudentClasses")
+    currentAssignments: [Assignment] @connection(name: "StudentAssignment")
+    pastAssignments: [Assignment] @connection(name: "StudentAssignment")
+    Attendance: [Attendance] @connection(name: "StudentAttendance")
+    grade: Int
+    totalAssignments: Int
+}
+type Student @model {
+  id: ID!
+  name: String!
+  imageId: Int
+  classes: [ClassStudent] @connection(name: "StudentClasses")
+}
+type Attendance @model {
+  id: ID!
+  classStudent: ClassStudent! @connection(name: "StudentAttendance")
+  date: String!
+  isPresent: Boolean!
+}
+type Assignment @model {
+  id: ID!
+  name: String!
+  startDate: String!
+  classStudent: ClassStudent! @connection(name: "StudentAssignment")
+  completionDate: String
+  evaluation: Evaluation
+}
+type Evaluation @model {
+  grade: Int!
+  notes: String
+  improvements: [String]
+}
