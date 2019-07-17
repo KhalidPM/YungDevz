@@ -1,20 +1,3 @@
-import {
-  LOG_IN,
-  LOG_IN_SUCCESS,
-  LOG_IN_FAILURE,
-  LOG_OUT,
-  SIGN_UP,
-  SIGN_UP_SUCCESS,
-  SIGN_UP_FAILURE,
-  SHOW_SIGN_IN_CONFIRMATION_MODAL,
-  SHOW_SIGN_UP_CONFIRMATION_MODAL,
-  CONFIRM_SIGNUP,
-  CONFIRM_SIGNUP_SUCCESS,
-  CONFIRM_SIGNUP_FAILURE,
-  CONFIRM_LOGIN,
-  CONFIRM_LOGIN_SUCCESS,
-  CONFIRM_LOGIN_FAILURE
-} from 'model/reducers/auth'
 import * as actionTypes from './authActionTypes'
 import { setFirstRunCompleted } from "model/actions/setFirstRunCompleted";
 
