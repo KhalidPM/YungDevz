@@ -19,8 +19,10 @@ type Class @model {
   students: [ClassStudent] @connection(name: "ClassStudents")
   teachers: [TeacherClass] @connection(name: "ClassTeachers")
 }
-type ClassStudent @model(queries: null) {
-    id: ID!
+type ClassStudent 
+    @model(queries: null)
+    @key(fields: ["id"])  {
+    id: String!
     class: Class! @connection(name: "ClassStudents")
     student: Student! @connection(name: "StudentClasses")
     currentAssignments: [Assignment] @connection(name: "StudentAssignment")
@@ -29,20 +31,23 @@ type ClassStudent @model(queries: null) {
     grade: Int
     totalAssignments: Int
 }
-type Student @model {
-  id: ID!
+type Student @model 
+  @key(fields: ["id"]) {
+  id: String!
   name: String!
   imageId: Int
   classes: [ClassStudent] @connection(name: "StudentClasses")
 }
-type Attendance @model {
-  id: ID!
+type Attendance @model
+  @key(fields: ["id"]) {
+  id: String!
   classStudent: ClassStudent! @connection(name: "StudentAttendance")
   date: String!
   isPresent: Boolean!
 }
-type Assignment @model {
-  id: ID!
+type Assignment @model 
+  @key(fields: ["id"]) {
+  id: String!
   name: String!
   startDate: String!
   classStudent: ClassStudent! @connection(name: "StudentAssignment")

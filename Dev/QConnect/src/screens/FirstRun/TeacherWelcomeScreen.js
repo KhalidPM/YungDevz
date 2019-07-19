@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View, Image, Text, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard, Alert, Modal, ScrollView, LayoutAnimation, Platform } from "react-native";
 import QcActionButton from "components/QcActionButton";
 import Toast, { DURATION } from "react-native-easy-toast";
-import { saveTeacherInfo } from "model/actions/saveTeacherInfo";
+import { addTeacher } from "model/actions/addTeacher";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import colors from "config/colors";
@@ -121,9 +121,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
   };
 
   //this method saves the new profile information to the redux database
-  // This is reused for teacher profile page and teacher welcome page
-  // In teacher welcome page, teacher ID will be passed as undefined, in which case
-  // we will generate a new ID before saving to the store.
+  //it will add a new teacher record to the database and up to the server
   saveProfileInfo = teacherID => {
     const { name, phoneNumber, emailAddress, password } = this.state;
 
@@ -143,7 +141,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
     }
 
     // save the relevant teacher properties
-    this.props.saveTeacherInfo(
+    this.props.addTeacher(
       { teacherID, ...params }
     );
   };
@@ -389,7 +387,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      saveTeacherInfo,
+      addTeacher,
       confirmUserSignUp,
       createUser
     },

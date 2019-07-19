@@ -4,7 +4,7 @@ import Toast, { DURATION } from 'react-native-easy-toast'
 import QcActionButton from 'components/QcActionButton';
 import TouchableText from 'components/TouchableText'
 import teacherImages from 'config/teacherImages'
-import { saveTeacherInfo } from "model/actions/saveTeacherInfo";
+import { addTeacher } from "model/actions/addTeacher";
 import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";
 import colors from 'config/colors';
@@ -61,8 +61,8 @@ export class TeacherProfileScreen extends QcParentScreen {
         } else if (!this.state.isPhoneValid) {
             Alert.alert(strings.Whoops, strings.InvalidPhoneNumber);
         } else {
-            const { modalVisible, ...params } = this.state; // trick to remove modalVisible from state and pass in everything else
-            this.props.saveTeacherInfo(
+            const { modalVisible, isPhoneValid, fontLoaded, ...params } = this.state; // trick to remove modalVisible from state and pass in everything else
+            this.props.addTeacher(
                 params
             );
             this.refs.toast.show(strings.YourProfileHasBeenSaved, DURATION.LENGTH_SHORT);
@@ -221,7 +221,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => (
     bindActionCreators({
-        saveTeacherInfo
+        addTeacher
     }, dispatch)
 );
 

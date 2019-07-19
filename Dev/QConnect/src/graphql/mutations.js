@@ -8,28 +8,7 @@ export const createTeacher = `mutation CreateTeacher($input: CreateTeacherInput!
     phoneNumber
     emailAddress
     profileImageId
-    curentClassId {
-      id
-      teacher {
-        id
-        name
-        phoneNumber
-        emailAddress
-        profileImageId
-      }
-      class {
-        id
-        name
-        imageId
-      }
-    }
-    classes {
-      items {
-        id
-      }
-      nextToken
-    }
-  }
+  } 
 }
 `;
 export const updateTeacher = `mutation UpdateTeacher($input: UpdateTeacherInput!) {
@@ -63,6 +42,18 @@ export const updateTeacher = `mutation UpdateTeacher($input: UpdateTeacherInput!
   }
 }
 `;
+
+export const updateTeacherNoClass = `mutation UpdateTeacher($input: UpdateTeacherInput!) {
+  updateTeacher(input: $input) {
+    id
+    name
+    phoneNumber
+    emailAddress
+    profileImageId
+  }
+}
+`;
+
 export const deleteTeacher = `mutation DeleteTeacher($input: DeleteTeacherInput!) {
   deleteTeacher(input: $input) {
     id
