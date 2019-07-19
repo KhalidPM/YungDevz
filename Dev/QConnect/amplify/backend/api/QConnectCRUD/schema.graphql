@@ -1,5 +1,6 @@
-type Teacher @model {
-  id: ID!
+type Teacher @model
+  @key(fields: ["id"]) {
+  id: String!
   name: String!
   phoneNumber: String!
   emailAddress: String!
@@ -12,24 +13,25 @@ type TeacherClass @model(queries: null) {
   teacher: Teacher! @connection(name: "TeacherClasses")
   class: Class! @connection(name: "ClassTeachers")
 }
-type Class @model {
-  id: ID!
+type Class @model
+  @key(fields: ["id"]) {
+  id: String!
   name: String!
   imageId: Int
   students: [ClassStudent] @connection(name: "ClassStudents")
   teachers: [TeacherClass] @connection(name: "ClassTeachers")
 }
+
 type ClassStudent 
-    @model(queries: null)
-    @key(fields: ["id"])  {
-    id: String!
-    class: Class! @connection(name: "ClassStudents")
-    student: Student! @connection(name: "StudentClasses")
-    currentAssignments: [Assignment] @connection(name: "StudentAssignment")
-    pastAssignments: [Assignment] @connection(name: "StudentAssignment")
-    Attendance: [Attendance] @connection(name: "StudentAttendance")
-    grade: Int
-    totalAssignments: Int
+  @model(queries: null) {
+  id: ID!
+  class: Class! @connection(name: "ClassStudents")
+  student: Student! @connection(name: "StudentClasses")
+  currentAssignments: [Assignment] @connection(name: "StudentAssignment")
+  pastAssignments: [Assignment] @connection(name: "StudentAssignment")
+  Attendance: [Attendance] @connection(name: "StudentAttendance")
+  grade: Int
+  totalAssignments: Int
 }
 type Student @model 
   @key(fields: ["id"]) {

@@ -1,7 +1,7 @@
 // eslint-disable
 // this is an auto generated file. This will be overwritten
 
-export const getTeacher = `query GetTeacher($id: ID!) {
+export const getTeacher = `query GetTeacher($id: String!) {
   getTeacher(id: $id) {
     id
     name
@@ -33,11 +33,12 @@ export const getTeacher = `query GetTeacher($id: ID!) {
 }
 `;
 export const listTeachers = `query ListTeachers(
+  $id: String
   $filter: ModelTeacherFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listTeachers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listTeachers(id: $id, filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
       name
@@ -55,7 +56,7 @@ export const listTeachers = `query ListTeachers(
   }
 }
 `;
-export const getClass = `query GetClass($id: ID!) {
+export const getClass = `query GetClass($id: String!) {
   getClass(id: $id) {
     id
     name
@@ -78,11 +79,12 @@ export const getClass = `query GetClass($id: ID!) {
 }
 `;
 export const listClasss = `query ListClasss(
+  $id: String
   $filter: ModelClassFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listClasss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listClasss(id: $id, filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
       name
@@ -98,7 +100,7 @@ export const listClasss = `query ListClasss(
   }
 }
 `;
-export const getStudent = `query GetStudent($id: ID!) {
+export const getStudent = `query GetStudent($id: String!) {
   getStudent(id: $id) {
     id
     name
@@ -115,11 +117,12 @@ export const getStudent = `query GetStudent($id: ID!) {
 }
 `;
 export const listStudents = `query ListStudents(
+  $id: String
   $filter: ModelStudentFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listStudents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listStudents(id: $id, filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
       name
@@ -132,7 +135,7 @@ export const listStudents = `query ListStudents(
   }
 }
 `;
-export const getAttendance = `query GetAttendance($id: ID!) {
+export const getAttendance = `query GetAttendance($id: String!) {
   getAttendance(id: $id) {
     id
     classStudent {
@@ -165,11 +168,17 @@ export const getAttendance = `query GetAttendance($id: ID!) {
 }
 `;
 export const listAttendances = `query ListAttendances(
+  $id: String
   $filter: ModelAttendanceFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listAttendances(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listAttendances(
+    id: $id
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
     items {
       id
       classStudent {
@@ -184,7 +193,7 @@ export const listAttendances = `query ListAttendances(
   }
 }
 `;
-export const getAssignment = `query GetAssignment($id: ID!) {
+export const getAssignment = `query GetAssignment($id: String!) {
   getAssignment(id: $id) {
     id
     name
@@ -223,11 +232,17 @@ export const getAssignment = `query GetAssignment($id: ID!) {
 }
 `;
 export const listAssignments = `query ListAssignments(
+  $id: String
   $filter: ModelAssignmentFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listAssignments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listAssignments(
+    id: $id
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
     items {
       id
       name
