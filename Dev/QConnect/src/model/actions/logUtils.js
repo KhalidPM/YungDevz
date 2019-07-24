@@ -14,7 +14,6 @@ export function getErrorAttributes(err){
     else {
        errorDetails = {details: JSON.stringify(err)}
     }
-    console.log("logging attributes " + JSON.stringify(errorDetails))
-
+    
     return {...errorDetails};
 }

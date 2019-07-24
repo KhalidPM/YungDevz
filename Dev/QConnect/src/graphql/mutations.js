@@ -93,39 +93,10 @@ export const createTeacherClass = `mutation CreateTeacherClass($input: CreateTea
     teacher {
       id
       name
-      phoneNumber
-      emailAddress
-      profileImageId
-      currentClass {
-        id
-      }
-      classes {
-        nextToken
-      }
     }
     class {
       id
       name
-      imageId
-      students {
-        nextToken
-      }
-      teachers {
-        nextToken
-      }
-    }
-    currentClass {
-      id
-      name
-      phoneNumber
-      emailAddress
-      profileImageId
-      currentClass {
-        id
-      }
-      classes {
-        nextToken
-      }
     }
   }
 }
