@@ -8,7 +8,7 @@ export const onCreateTeacher = `subscription OnCreateTeacher {
     phoneNumber
     emailAddress
     profileImageId
-    curentClassId {
+    currentClass {
       id
       teacher {
         id
@@ -21,6 +21,13 @@ export const onCreateTeacher = `subscription OnCreateTeacher {
         id
         name
         imageId
+      }
+      currentClass {
+        id
+        name
+        phoneNumber
+        emailAddress
+        profileImageId
       }
     }
     classes {
@@ -39,7 +46,7 @@ export const onUpdateTeacher = `subscription OnUpdateTeacher {
     phoneNumber
     emailAddress
     profileImageId
-    curentClassId {
+    currentClass {
       id
       teacher {
         id
@@ -52,6 +59,13 @@ export const onUpdateTeacher = `subscription OnUpdateTeacher {
         id
         name
         imageId
+      }
+      currentClass {
+        id
+        name
+        phoneNumber
+        emailAddress
+        profileImageId
       }
     }
     classes {
@@ -70,7 +84,7 @@ export const onDeleteTeacher = `subscription OnDeleteTeacher {
     phoneNumber
     emailAddress
     profileImageId
-    curentClassId {
+    currentClass {
       id
       teacher {
         id
@@ -83,6 +97,13 @@ export const onDeleteTeacher = `subscription OnDeleteTeacher {
         id
         name
         imageId
+      }
+      currentClass {
+        id
+        name
+        phoneNumber
+        emailAddress
+        profileImageId
       }
     }
     classes {
@@ -103,7 +124,7 @@ export const onCreateTeacherClass = `subscription OnCreateTeacherClass {
       phoneNumber
       emailAddress
       profileImageId
-      curentClassId {
+      currentClass {
         id
       }
       classes {
@@ -118,6 +139,19 @@ export const onCreateTeacherClass = `subscription OnCreateTeacherClass {
         nextToken
       }
       teachers {
+        nextToken
+      }
+    }
+    currentClass {
+      id
+      name
+      phoneNumber
+      emailAddress
+      profileImageId
+      currentClass {
+        id
+      }
+      classes {
         nextToken
       }
     }
@@ -133,7 +167,7 @@ export const onUpdateTeacherClass = `subscription OnUpdateTeacherClass {
       phoneNumber
       emailAddress
       profileImageId
-      curentClassId {
+      currentClass {
         id
       }
       classes {
@@ -148,6 +182,19 @@ export const onUpdateTeacherClass = `subscription OnUpdateTeacherClass {
         nextToken
       }
       teachers {
+        nextToken
+      }
+    }
+    currentClass {
+      id
+      name
+      phoneNumber
+      emailAddress
+      profileImageId
+      currentClass {
+        id
+      }
+      classes {
         nextToken
       }
     }
@@ -163,7 +210,7 @@ export const onDeleteTeacherClass = `subscription OnDeleteTeacherClass {
       phoneNumber
       emailAddress
       profileImageId
-      curentClassId {
+      currentClass {
         id
       }
       classes {
@@ -178,6 +225,19 @@ export const onDeleteTeacherClass = `subscription OnDeleteTeacherClass {
         nextToken
       }
       teachers {
+        nextToken
+      }
+    }
+    currentClass {
+      id
+      name
+      phoneNumber
+      emailAddress
+      profileImageId
+      currentClass {
+        id
+      }
+      classes {
         nextToken
       }
     }

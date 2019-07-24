@@ -5,14 +5,17 @@ type Teacher @model
   phoneNumber: String!
   emailAddress: String!
   profileImageId: Int
-  curentClassId: TeacherClass @connection(name: "TeacherClasses")
+  currentClass: TeacherClass @connection(name: "TeachersDefaultClass")
   classes: [TeacherClass] @connection(name: "TeacherClasses")
 }
-type TeacherClass @model(queries: null) {
+
+type TeacherClass @model {
   id: ID!
   teacher: Teacher! @connection(name: "TeacherClasses")
   class: Class! @connection(name: "ClassTeachers")
+  currentClass: Teacher @connection(name: "TeachersDefaultClass")
 }
+
 type Class @model
   @key(fields: ["id"]) {
   id: String!
@@ -23,7 +26,7 @@ type Class @model
 }
 
 type ClassStudent 
-  @model(queries: null) {
+  @model {
   id: ID!
   class: Class! @connection(name: "ClassStudents")
   student: Student! @connection(name: "StudentClasses")

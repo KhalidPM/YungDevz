@@ -8,7 +8,7 @@ export const getTeacher = `query GetTeacher($id: String!) {
     phoneNumber
     emailAddress
     profileImageId
-    curentClassId {
+    currentClass {
       id
       teacher {
         id
@@ -21,6 +21,13 @@ export const getTeacher = `query GetTeacher($id: String!) {
         id
         name
         imageId
+      }
+      currentClass {
+        id
+        name
+        phoneNumber
+        emailAddress
+        profileImageId
       }
     }
     classes {
@@ -45,11 +52,86 @@ export const listTeachers = `query ListTeachers(
       phoneNumber
       emailAddress
       profileImageId
-      curentClassId {
+      currentClass {
         id
       }
       classes {
         nextToken
+      }
+    }
+    nextToken
+  }
+}
+`;
+export const getTeacherClass = `query GetTeacherClass($id: ID!) {
+  getTeacherClass(id: $id) {
+    id
+    teacher {
+      id
+      name
+      phoneNumber
+      emailAddress
+      profileImageId
+      currentClass {
+        id
+      }
+      classes {
+        nextToken
+      }
+    }
+    class {
+      id
+      name
+      imageId
+      students {
+        nextToken
+      }
+      teachers {
+        nextToken
+      }
+    }
+    currentClass {
+      id
+      name
+      phoneNumber
+      emailAddress
+      profileImageId
+      currentClass {
+        id
+      }
+      classes {
+        nextToken
+      }
+    }
+  }
+}
+`;
+export const listTeacherClasss = `query ListTeacherClasss(
+  $filter: ModelTeacherClassFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listTeacherClasss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      teacher {
+        id
+        name
+        phoneNumber
+        emailAddress
+        profileImageId
+      }
+      class {
+        id
+        name
+        imageId
+      }
+      currentClass {
+        id
+        name
+        phoneNumber
+        emailAddress
+        profileImageId
       }
     }
     nextToken
@@ -95,6 +177,93 @@ export const listClasss = `query ListClasss(
       teachers {
         nextToken
       }
+    }
+    nextToken
+  }
+}
+`;
+export const getClassStudent = `query GetClassStudent($id: ID!) {
+  getClassStudent(id: $id) {
+    id
+    class {
+      id
+      name
+      imageId
+      students {
+        nextToken
+      }
+      teachers {
+        nextToken
+      }
+    }
+    student {
+      id
+      name
+      imageId
+      classes {
+        nextToken
+      }
+    }
+    currentAssignments {
+      items {
+        id
+        name
+        startDate
+        completionDate
+      }
+      nextToken
+    }
+    pastAssignments {
+      items {
+        id
+        name
+        startDate
+        completionDate
+      }
+      nextToken
+    }
+    Attendance {
+      items {
+        id
+        date
+        isPresent
+      }
+      nextToken
+    }
+    grade
+    totalAssignments
+  }
+}
+`;
+export const listClassStudents = `query ListClassStudents(
+  $filter: ModelClassStudentFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listClassStudents(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      class {
+        id
+        name
+        imageId
+      }
+      student {
+        id
+        name
+        imageId
+      }
+      currentAssignments {
+        nextToken
+      }
+      pastAssignments {
+        nextToken
+      }
+      Attendance {
+        nextToken
+      }
+      grade
+      totalAssignments
     }
     nextToken
   }

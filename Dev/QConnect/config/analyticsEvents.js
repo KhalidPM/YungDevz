@@ -12,6 +12,7 @@ export default {
    login_failed: 'login failed',
    login_succeeded: 'login succeeded',
    confirm_new_user_failed: 'confirm new user failed',
-   confirm_new_user_failed: 'confirm new user succeeded',
+   confirm_new_user_succeeded: 'confirm new user succeeded',
    first_screen_loaded: "first screen loaded",
+   create_teacher_failed: "create teacher failed"
 }

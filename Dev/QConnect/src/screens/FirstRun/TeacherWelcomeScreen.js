@@ -2,7 +2,6 @@ import React from "react";
 import { StyleSheet, View, Image, Text, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard, Alert, Modal, ScrollView, LayoutAnimation, Platform } from "react-native";
 import QcActionButton from "components/QcActionButton";
 import Toast, { DURATION } from "react-native-easy-toast";
-import { addTeacher } from "model/actions/addTeacher";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import colors from "config/colors";
@@ -13,9 +12,9 @@ import teacherImages from "config/teacherImages";
 import strings from "config/strings";
 import QcParentScreen from "screens/QcParentScreen";
 import FadeInView from "../../components/FadeInView";
-import Auth from '@aws-amplify/auth';
-import { createUser, confirmUserSignUp } from 'model/actions/authActions'
-import { Input, Button } from 'react-native-elements'
+import { confirmUserSignUp, createUser } from 'model/actions/authActions'
+import { addTeacher} from 'model/actions/addTeacher'
+import { Input } from 'react-native-elements'
 
 const initialState = {
   authCode: '',
@@ -31,17 +30,13 @@ export class TeacherWelcomeScreen extends QcParentScreen {
     this.setState({ isModalVisible: false });
   }
 
-  signUp(username, password, email, phone_number) {
-    this.props.createUser(username, password, email, phone_number)
-  }
-
   confirm() {
     const { authCode, emailAddress, password } = this.state
     this.props.confirmUserSignUp(emailAddress, password, authCode, this.props.navigation, 'AddClass')
   }
 
   componentWillReceiveProps(nextProps) {
-    const { auth: { showSignUpConfirmationModal, confirmedSignUp } } = nextProps
+    const { auth: { showSignUpConfirmationModal } } = nextProps
     if (!showSignUpConfirmationModal && this.props.auth.showSignUpConfirmationModal) {
       this.setState(initialState)
     }
@@ -122,28 +117,19 @@ export class TeacherWelcomeScreen extends QcParentScreen {
 
   //this method saves the new profile information to the redux database
   //it will add a new teacher record to the database and up to the server
-  saveProfileInfo = teacherID => {
-    const { name, phoneNumber, emailAddress, password } = this.state;
+  saveProfileInfo = teacherId => {
+    const { name, phoneNumber, emailAddress, password, profileImageId } = this.state;
 
     //Reset the confirmation dialog state cancelation state
     //In case user canceled the confirmation code dialog before, we reset that state so we can show the dialog again upon new submission
     this.setState({ confirmationModalCanceled: false });
 
-    // trick to remove modalVisible and hilightedImagesIndices from state and pass in everything else
-    const { modalVisible, highlightedImagesIndices, ...params } = this.state;
-
-    this.signUp(emailAddress, password, emailAddress, phoneNumber);
-
     //generate a new id if this is a new teacher 
-    if (teacherID === undefined) {
+    if (teacherId === undefined) {
       var nanoid = require('nanoid/non-secure')
-      teacherID = nanoid()
+      teacherId = nanoid()
     }
-
-    // save the relevant teacher properties
-    this.props.addTeacher(
-      { teacherID, ...params }
-    );
+    this.props.createUser(name, phoneNumber, emailAddress, password, this.props.addTeacher, profileImageId, teacherId)
   };
 
   //Creates new account, or launches confirmation dialog if account was created but not confirmed yet.

@@ -2,26 +2,31 @@ import actionTypes from './actionTypes';
 // imports from Amplify library
 import config from '../../../aws-exports'
 import { API, graphqlOperation } from 'aws-amplify'
-// import the query
+// import the gql mutation
 import { createTeacher } from 'graphql/mutations'
+import Analytics from '@aws-amplify/analytics';
+import analyticsEvents from 'config/analyticsEvents'
+import {getErrorAttributes} from './logUtils'
 
 API.configure(config)
-
 export function addTeacher(teacherInfo) {
   return async (dispatch) => {
-    console.log("calling.. " + JSON.stringify(teacherInfo));
+    //save to the local database
+    dispatch(saveTeacherInfoToDb(teacherInfo))
     try {
         newTeacher = await API.graphql(graphqlOperation(createTeacher, {
-        input: teacherInfo
+          input: {...teacherInfo}
       }))
-      console.log('item created! ' + JSON.stringify(newTeacher.data.createTeacher.id))
-      dispatch(saveTeacherInfoToDb({...teacherInfo, id: newTeacher.data.createTeacher.id}))
+      console.log('teacher record created ' + JSON.stringify(newTeacher.data.createTeacher.id))
     } catch (err) {
       console.log('error adding teacher...', err)
+      Analytics.record({
+        name: analyticsEvents.create_teacher_failed,
+        attributes:  {...getErrorAttributes(err)}
+      })
     }
   }
 }
-
 
 export const saveTeacherInfoToDb = (teacherInfo) => (
     {

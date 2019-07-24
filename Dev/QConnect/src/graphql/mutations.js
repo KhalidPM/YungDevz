@@ -18,7 +18,7 @@ export const updateTeacher = `mutation UpdateTeacher($input: UpdateTeacherInput!
     phoneNumber
     emailAddress
     profileImageId
-    curentClassId {
+    currentClass {
       id
       teacher {
         id
@@ -31,6 +31,13 @@ export const updateTeacher = `mutation UpdateTeacher($input: UpdateTeacherInput!
         id
         name
         imageId
+      }
+      currentClass {
+        id
+        name
+        phoneNumber
+        emailAddress
+        profileImageId
       }
     }
     classes {
@@ -49,7 +56,7 @@ export const deleteTeacher = `mutation DeleteTeacher($input: DeleteTeacherInput!
     phoneNumber
     emailAddress
     profileImageId
-    curentClassId {
+    currentClass {
       id
       teacher {
         id
@@ -62,6 +69,13 @@ export const deleteTeacher = `mutation DeleteTeacher($input: DeleteTeacherInput!
         id
         name
         imageId
+      }
+      currentClass {
+        id
+        name
+        phoneNumber
+        emailAddress
+        profileImageId
       }
     }
     classes {
@@ -82,7 +96,7 @@ export const createTeacherClass = `mutation CreateTeacherClass($input: CreateTea
       phoneNumber
       emailAddress
       profileImageId
-      curentClassId {
+      currentClass {
         id
       }
       classes {
@@ -97,6 +111,19 @@ export const createTeacherClass = `mutation CreateTeacherClass($input: CreateTea
         nextToken
       }
       teachers {
+        nextToken
+      }
+    }
+    currentClass {
+      id
+      name
+      phoneNumber
+      emailAddress
+      profileImageId
+      currentClass {
+        id
+      }
+      classes {
         nextToken
       }
     }
@@ -112,7 +139,7 @@ export const updateTeacherClass = `mutation UpdateTeacherClass($input: UpdateTea
       phoneNumber
       emailAddress
       profileImageId
-      curentClassId {
+      currentClass {
         id
       }
       classes {
@@ -127,6 +154,19 @@ export const updateTeacherClass = `mutation UpdateTeacherClass($input: UpdateTea
         nextToken
       }
       teachers {
+        nextToken
+      }
+    }
+    currentClass {
+      id
+      name
+      phoneNumber
+      emailAddress
+      profileImageId
+      currentClass {
+        id
+      }
+      classes {
         nextToken
       }
     }
@@ -142,7 +182,7 @@ export const deleteTeacherClass = `mutation DeleteTeacherClass($input: DeleteTea
       phoneNumber
       emailAddress
       profileImageId
-      curentClassId {
+      currentClass {
         id
       }
       classes {
@@ -157,6 +197,19 @@ export const deleteTeacherClass = `mutation DeleteTeacherClass($input: DeleteTea
         nextToken
       }
       teachers {
+        nextToken
+      }
+    }
+    currentClass {
+      id
+      name
+      phoneNumber
+      emailAddress
+      profileImageId
+      currentClass {
+        id
+      }
+      classes {
         nextToken
       }
     }

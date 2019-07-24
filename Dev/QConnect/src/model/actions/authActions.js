@@ -6,6 +6,8 @@ import { Auth } from 'aws-amplify'
 import strings from 'config/strings'
 import Analytics from '@aws-amplify/analytics';
 import analyticsEvents from 'config/analyticsEvents'
+import {getErrorAttributes} from './logUtils.js'
+import { addTeacher} from 'model/actions/addTeacher'
 
 function signUp() {
   return {
@@ -27,10 +29,12 @@ function signUpFailure(err) {
   }
 }
 
-export function createUser(username, password, email, phone_number) {
+export function createUser(name, phoneNumber, emailAddress, password,  provisionUser, profileImageId, userId) {
   return (dispatch) => {
     dispatch(signUp())
-    let phone = phone_number
+    let phone = phoneNumber
+    let username = emailAddress
+    let email = emailAddress
 
     Auth.signUp({
       username,
@@ -41,18 +45,28 @@ export function createUser(username, password, email, phone_number) {
       }
     })
     .then(data => {
+      console.log("user created successfully.")
       Analytics.record({
         name: analyticsEvents.create_user_succeeded,
       })
 
       dispatch(signUpSuccess(data))
       dispatch(showSignUpConfirmationModal())
+
+      newTeacher = provisionUser({
+          id: userId,
+          name: name,
+          phoneNumber: phoneNumber,
+          emailAddress: emailAddress,
+          profileImageId: profileImageId
+      })
+
     })
     .catch(err => {
       console.log('error signing up: ', err)
       Analytics.record({
         name: analyticsEvents.create_user_failed,
-        attributes:  {...err} 
+        attributes:  {...getErrorAttributes(err)}
       })
 
       setTimeout(() => {
@@ -106,7 +120,7 @@ export function authenticate(username, password, navigation, nextScreenName) {
       .catch(err => {
         Analytics.record({
           name: analyticsEvents.login_failed,
-          attributes:  {...err} 
+          attributes:  {...getErrorAttributes(err)}   
         })
 
         Alert.alert(strings.ErrorSigningIn, "" + (err.message || err))
@@ -141,9 +155,10 @@ export function confirmUserSignUp(username, password, authCode, navigation, next
       })
       .catch(err => {
         console.log('error signing up: ', err)
+        
         Analytics.record({
           name: analyticsEvents.confirm_new_user_failed,
-          attributes:  {...err} 
+          attributes: {...getErrorAttributes(err)}  
         })
   
         setTimeout(() => {
