@@ -66,6 +66,7 @@ export class AddClassScreen extends QcParentScreen {
     let classInfo = {
       name: this.state.className,
       imageId: this.state.classImageId,
+      teacherId: this.props.teacherId,
       students: []
     };
 
@@ -74,10 +75,7 @@ export class AddClassScreen extends QcParentScreen {
     let newId = nanoid()
     classInfo = { id: newId, ...classInfo };
 
-    this.props.addClass(classInfo);
-    this.props.saveTeacherInfo(
-      { currentClassId: newId }
-    );
+    this.props.addClass(classInfo, this.props.navigation);
 
     //Navigates to the class
     this.props.navigation.push("ClassEdit");
@@ -184,7 +182,7 @@ const getTeacherClassNames = (classIds, classes) => {
 const mapStateToProps = state => {
   const { classes, teacher } = state.data;
   const teacherClassNames =  getTeacherClassNames(teacher.classes, classes);
-  return { teacherClassNames };
+  return { teacherClassNames, teacherId: teacher.id };
 };
 
 export const mapDispatchToProps = dispatch =>

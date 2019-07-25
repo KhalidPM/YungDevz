@@ -4,7 +4,7 @@ import Toast, { DURATION } from 'react-native-easy-toast'
 import QcActionButton from 'components/QcActionButton';
 import TouchableText from 'components/TouchableText'
 import teacherImages from 'config/teacherImages'
-import { addTeacher } from "model/actions/addTeacher";
+import { saveTeacherInfo } from "model/actions/saveTeacherInfo";
 import { bindActionCreators } from 'redux';
 import { connect } from "react-redux";
 import colors from 'config/colors';
@@ -50,7 +50,7 @@ export class TeacherProfileScreen extends QcParentScreen {
 
     //this method saves the new profile information to the redux database
     saveProfileInfo = () => {
-        const { name, phoneNumber, emailAddress } = this.state;
+        const { name, phoneNumber, emailAddress, profileImageId } = this.state;
         if (!name ||
             !phoneNumber ||
             !emailAddress ||
@@ -62,9 +62,13 @@ export class TeacherProfileScreen extends QcParentScreen {
             Alert.alert(strings.Whoops, strings.InvalidPhoneNumber);
         } else {
             const { modalVisible, isPhoneValid, fontLoaded, ...params } = this.state; // trick to remove modalVisible from state and pass in everything else
-            this.props.addTeacher(
-                params
-            );
+            this.props.saveTeacherInfo({
+                id: this.props.id,
+                name: name,
+                phoneNumber: phoneNumber,
+                emailAddress: emailAddress,
+                profileImageId: profileImageId
+            });
             this.refs.toast.show(strings.YourProfileHasBeenSaved, DURATION.LENGTH_SHORT);
             //Just goes to the first class
             this.props.navigation.push('CurrentClass');
@@ -215,13 +219,13 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => {
-    const { name, phoneNumber, emailAddress, profileImageId } = state.data.teacher;
-    return { name, phoneNumber, emailAddress, profileImageId };
+    const { id, name, phoneNumber, emailAddress, profileImageId } = state.data.teacher;
+    return { id, name, phoneNumber, emailAddress, profileImageId };
 };
 
 const mapDispatchToProps = dispatch => (
     bindActionCreators({
-        addTeacher
+        saveTeacherInfo
     }, dispatch)
 );
 

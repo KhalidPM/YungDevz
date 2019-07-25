@@ -3,7 +3,6 @@ import { ActivityIndicator, StatusBar, View } from 'react-native';
 import { connect } from "react-redux";
 import Analytics from '@aws-amplify/analytics';
 import analyticsEvents from 'config/analyticsEvents'
-import awsconfig from '../../../aws-exports';
 
 class FirstScreenLoader extends React.Component {
   constructor(props) {

@@ -6,8 +6,7 @@ import { Auth } from 'aws-amplify'
 import strings from 'config/strings'
 import Analytics from '@aws-amplify/analytics';
 import analyticsEvents from 'config/analyticsEvents'
-import {getErrorAttributes} from './logUtils.js'
-import { addTeacher} from 'model/actions/addTeacher'
+import {logActionError} from './logUtils.js'
 
 function signUp() {
   return {
@@ -63,11 +62,7 @@ export function createUser(name, phoneNumber, emailAddress, password,  provision
 
     })
     .catch(err => {
-      console.log('error signing up: ', err)
-      Analytics.record({
-        name: analyticsEvents.create_user_failed,
-        attributes:  {...getErrorAttributes(err)}
-      })
+      logActionError(err, actionTypes.SIGN_UP) 
 
       setTimeout(() => {
         Alert.alert(strings.ErrorSigningUp, "" + (err.message || err))
@@ -118,11 +113,7 @@ export function authenticate(username, password, navigation, nextScreenName) {
         navigation.navigate(nextScreenName);
       })
       .catch(err => {
-        Analytics.record({
-          name: analyticsEvents.login_failed,
-          attributes:  {...getErrorAttributes(err)}   
-        })
-
+        logActionError(err, actionTypes.LOG_IN)
         Alert.alert(strings.ErrorSigningIn, "" + (err.message || err))
         dispatch(logInFailure(err))
       });
@@ -154,12 +145,7 @@ export function confirmUserSignUp(username, password, authCode, navigation, next
         dispatch(authenticate(username, password, navigation, nextScreenName))
       })
       .catch(err => {
-        console.log('error signing up: ', err)
-        
-        Analytics.record({
-          name: analyticsEvents.confirm_new_user_failed,
-          attributes: {...getErrorAttributes(err)}  
-        })
+        logActionError(err, actionTypes.CONFIRM_SIGNUP_FAILURE)
   
         setTimeout(() => {
           Alert.alert(strings.ErrorSigningUp, "" + (err.message || err))

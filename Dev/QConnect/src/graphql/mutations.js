@@ -18,34 +18,6 @@ export const updateTeacher = `mutation UpdateTeacher($input: UpdateTeacherInput!
     phoneNumber
     emailAddress
     profileImageId
-    currentClass {
-      id
-      teacher {
-        id
-        name
-        phoneNumber
-        emailAddress
-        profileImageId
-      }
-      class {
-        id
-        name
-        imageId
-      }
-      currentClass {
-        id
-        name
-        phoneNumber
-        emailAddress
-        profileImageId
-      }
-    }
-    classes {
-      items {
-        id
-      }
-      nextToken
-    }
   }
 }
 `;
@@ -90,14 +62,6 @@ export const deleteTeacher = `mutation DeleteTeacher($input: DeleteTeacherInput!
 export const createTeacherClass = `mutation CreateTeacherClass($input: CreateTeacherClassInput!) {
   createTeacherClass(input: $input) {
     id
-    teacher {
-      id
-      name
-    }
-    class {
-      id
-      name
-    }
   }
 }
 `;
@@ -256,53 +220,6 @@ export const deleteClass = `mutation DeleteClass($input: DeleteClassInput!) {
 export const createClassStudent = `mutation CreateClassStudent($input: CreateClassStudentInput!) {
   createClassStudent(input: $input) {
     id
-    class {
-      id
-      name
-      imageId
-      students {
-        nextToken
-      }
-      teachers {
-        nextToken
-      }
-    }
-    student {
-      id
-      name
-      imageId
-      classes {
-        nextToken
-      }
-    }
-    currentAssignments {
-      items {
-        id
-        name
-        startDate
-        completionDate
-      }
-      nextToken
-    }
-    pastAssignments {
-      items {
-        id
-        name
-        startDate
-        completionDate
-      }
-      nextToken
-    }
-    Attendance {
-      items {
-        id
-        date
-        isPresent
-      }
-      nextToken
-    }
-    grade
-    totalAssignments
   }
 }
 `;
@@ -416,15 +333,6 @@ export const createStudent = `mutation CreateStudent($input: CreateStudentInput!
   createStudent(input: $input) {
     id
     name
-    imageId
-    classes {
-      items {
-        id
-        grade
-        totalAssignments
-      }
-      nextToken
-    }
   }
 }
 `;

@@ -34,7 +34,7 @@ const persistConfig = {
   version: 2,
   debug: true,  //we should consider turn off verbose logs at some point, but we keep them now until we have enough validation.
   migrate: createMigrate(migrations, { debug: true })
-}
+} 
 const persistedReducer = persistReducer(persistConfig, classReducer)
 
 export const store = createStore(

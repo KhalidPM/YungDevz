@@ -1,11 +1,10 @@
 import actionTypes from './actionTypes';
-// imports from Amplify library
-import config from '../../../aws-exports'
 import { API, graphqlOperation } from 'aws-amplify'
 // import the mutation
 import { createClass } from 'graphql/mutations'
 import { createTeacherClass, updateTeacher } from '../../graphql/mutations';
 
+import {logActionError} from './logUtils.js'
 
 export const addClass = (classInfo, navigation) => {
   return async (dispatch) => {
@@ -28,9 +27,12 @@ export const addClass = (classInfo, navigation) => {
           teacherCurrentClassId: newTeacherClass.data.createTeacherClass.id }
       }))
     
+      //todo: this will only happen now if user is created to the server
+      //should we either navigate in all cases (since we saved offline
+      // or require online for now?
       navigation.push("ClassEdit")
     } catch (err) {
-      console.log('error adding class...', err)
+      logActionError(err, actionTypes.ADD_CLASS)      
     }
   }
 };

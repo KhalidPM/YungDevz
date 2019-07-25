@@ -117,7 +117,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
 
   //this method saves the new profile information to the redux database
   //it will add a new teacher record to the database and up to the server
-  saveProfileInfo = teacherId => {
+  createTeacherProfile = teacherId => {
     const { name, phoneNumber, emailAddress, password, profileImageId } = this.state;
 
     //Reset the confirmation dialog state cancelation state
@@ -153,7 +153,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
         this.setState({ showSignUpConfirmationModal: true, confirmationModalCanceled: false });
       } else {
         //else, create account and save profile info
-        this.saveProfileInfo()
+        this.createTeacherProfile()
       }
     }
   }

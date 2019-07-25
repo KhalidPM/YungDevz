@@ -86,10 +86,14 @@ export class ClassEditScreen extends QcParentScreen {
     } else if (this.studentNameExists()) {
       Alert.alert(strings.Whoops, strings.ThereIsAlreadyAStudentWithThatName);
     } else {
+      var nanoid = require('nanoid/non-secure')
+      let id = nanoid()
+
       this.props.addStudent(
         classId,
         {
           studentInfo: {
+            id: id,
             name: this.state.newStudentName,
             imageId: this.state.profileImageId
           }

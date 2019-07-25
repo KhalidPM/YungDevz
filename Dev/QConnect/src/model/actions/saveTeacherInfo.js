@@ -3,27 +3,29 @@ import actionTypes from './actionTypes';
 import config from '../../../aws-exports'
 import { API, graphqlOperation } from 'aws-amplify'
 // import the query
-import { updateTeacher, updateTeacherNoClass } from 'graphql/mutations'
+import { updateTeacher } from 'graphql/mutations'
+import {logActionError} from './logUtils.js'
 
-API.configure(config)
 
 export function saveTeacherInfo(teacherInfo) {
   return async (dispatch) => {
-    console.log("calling.. " + JSON.stringify(teacherInfo));
     dispatch(saveTeacherInfoToDb(teacherInfo))
-    //if the teacher has classes already, we will update the classes info as well, otherwise, we will just update profile info
-    let operation = teacherInfo.currentClassId? updateTeacher : updateTeacherNoClass;
     try {
-      await API.graphql(graphqlOperation(updateTeacherNoClass, {
-        input: teacherInfo
+      await API.graphql(graphqlOperation(updateTeacher, {
+        input: {
+          id: teacherInfo.id,
+          name: teacherInfo.name,
+          phoneNumber: teacherInfo.phoneNumber,
+          emailAddress: teacherInfo.emailAddress,
+          profileImageId: teacherInfo.profileImageId
+        }
       }))
-      console.log('teacher info saved in the service.')
+      console.log('teacher info saved successfully')
     } catch (err) {
-      console.log('error adding teacher...', err)
+      logActionError(err, actionTypes.SAVE_TEACHER_INFO)
     }
   }
 }
-
 
 export const saveTeacherInfoToDb = (teacherInfo) => (
     {

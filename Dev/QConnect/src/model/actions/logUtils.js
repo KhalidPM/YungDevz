@@ -1,4 +1,13 @@
+import Analytics from '@aws-amplify/analytics';
+import analyticsEvents from 'config/analyticsEvents'
 
+export function logActionError(err, type){
+    console.log('error adding class...', err)
+    Analytics.record({
+        name: analyticsEvents.action_failed,
+        attributes:  {type: type, ...getErrorAttributes(err)}   
+      })
+}
 //sometimes the api returns a string and sometimes a JSON blob,
 // this is a workaround to anticipate either one
 export function getErrorAttributes(err){
@@ -12,8 +21,8 @@ export function getErrorAttributes(err){
         if(err.name !== undefined) errorDetails = {name: err.name, ...errorDetails}
     }
     else {
-       errorDetails = {details: JSON.stringify(err)}
+       errorDetails = {details: JSON.stringify(err).substring(0, 199)} //service doesn't accept longer events than 200 chars
     }
-    
+
     return {...errorDetails};
 }
