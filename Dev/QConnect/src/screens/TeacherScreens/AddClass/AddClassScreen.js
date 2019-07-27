@@ -70,15 +70,7 @@ export class AddClassScreen extends QcParentScreen {
       students: []
     };
 
-    //todo: this should be in the reducer??
-    var nanoid = require('nanoid/non-secure')
-    let newId = nanoid()
-    classInfo = { id: newId, ...classInfo };
-
     this.props.addClass(classInfo, this.props.navigation);
-
-    //Navigates to the class
-    this.props.navigation.push("ClassEdit");
   }
 
   // ------------ renders the UI of the screen ---------------------------

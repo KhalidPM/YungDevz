@@ -2,7 +2,7 @@ import Analytics from '@aws-amplify/analytics';
 import analyticsEvents from 'config/analyticsEvents'
 
 export function logActionError(err, type){
-    console.log('error adding class...', err)
+    console.log('Error performing action ' + type + ". Error: ", err)
     Analytics.record({
         name: analyticsEvents.action_failed,
         attributes:  {type: type, ...getErrorAttributes(err)}   

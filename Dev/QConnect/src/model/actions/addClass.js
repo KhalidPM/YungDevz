@@ -8,25 +8,28 @@ import {logActionError} from './logUtils.js'
 
 export const addClass = (classInfo, navigation) => {
   return async (dispatch) => {
-    dispatch(addClassInDb(classInfo))
     const {students, teacherId, ...myInput} = classInfo
 
     try {
-      await API.graphql(graphqlOperation(createClass, {
-        input: {id: classInfo.id, name: classInfo.name, imageId: classInfo.imageId}
+      newClass = await API.graphql(graphqlOperation(createClass, {
+        input: {name: classInfo.name, imageId: classInfo.imageId}
       }))
     
       newTeacherClass = await API.graphql(graphqlOperation(createTeacherClass, {
         input: {
           teacherClassTeacherId: classInfo.teacherId, 
-          teacherClassClassId: classInfo.id}}))
+          teacherClassClassId: newClass.data.createClass.id}}))
      
+      let teacherClassId = newTeacherClass.data.createTeacherClass.id;
+
       await API.graphql(graphqlOperation(updateTeacher, {
         input: {
           id: classInfo.teacherId,
-          teacherCurrentClassId: newTeacherClass.data.createTeacherClass.id }
+          teacherCurrentClassId: teacherClassId }
       }))
     
+      dispatch(addClassInDb({id: teacherClassId, uniqueId: newClass.data.createClass.id, ...classInfo}))
+
       //todo: this will only happen now if user is created to the server
       //should we either navigate in all cases (since we saved offline
       // or require online for now?

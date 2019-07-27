@@ -20,12 +20,12 @@ export const INITIAL_STATE = {
   },
   student: {
     id: "",
-    name: "Zyad",
+    name: "",
     imageId: 1,
     averageRating: 1,
     totalAssignments: 1,
     isReady: false,
-    currentAssignment: 'Al-Baqara',
+    currentAssignment: '',
     assignmentHistory: [],
     currentClassID: "",
     classes: []
@@ -76,7 +76,7 @@ export const classReducer = (state = INITIAL_STATE, action) => {
         // used for properties of a student that are specific to a class, 
         // for example, attendance, asignments etc..
         let newStudentId = action.studentInfo.id;
-        
+
         newState = update(baseState, { students: { $merge: { [newStudentId]: newStudent } } });
         newState = update(newState, { classes: { [classId]: { students: { $push: [newStudentId] } } } });
         newState = editAssignment(newState, classId, newStudentId, { name: 'None', startDate: '', totalAssignments: 0, grade: 0 });
@@ -108,6 +108,7 @@ export const classReducer = (state = INITIAL_STATE, action) => {
       }
     case actionTypes.ADD_CLASS:
       {
+        newState = baseState;
         newState = update(baseState, { classes: { $merge: { [action.classInfo.id]: action.classInfo } } });
         newState = update(newState, { teacher: { classes: { $push: [action.classInfo.id] } } });
         newState = update(newState, { teacher: { currentClassId: { $set: action.classInfo.id } } });
