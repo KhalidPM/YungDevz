@@ -16,11 +16,13 @@ export const onCreateTeacher = `subscription OnCreateTeacher {
         phoneNumber
         emailAddress
         profileImageId
+        createdAt
       }
       class {
         id
         name
         imageId
+        createdAt
       }
       currentClass {
         id
@@ -28,14 +30,18 @@ export const onCreateTeacher = `subscription OnCreateTeacher {
         phoneNumber
         emailAddress
         profileImageId
+        createdAt
       }
+      createdAt
     }
     classes {
       items {
         id
+        createdAt
       }
       nextToken
     }
+    createdAt
   }
 }
 `;
@@ -54,11 +60,13 @@ export const onUpdateTeacher = `subscription OnUpdateTeacher {
         phoneNumber
         emailAddress
         profileImageId
+        createdAt
       }
       class {
         id
         name
         imageId
+        createdAt
       }
       currentClass {
         id
@@ -66,14 +74,18 @@ export const onUpdateTeacher = `subscription OnUpdateTeacher {
         phoneNumber
         emailAddress
         profileImageId
+        createdAt
       }
+      createdAt
     }
     classes {
       items {
         id
+        createdAt
       }
       nextToken
     }
+    createdAt
   }
 }
 `;
@@ -92,11 +104,13 @@ export const onDeleteTeacher = `subscription OnDeleteTeacher {
         phoneNumber
         emailAddress
         profileImageId
+        createdAt
       }
       class {
         id
         name
         imageId
+        createdAt
       }
       currentClass {
         id
@@ -104,14 +118,18 @@ export const onDeleteTeacher = `subscription OnDeleteTeacher {
         phoneNumber
         emailAddress
         profileImageId
+        createdAt
       }
+      createdAt
     }
     classes {
       items {
         id
+        createdAt
       }
       nextToken
     }
+    createdAt
   }
 }
 `;
@@ -126,10 +144,12 @@ export const onCreateTeacherClass = `subscription OnCreateTeacherClass {
       profileImageId
       currentClass {
         id
+        createdAt
       }
       classes {
         nextToken
       }
+      createdAt
     }
     class {
       id
@@ -141,6 +161,7 @@ export const onCreateTeacherClass = `subscription OnCreateTeacherClass {
       teachers {
         nextToken
       }
+      createdAt
     }
     currentClass {
       id
@@ -150,11 +171,14 @@ export const onCreateTeacherClass = `subscription OnCreateTeacherClass {
       profileImageId
       currentClass {
         id
+        createdAt
       }
       classes {
         nextToken
       }
+      createdAt
     }
+    createdAt
   }
 }
 `;
@@ -169,10 +193,12 @@ export const onUpdateTeacherClass = `subscription OnUpdateTeacherClass {
       profileImageId
       currentClass {
         id
+        createdAt
       }
       classes {
         nextToken
       }
+      createdAt
     }
     class {
       id
@@ -184,6 +210,7 @@ export const onUpdateTeacherClass = `subscription OnUpdateTeacherClass {
       teachers {
         nextToken
       }
+      createdAt
     }
     currentClass {
       id
@@ -193,11 +220,14 @@ export const onUpdateTeacherClass = `subscription OnUpdateTeacherClass {
       profileImageId
       currentClass {
         id
+        createdAt
       }
       classes {
         nextToken
       }
+      createdAt
     }
+    createdAt
   }
 }
 `;
@@ -212,10 +242,12 @@ export const onDeleteTeacherClass = `subscription OnDeleteTeacherClass {
       profileImageId
       currentClass {
         id
+        createdAt
       }
       classes {
         nextToken
       }
+      createdAt
     }
     class {
       id
@@ -227,6 +259,7 @@ export const onDeleteTeacherClass = `subscription OnDeleteTeacherClass {
       teachers {
         nextToken
       }
+      createdAt
     }
     currentClass {
       id
@@ -236,11 +269,14 @@ export const onDeleteTeacherClass = `subscription OnDeleteTeacherClass {
       profileImageId
       currentClass {
         id
+        createdAt
       }
       classes {
         nextToken
       }
+      createdAt
     }
+    createdAt
   }
 }
 `;
@@ -254,15 +290,18 @@ export const onCreateClass = `subscription OnCreateClass {
         id
         grade
         totalAssignments
+        createdAt
       }
       nextToken
     }
     teachers {
       items {
         id
+        createdAt
       }
       nextToken
     }
+    createdAt
   }
 }
 `;
@@ -276,15 +315,18 @@ export const onUpdateClass = `subscription OnUpdateClass {
         id
         grade
         totalAssignments
+        createdAt
       }
       nextToken
     }
     teachers {
       items {
         id
+        createdAt
       }
       nextToken
     }
+    createdAt
   }
 }
 `;
@@ -298,15 +340,18 @@ export const onDeleteClass = `subscription OnDeleteClass {
         id
         grade
         totalAssignments
+        createdAt
       }
       nextToken
     }
     teachers {
       items {
         id
+        createdAt
       }
       nextToken
     }
+    createdAt
   }
 }
 `;
@@ -323,6 +368,7 @@ export const onCreateClassStudent = `subscription OnCreateClassStudent {
       teachers {
         nextToken
       }
+      createdAt
     }
     student {
       id
@@ -331,6 +377,7 @@ export const onCreateClassStudent = `subscription OnCreateClassStudent {
       classes {
         nextToken
       }
+      createdAt
     }
     currentAssignments {
       items {
@@ -360,6 +407,7 @@ export const onCreateClassStudent = `subscription OnCreateClassStudent {
     }
     grade
     totalAssignments
+    createdAt
   }
 }
 `;
@@ -376,6 +424,7 @@ export const onUpdateClassStudent = `subscription OnUpdateClassStudent {
       teachers {
         nextToken
       }
+      createdAt
     }
     student {
       id
@@ -384,6 +433,7 @@ export const onUpdateClassStudent = `subscription OnUpdateClassStudent {
       classes {
         nextToken
       }
+      createdAt
     }
     currentAssignments {
       items {
@@ -413,6 +463,7 @@ export const onUpdateClassStudent = `subscription OnUpdateClassStudent {
     }
     grade
     totalAssignments
+    createdAt
   }
 }
 `;
@@ -429,6 +480,7 @@ export const onDeleteClassStudent = `subscription OnDeleteClassStudent {
       teachers {
         nextToken
       }
+      createdAt
     }
     student {
       id
@@ -437,6 +489,7 @@ export const onDeleteClassStudent = `subscription OnDeleteClassStudent {
       classes {
         nextToken
       }
+      createdAt
     }
     currentAssignments {
       items {
@@ -466,6 +519,7 @@ export const onDeleteClassStudent = `subscription OnDeleteClassStudent {
     }
     grade
     totalAssignments
+    createdAt
   }
 }
 `;
@@ -479,9 +533,11 @@ export const onCreateStudent = `subscription OnCreateStudent {
         id
         grade
         totalAssignments
+        createdAt
       }
       nextToken
     }
+    createdAt
   }
 }
 `;
@@ -495,9 +551,11 @@ export const onUpdateStudent = `subscription OnUpdateStudent {
         id
         grade
         totalAssignments
+        createdAt
       }
       nextToken
     }
+    createdAt
   }
 }
 `;
@@ -511,9 +569,11 @@ export const onDeleteStudent = `subscription OnDeleteStudent {
         id
         grade
         totalAssignments
+        createdAt
       }
       nextToken
     }
+    createdAt
   }
 }
 `;
@@ -526,11 +586,13 @@ export const onCreateAttendance = `subscription OnCreateAttendance {
         id
         name
         imageId
+        createdAt
       }
       student {
         id
         name
         imageId
+        createdAt
       }
       currentAssignments {
         nextToken
@@ -543,6 +605,7 @@ export const onCreateAttendance = `subscription OnCreateAttendance {
       }
       grade
       totalAssignments
+      createdAt
     }
     date
     isPresent
@@ -558,11 +621,13 @@ export const onUpdateAttendance = `subscription OnUpdateAttendance {
         id
         name
         imageId
+        createdAt
       }
       student {
         id
         name
         imageId
+        createdAt
       }
       currentAssignments {
         nextToken
@@ -575,6 +640,7 @@ export const onUpdateAttendance = `subscription OnUpdateAttendance {
       }
       grade
       totalAssignments
+      createdAt
     }
     date
     isPresent
@@ -590,11 +656,13 @@ export const onDeleteAttendance = `subscription OnDeleteAttendance {
         id
         name
         imageId
+        createdAt
       }
       student {
         id
         name
         imageId
+        createdAt
       }
       currentAssignments {
         nextToken
@@ -607,6 +675,7 @@ export const onDeleteAttendance = `subscription OnDeleteAttendance {
       }
       grade
       totalAssignments
+      createdAt
     }
     date
     isPresent
@@ -624,11 +693,13 @@ export const onCreateAssignment = `subscription OnCreateAssignment {
         id
         name
         imageId
+        createdAt
       }
       student {
         id
         name
         imageId
+        createdAt
       }
       currentAssignments {
         nextToken
@@ -641,6 +712,7 @@ export const onCreateAssignment = `subscription OnCreateAssignment {
       }
       grade
       totalAssignments
+      createdAt
     }
     completionDate
     evaluation {
@@ -662,11 +734,13 @@ export const onUpdateAssignment = `subscription OnUpdateAssignment {
         id
         name
         imageId
+        createdAt
       }
       student {
         id
         name
         imageId
+        createdAt
       }
       currentAssignments {
         nextToken
@@ -679,6 +753,7 @@ export const onUpdateAssignment = `subscription OnUpdateAssignment {
       }
       grade
       totalAssignments
+      createdAt
     }
     completionDate
     evaluation {
@@ -700,11 +775,13 @@ export const onDeleteAssignment = `subscription OnDeleteAssignment {
         id
         name
         imageId
+        createdAt
       }
       student {
         id
         name
         imageId
+        createdAt
       }
       currentAssignments {
         nextToken
@@ -717,6 +794,7 @@ export const onDeleteAssignment = `subscription OnDeleteAssignment {
       }
       grade
       totalAssignments
+      createdAt
     }
     completionDate
     evaluation {

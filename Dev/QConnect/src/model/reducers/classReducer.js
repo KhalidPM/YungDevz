@@ -69,10 +69,14 @@ export const classReducer = (state = INITIAL_STATE, action) => {
     case actionTypes.ADD_STUDENT:
       {
         let classId = action.classId
+        let newStudent = { ...action.studentInfo }
 
-        let newStudent = { ...action.studentInfo.studentInfo }
-        let newStudentId = newStudent.id;
-
+        // classStudentID: the ID of the student specific to the current class
+        // this is used to identify a student in a particular class
+        // used for properties of a student that are specific to a class, 
+        // for example, attendance, asignments etc..
+        let newStudentId = action.studentInfo.id;
+        
         newState = update(baseState, { students: { $merge: { [newStudentId]: newStudent } } });
         newState = update(newState, { classes: { [classId]: { students: { $push: [newStudentId] } } } });
         newState = editAssignment(newState, classId, newStudentId, { name: 'None', startDate: '', totalAssignments: 0, grade: 0 });

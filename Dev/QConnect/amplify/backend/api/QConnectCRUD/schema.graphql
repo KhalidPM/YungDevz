@@ -1,12 +1,12 @@
-type Teacher @model
-  @key(fields: ["id"]) {
-  id: String!
+type Teacher @model {
+  id: ID!
   name: String!
   phoneNumber: String!
   emailAddress: String!
   profileImageId: Int
   currentClass: TeacherClass @connection(name: "TeachersDefaultClass")
   classes: [TeacherClass] @connection(name: "TeacherClasses")
+   createdAt: AWSDateTime
 }
 
 type TeacherClass @model {
@@ -14,15 +14,16 @@ type TeacherClass @model {
   teacher: Teacher! @connection(name: "TeacherClasses")
   class: Class! @connection(name: "ClassTeachers")
   currentClass: Teacher @connection(name: "TeachersDefaultClass")
+  createdAt: AWSDateTime
 }
 
-type Class @model
-  @key(fields: ["id"]) {
-  id: String!
+type Class @model {
+  id: ID!
   name: String!
   imageId: Int
   students: [ClassStudent] @connection(name: "ClassStudents")
   teachers: [TeacherClass] @connection(name: "ClassTeachers")
+  createdAt: AWSDateTime
 }
 
 type ClassStudent 
@@ -35,24 +36,23 @@ type ClassStudent
   Attendance: [Attendance] @connection(name: "StudentAttendance")
   grade: Int
   totalAssignments: Int
+  createdAt: AWSDateTime
 }
-type Student @model 
-  @key(fields: ["id"]) {
-  id: String!
+type Student @model {
+  id: ID!
   name: String!
   imageId: Int
   classes: [ClassStudent] @connection(name: "StudentClasses")
+  createdAt: AWSDateTime
 }
-type Attendance @model
-  @key(fields: ["id"]) {
-  id: String!
+type Attendance @model {
+  id: ID!
   classStudent: ClassStudent! @connection(name: "StudentAttendance")
   date: String!
   isPresent: Boolean!
 }
-type Assignment @model 
-  @key(fields: ["id"]) {
-  id: String!
+type Assignment @model{
+  id: ID!
   name: String!
   startDate: String!
   classStudent: ClassStudent! @connection(name: "StudentAssignment")

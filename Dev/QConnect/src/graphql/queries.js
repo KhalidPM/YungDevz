@@ -1,7 +1,7 @@
 // eslint-disable
 // this is an auto generated file. This will be overwritten
 
-export const getTeacher = `query GetTeacher($id: String!) {
+export const getTeacher = `query GetTeacher($id: ID!) {
   getTeacher(id: $id) {
     id
     name
@@ -16,11 +16,13 @@ export const getTeacher = `query GetTeacher($id: String!) {
         phoneNumber
         emailAddress
         profileImageId
+        createdAt
       }
       class {
         id
         name
         imageId
+        createdAt
       }
       currentClass {
         id
@@ -28,24 +30,27 @@ export const getTeacher = `query GetTeacher($id: String!) {
         phoneNumber
         emailAddress
         profileImageId
+        createdAt
       }
+      createdAt
     }
     classes {
       items {
         id
+        createdAt
       }
       nextToken
     }
+    createdAt
   }
 }
 `;
 export const listTeachers = `query ListTeachers(
-  $id: String
   $filter: ModelTeacherFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listTeachers(id: $id, filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listTeachers(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
       name
@@ -54,10 +59,12 @@ export const listTeachers = `query ListTeachers(
       profileImageId
       currentClass {
         id
+        createdAt
       }
       classes {
         nextToken
       }
+      createdAt
     }
     nextToken
   }
@@ -74,10 +81,12 @@ export const getTeacherClass = `query GetTeacherClass($id: ID!) {
       profileImageId
       currentClass {
         id
+        createdAt
       }
       classes {
         nextToken
       }
+      createdAt
     }
     class {
       id
@@ -89,6 +98,7 @@ export const getTeacherClass = `query GetTeacherClass($id: ID!) {
       teachers {
         nextToken
       }
+      createdAt
     }
     currentClass {
       id
@@ -98,11 +108,14 @@ export const getTeacherClass = `query GetTeacherClass($id: ID!) {
       profileImageId
       currentClass {
         id
+        createdAt
       }
       classes {
         nextToken
       }
+      createdAt
     }
+    createdAt
   }
 }
 `;
@@ -120,11 +133,13 @@ export const listTeacherClasss = `query ListTeacherClasss(
         phoneNumber
         emailAddress
         profileImageId
+        createdAt
       }
       class {
         id
         name
         imageId
+        createdAt
       }
       currentClass {
         id
@@ -132,13 +147,15 @@ export const listTeacherClasss = `query ListTeacherClasss(
         phoneNumber
         emailAddress
         profileImageId
+        createdAt
       }
+      createdAt
     }
     nextToken
   }
 }
 `;
-export const getClass = `query GetClass($id: String!) {
+export const getClass = `query GetClass($id: ID!) {
   getClass(id: $id) {
     id
     name
@@ -148,25 +165,27 @@ export const getClass = `query GetClass($id: String!) {
         id
         grade
         totalAssignments
+        createdAt
       }
       nextToken
     }
     teachers {
       items {
         id
+        createdAt
       }
       nextToken
     }
+    createdAt
   }
 }
 `;
 export const listClasss = `query ListClasss(
-  $id: String
   $filter: ModelClassFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listClasss(id: $id, filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listClasss(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
       name
@@ -177,6 +196,7 @@ export const listClasss = `query ListClasss(
       teachers {
         nextToken
       }
+      createdAt
     }
     nextToken
   }
@@ -195,6 +215,7 @@ export const getClassStudent = `query GetClassStudent($id: ID!) {
       teachers {
         nextToken
       }
+      createdAt
     }
     student {
       id
@@ -203,6 +224,7 @@ export const getClassStudent = `query GetClassStudent($id: ID!) {
       classes {
         nextToken
       }
+      createdAt
     }
     currentAssignments {
       items {
@@ -232,6 +254,7 @@ export const getClassStudent = `query GetClassStudent($id: ID!) {
     }
     grade
     totalAssignments
+    createdAt
   }
 }
 `;
@@ -247,11 +270,13 @@ export const listClassStudents = `query ListClassStudents(
         id
         name
         imageId
+        createdAt
       }
       student {
         id
         name
         imageId
+        createdAt
       }
       currentAssignments {
         nextToken
@@ -264,12 +289,13 @@ export const listClassStudents = `query ListClassStudents(
       }
       grade
       totalAssignments
+      createdAt
     }
     nextToken
   }
 }
 `;
-export const getStudent = `query GetStudent($id: String!) {
+export const getStudent = `query GetStudent($id: ID!) {
   getStudent(id: $id) {
     id
     name
@@ -279,19 +305,20 @@ export const getStudent = `query GetStudent($id: String!) {
         id
         grade
         totalAssignments
+        createdAt
       }
       nextToken
     }
+    createdAt
   }
 }
 `;
 export const listStudents = `query ListStudents(
-  $id: String
   $filter: ModelStudentFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listStudents(id: $id, filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listStudents(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
       name
@@ -299,12 +326,13 @@ export const listStudents = `query ListStudents(
       classes {
         nextToken
       }
+      createdAt
     }
     nextToken
   }
 }
 `;
-export const getAttendance = `query GetAttendance($id: String!) {
+export const getAttendance = `query GetAttendance($id: ID!) {
   getAttendance(id: $id) {
     id
     classStudent {
@@ -313,11 +341,13 @@ export const getAttendance = `query GetAttendance($id: String!) {
         id
         name
         imageId
+        createdAt
       }
       student {
         id
         name
         imageId
+        createdAt
       }
       currentAssignments {
         nextToken
@@ -330,6 +360,7 @@ export const getAttendance = `query GetAttendance($id: String!) {
       }
       grade
       totalAssignments
+      createdAt
     }
     date
     isPresent
@@ -337,23 +368,18 @@ export const getAttendance = `query GetAttendance($id: String!) {
 }
 `;
 export const listAttendances = `query ListAttendances(
-  $id: String
   $filter: ModelAttendanceFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listAttendances(
-    id: $id
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
+  listAttendances(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
       classStudent {
         id
         grade
         totalAssignments
+        createdAt
       }
       date
       isPresent
@@ -362,7 +388,7 @@ export const listAttendances = `query ListAttendances(
   }
 }
 `;
-export const getAssignment = `query GetAssignment($id: String!) {
+export const getAssignment = `query GetAssignment($id: ID!) {
   getAssignment(id: $id) {
     id
     name
@@ -373,11 +399,13 @@ export const getAssignment = `query GetAssignment($id: String!) {
         id
         name
         imageId
+        createdAt
       }
       student {
         id
         name
         imageId
+        createdAt
       }
       currentAssignments {
         nextToken
@@ -390,6 +418,7 @@ export const getAssignment = `query GetAssignment($id: String!) {
       }
       grade
       totalAssignments
+      createdAt
     }
     completionDate
     evaluation {
@@ -401,17 +430,11 @@ export const getAssignment = `query GetAssignment($id: String!) {
 }
 `;
 export const listAssignments = `query ListAssignments(
-  $id: String
   $filter: ModelAssignmentFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listAssignments(
-    id: $id
-    filter: $filter
-    limit: $limit
-    nextToken: $nextToken
-  ) {
+  listAssignments(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
       name
@@ -420,6 +443,7 @@ export const listAssignments = `query ListAssignments(
         id
         grade
         totalAssignments
+        createdAt
       }
       completionDate
       evaluation {

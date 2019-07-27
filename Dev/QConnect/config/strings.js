@@ -86,6 +86,7 @@ export default {
     ThereIsAlreadyAStudentWithThatName: 'There is already a student with that name',
     EnterYourStudentsName: 'Enter your student\'s name',
     Whoops: 'Whoops',
+    FailedToAddStudent: "Bummer, we couldn't add the student info. Please make sure your device is connected to the internet.",
 
     //--------------------- Class Header Navigator ---------------------
     StudentProfile: 'Student Profile',

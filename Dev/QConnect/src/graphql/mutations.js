@@ -8,6 +8,40 @@ export const createTeacher = `mutation CreateTeacher($input: CreateTeacherInput!
     phoneNumber
     emailAddress
     profileImageId
+    currentClass {
+      id
+      teacher {
+        id
+        name
+        phoneNumber
+        emailAddress
+        profileImageId
+        createdAt
+      }
+      class {
+        id
+        name
+        imageId
+        createdAt
+      }
+      currentClass {
+        id
+        name
+        phoneNumber
+        emailAddress
+        profileImageId
+        createdAt
+      }
+      createdAt
+    }
+    classes {
+      items {
+        id
+        createdAt
+      }
+      nextToken
+    }
+    createdAt
   }
 }
 `;
@@ -18,6 +52,40 @@ export const updateTeacher = `mutation UpdateTeacher($input: UpdateTeacherInput!
     phoneNumber
     emailAddress
     profileImageId
+    currentClass {
+      id
+      teacher {
+        id
+        name
+        phoneNumber
+        emailAddress
+        profileImageId
+        createdAt
+      }
+      class {
+        id
+        name
+        imageId
+        createdAt
+      }
+      currentClass {
+        id
+        name
+        phoneNumber
+        emailAddress
+        profileImageId
+        createdAt
+      }
+      createdAt
+    }
+    classes {
+      items {
+        id
+        createdAt
+      }
+      nextToken
+    }
+    createdAt
   }
 }
 `;
@@ -36,11 +104,13 @@ export const deleteTeacher = `mutation DeleteTeacher($input: DeleteTeacherInput!
         phoneNumber
         emailAddress
         profileImageId
+        createdAt
       }
       class {
         id
         name
         imageId
+        createdAt
       }
       currentClass {
         id
@@ -48,20 +118,67 @@ export const deleteTeacher = `mutation DeleteTeacher($input: DeleteTeacherInput!
         phoneNumber
         emailAddress
         profileImageId
+        createdAt
       }
+      createdAt
     }
     classes {
       items {
         id
+        createdAt
       }
       nextToken
     }
+    createdAt
   }
 }
 `;
 export const createTeacherClass = `mutation CreateTeacherClass($input: CreateTeacherClassInput!) {
   createTeacherClass(input: $input) {
     id
+    teacher {
+      id
+      name
+      phoneNumber
+      emailAddress
+      profileImageId
+      currentClass {
+        id
+        createdAt
+      }
+      classes {
+        nextToken
+      }
+      createdAt
+    }
+    class {
+      id
+      name
+      imageId
+      students {
+        nextToken
+      }
+      teachers {
+        nextToken
+      }
+      createdAt
+    }
+    currentClass {
+      id
+      name
+      phoneNumber
+      emailAddress
+      profileImageId
+      currentClass {
+        id
+        createdAt
+      }
+      classes {
+        nextToken
+      }
+      createdAt
+    }
+    createdAt
   }
 }
 `;
@@ -76,10 +193,12 @@ export const updateTeacherClass = `mutation UpdateTeacherClass($input: UpdateTea
       profileImageId
       currentClass {
         id
+        createdAt
       }
       classes {
         nextToken
       }
+      createdAt
     }
     class {
       id
@@ -91,6 +210,7 @@ export const updateTeacherClass = `mutation UpdateTeacherClass($input: UpdateTea
       teachers {
         nextToken
       }
+      createdAt
     }
     currentClass {
       id
@@ -100,11 +220,14 @@ export const updateTeacherClass = `mutation UpdateTeacherClass($input: UpdateTea
       profileImageId
       currentClass {
         id
+        createdAt
       }
       classes {
         nextToken
       }
+      createdAt
     }
+    createdAt
   }
 }
 `;
@@ -119,10 +242,12 @@ export const deleteTeacherClass = `mutation DeleteTeacherClass($input: DeleteTea
       profileImageId
       currentClass {
         id
+        createdAt
       }
       classes {
         nextToken
       }
+      createdAt
     }
     class {
       id
@@ -134,6 +259,7 @@ export const deleteTeacherClass = `mutation DeleteTeacherClass($input: DeleteTea
       teachers {
         nextToken
       }
+      createdAt
     }
     currentClass {
       id
@@ -143,11 +269,14 @@ export const deleteTeacherClass = `mutation DeleteTeacherClass($input: DeleteTea
       profileImageId
       currentClass {
         id
+        createdAt
       }
       classes {
         nextToken
       }
+      createdAt
     }
+    createdAt
   }
 }
 `;
@@ -161,15 +290,18 @@ export const createClass = `mutation CreateClass($input: CreateClassInput!) {
         id
         grade
         totalAssignments
+        createdAt
       }
       nextToken
     }
     teachers {
       items {
         id
+        createdAt
       }
       nextToken
     }
+    createdAt
   }
 }
 `;
@@ -183,15 +315,18 @@ export const updateClass = `mutation UpdateClass($input: UpdateClassInput!) {
         id
         grade
         totalAssignments
+        createdAt
       }
       nextToken
     }
     teachers {
       items {
         id
+        createdAt
       }
       nextToken
     }
+    createdAt
   }
 }
 `;
@@ -205,21 +340,74 @@ export const deleteClass = `mutation DeleteClass($input: DeleteClassInput!) {
         id
         grade
         totalAssignments
+        createdAt
       }
       nextToken
     }
     teachers {
       items {
         id
+        createdAt
       }
       nextToken
     }
+    createdAt
   }
 }
 `;
 export const createClassStudent = `mutation CreateClassStudent($input: CreateClassStudentInput!) {
   createClassStudent(input: $input) {
     id
+    class {
+      id
+      name
+      imageId
+      students {
+        nextToken
+      }
+      teachers {
+        nextToken
+      }
+      createdAt
+    }
+    student {
+      id
+      name
+      imageId
+      classes {
+        nextToken
+      }
+      createdAt
+    }
+    currentAssignments {
+      items {
+        id
+        name
+        startDate
+        completionDate
+      }
+      nextToken
+    }
+    pastAssignments {
+      items {
+        id
+        name
+        startDate
+        completionDate
+      }
+      nextToken
+    }
+    Attendance {
+      items {
+        id
+        date
+        isPresent
+      }
+      nextToken
+    }
+    grade
+    totalAssignments
+    createdAt
   }
 }
 `;
@@ -236,6 +424,7 @@ export const updateClassStudent = `mutation UpdateClassStudent($input: UpdateCla
       teachers {
         nextToken
       }
+      createdAt
     }
     student {
       id
@@ -244,6 +433,7 @@ export const updateClassStudent = `mutation UpdateClassStudent($input: UpdateCla
       classes {
         nextToken
       }
+      createdAt
     }
     currentAssignments {
       items {
@@ -273,6 +463,7 @@ export const updateClassStudent = `mutation UpdateClassStudent($input: UpdateCla
     }
     grade
     totalAssignments
+    createdAt
   }
 }
 `;
@@ -289,6 +480,7 @@ export const deleteClassStudent = `mutation DeleteClassStudent($input: DeleteCla
       teachers {
         nextToken
       }
+      createdAt
     }
     student {
       id
@@ -297,6 +489,7 @@ export const deleteClassStudent = `mutation DeleteClassStudent($input: DeleteCla
       classes {
         nextToken
       }
+      createdAt
     }
     currentAssignments {
       items {
@@ -326,6 +519,7 @@ export const deleteClassStudent = `mutation DeleteClassStudent($input: DeleteCla
     }
     grade
     totalAssignments
+    createdAt
   }
 }
 `;
@@ -333,6 +527,17 @@ export const createStudent = `mutation CreateStudent($input: CreateStudentInput!
   createStudent(input: $input) {
     id
     name
+    imageId
+    classes {
+      items {
+        id
+        grade
+        totalAssignments
+        createdAt
+      }
+      nextToken
+    }
+    createdAt
   }
 }
 `;
@@ -346,9 +551,11 @@ export const updateStudent = `mutation UpdateStudent($input: UpdateStudentInput!
         id
         grade
         totalAssignments
+        createdAt
       }
       nextToken
     }
+    createdAt
   }
 }
 `;
@@ -362,9 +569,11 @@ export const deleteStudent = `mutation DeleteStudent($input: DeleteStudentInput!
         id
         grade
         totalAssignments
+        createdAt
       }
       nextToken
     }
+    createdAt
   }
 }
 `;
@@ -377,11 +586,13 @@ export const createAttendance = `mutation CreateAttendance($input: CreateAttenda
         id
         name
         imageId
+        createdAt
       }
       student {
         id
         name
         imageId
+        createdAt
       }
       currentAssignments {
         nextToken
@@ -394,6 +605,7 @@ export const createAttendance = `mutation CreateAttendance($input: CreateAttenda
       }
       grade
       totalAssignments
+      createdAt
     }
     date
     isPresent
@@ -409,11 +621,13 @@ export const updateAttendance = `mutation UpdateAttendance($input: UpdateAttenda
         id
         name
         imageId
+        createdAt
       }
       student {
         id
         name
         imageId
+        createdAt
       }
       currentAssignments {
         nextToken
@@ -426,6 +640,7 @@ export const updateAttendance = `mutation UpdateAttendance($input: UpdateAttenda
       }
       grade
       totalAssignments
+      createdAt
     }
     date
     isPresent
@@ -441,11 +656,13 @@ export const deleteAttendance = `mutation DeleteAttendance($input: DeleteAttenda
         id
         name
         imageId
+        createdAt
       }
       student {
         id
         name
         imageId
+        createdAt
       }
       currentAssignments {
         nextToken
@@ -458,6 +675,7 @@ export const deleteAttendance = `mutation DeleteAttendance($input: DeleteAttenda
       }
       grade
       totalAssignments
+      createdAt
     }
     date
     isPresent
@@ -475,11 +693,13 @@ export const createAssignment = `mutation CreateAssignment($input: CreateAssignm
         id
         name
         imageId
+        createdAt
       }
       student {
         id
         name
         imageId
+        createdAt
       }
       currentAssignments {
         nextToken
@@ -492,6 +712,7 @@ export const createAssignment = `mutation CreateAssignment($input: CreateAssignm
       }
       grade
       totalAssignments
+      createdAt
     }
     completionDate
     evaluation {
@@ -513,11 +734,13 @@ export const updateAssignment = `mutation UpdateAssignment($input: UpdateAssignm
         id
         name
         imageId
+        createdAt
       }
       student {
         id
         name
         imageId
+        createdAt
       }
       currentAssignments {
         nextToken
@@ -530,6 +753,7 @@ export const updateAssignment = `mutation UpdateAssignment($input: UpdateAssignm
       }
       grade
       totalAssignments
+      createdAt
     }
     completionDate
     evaluation {
@@ -551,11 +775,13 @@ export const deleteAssignment = `mutation DeleteAssignment($input: DeleteAssignm
         id
         name
         imageId
+        createdAt
       }
       student {
         id
         name
         imageId
+        createdAt
       }
       currentAssignments {
         nextToken
@@ -568,6 +794,7 @@ export const deleteAssignment = `mutation DeleteAssignment($input: DeleteAssignm
       }
       grade
       totalAssignments
+      createdAt
     }
     completionDate
     evaluation {
