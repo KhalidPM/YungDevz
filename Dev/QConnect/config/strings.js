@@ -87,7 +87,7 @@ export default {
     EnterYourStudentsName: 'Enter your student\'s name',
     Whoops: 'Whoops',
     FailedToAddStudent: "Bummer, we couldn't add the student info. Please make sure your device is connected to the internet.",
-
+    FailedToDeleteStudent: "Bummer, we couldn't remove the student from the class. Please make sure your device is connected to the internet.",
     //--------------------- Class Header Navigator ---------------------
     StudentProfile: 'Student Profile',
     EditClass: 'Edit Students',

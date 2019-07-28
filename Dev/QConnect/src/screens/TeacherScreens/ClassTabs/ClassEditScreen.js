@@ -201,7 +201,7 @@ export class ClassEditScreen extends QcParentScreen {
                           text: 'Delete', onPress: () => {
                             deleteStudent(
                               classId,
-                              index
+                              item.id
                             );
                           }
                         },

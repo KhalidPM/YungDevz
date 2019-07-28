@@ -45,7 +45,7 @@ export class ClassMainScreen extends QcParentScreen {
               studentName={item.name}
               background={colors.white}
               profilePic={studentImages.images[item.imageId]}
-              currentAssignment={this.props.currentAssignments.byStudentId[item.id][0].name}
+              currentAssignment={this.props.currentAssignments.byStudentId[item.id]? this.props.currentAssignments.byStudentId[item.id][0].name : 'None'}
               onPress={() =>
                 this.props.navigation.push("StudentProfile", {
                   studentId: item.id,

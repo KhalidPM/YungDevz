@@ -85,7 +85,9 @@ export const classReducer = (state = INITIAL_STATE, action) => {
     case actionTypes.DELETE_STUDENT:
       {
         //remove student from the class's roster 
-        newState = update(baseState, { classes: { [action.classId]: { students: { $splice: [[action.studentId, 1]] } } } });
+
+        let index = baseState.classes[action.classId].students.indexOf(action.studentId);
+        newState = update(baseState, { classes: { [action.classId]: { students: { $splice: [[index, 1]] } } } });
 
         newState = update(newState, { currentAssignments: { byClassId: { [action.classId]: { byStudentId: { $unset: [action.studentId] } } } } });
 
