@@ -275,35 +275,6 @@ export const deleteStudent = `mutation DeleteStudent($input: DeleteStudentInput!
 export const createAttendance = `mutation CreateAttendance($input: CreateAttendanceInput!) {
   createAttendance(input: $input) {
     id
-    classStudent {
-      id
-      class {
-        id
-        name
-        imageId
-        createdAt
-      }
-      student {
-        id
-        name
-        imageId
-        createdAt
-      }
-      currentAssignments {
-        nextToken
-      }
-      pastAssignments {
-        nextToken
-      }
-      Attendance {
-        nextToken
-      }
-      grade
-      totalAssignments
-      createdAt
-    }
-    date
-    isPresent
   }
 }
 `;
