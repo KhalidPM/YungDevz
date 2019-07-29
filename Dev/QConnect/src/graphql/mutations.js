@@ -8,39 +8,6 @@ export const createTeacher = `mutation CreateTeacher($input: CreateTeacherInput!
     phoneNumber
     emailAddress
     profileImageId
-    currentClass {
-      id
-      teacher {
-        id
-        name
-        phoneNumber
-        emailAddress
-        profileImageId
-        createdAt
-      }
-      class {
-        id
-        name
-        imageId
-        createdAt
-      }
-      currentClass {
-        id
-        name
-        phoneNumber
-        emailAddress
-        profileImageId
-        createdAt
-      }
-      createdAt
-    }
-    classes {
-      items {
-        id
-        createdAt
-      }
-      nextToken
-    }
     createdAt
   }
 }
@@ -52,39 +19,6 @@ export const updateTeacher = `mutation UpdateTeacher($input: UpdateTeacherInput!
     phoneNumber
     emailAddress
     profileImageId
-    currentClass {
-      id
-      teacher {
-        id
-        name
-        phoneNumber
-        emailAddress
-        profileImageId
-        createdAt
-      }
-      class {
-        id
-        name
-        imageId
-        createdAt
-      }
-      currentClass {
-        id
-        name
-        phoneNumber
-        emailAddress
-        profileImageId
-        createdAt
-      }
-      createdAt
-    }
-    classes {
-      items {
-        id
-        createdAt
-      }
-      nextToken
-    }
     createdAt
   }
 }
@@ -96,88 +30,12 @@ export const deleteTeacher = `mutation DeleteTeacher($input: DeleteTeacherInput!
     phoneNumber
     emailAddress
     profileImageId
-    currentClass {
-      id
-      teacher {
-        id
-        name
-        phoneNumber
-        emailAddress
-        profileImageId
-        createdAt
-      }
-      class {
-        id
-        name
-        imageId
-        createdAt
-      }
-      currentClass {
-        id
-        name
-        phoneNumber
-        emailAddress
-        profileImageId
-        createdAt
-      }
-      createdAt
-    }
-    classes {
-      items {
-        id
-        createdAt
-      }
-      nextToken
-    }
-    createdAt
   }
 }
 `;
 export const createTeacherClass = `mutation CreateTeacherClass($input: CreateTeacherClassInput!) {
   createTeacherClass(input: $input) {
     id
-    teacher {
-      id
-      name
-      phoneNumber
-      emailAddress
-      profileImageId
-      currentClass {
-        id
-        createdAt
-      }
-      classes {
-        nextToken
-      }
-      createdAt
-    }
-    class {
-      id
-      name
-      imageId
-      students {
-        nextToken
-      }
-      teachers {
-        nextToken
-      }
-      createdAt
-    }
-    currentClass {
-      id
-      name
-      phoneNumber
-      emailAddress
-      profileImageId
-      currentClass {
-        id
-        createdAt
-      }
-      classes {
-        nextToken
-      }
-      createdAt
-    }
     createdAt
   }
 }
@@ -191,41 +49,16 @@ export const updateTeacherClass = `mutation UpdateTeacherClass($input: UpdateTea
       phoneNumber
       emailAddress
       profileImageId
-      currentClass {
-        id
-        createdAt
-      }
-      classes {
-        nextToken
-      }
       createdAt
     }
     class {
       id
       name
       imageId
-      students {
-        nextToken
-      }
-      teachers {
-        nextToken
-      }
       createdAt
     }
     currentClass {
       id
-      name
-      phoneNumber
-      emailAddress
-      profileImageId
-      currentClass {
-        id
-        createdAt
-      }
-      classes {
-        nextToken
-      }
-      createdAt
     }
     createdAt
   }
@@ -236,47 +69,7 @@ export const deleteTeacherClass = `mutation DeleteTeacherClass($input: DeleteTea
     id
     teacher {
       id
-      name
-      phoneNumber
-      emailAddress
-      profileImageId
-      currentClass {
-        id
-        createdAt
-      }
-      classes {
-        nextToken
-      }
-      createdAt
     }
-    class {
-      id
-      name
-      imageId
-      students {
-        nextToken
-      }
-      teachers {
-        nextToken
-      }
-      createdAt
-    }
-    currentClass {
-      id
-      name
-      phoneNumber
-      emailAddress
-      profileImageId
-      currentClass {
-        id
-        createdAt
-      }
-      classes {
-        nextToken
-      }
-      createdAt
-    }
-    createdAt
   }
 }
 `;
@@ -358,55 +151,6 @@ export const deleteClass = `mutation DeleteClass($input: DeleteClassInput!) {
 export const createClassStudent = `mutation CreateClassStudent($input: CreateClassStudentInput!) {
   createClassStudent(input: $input) {
     id
-    class {
-      id
-      name
-      imageId
-      students {
-        nextToken
-      }
-      teachers {
-        nextToken
-      }
-      createdAt
-    }
-    student {
-      id
-      name
-      imageId
-      classes {
-        nextToken
-      }
-      createdAt
-    }
-    currentAssignments {
-      items {
-        id
-        name
-        startDate
-        completionDate
-      }
-      nextToken
-    }
-    pastAssignments {
-      items {
-        id
-        name
-        startDate
-        completionDate
-      }
-      nextToken
-    }
-    Attendance {
-      items {
-        id
-        date
-        isPresent
-      }
-      nextToken
-    }
-    grade
-    totalAssignments
     createdAt
   }
 }
@@ -470,55 +214,6 @@ export const updateClassStudent = `mutation UpdateClassStudent($input: UpdateCla
 export const deleteClassStudent = `mutation DeleteClassStudent($input: DeleteClassStudentInput!) {
   deleteClassStudent(input: $input) {
     id
-    class {
-      id
-      name
-      imageId
-      students {
-        nextToken
-      }
-      teachers {
-        nextToken
-      }
-      createdAt
-    }
-    student {
-      id
-      name
-      imageId
-      classes {
-        nextToken
-      }
-      createdAt
-    }
-    currentAssignments {
-      items {
-        id
-        name
-        startDate
-        completionDate
-      }
-      nextToken
-    }
-    pastAssignments {
-      items {
-        id
-        name
-        startDate
-        completionDate
-      }
-      nextToken
-    }
-    Attendance {
-      items {
-        id
-        date
-        isPresent
-      }
-      nextToken
-    }
-    grade
-    totalAssignments
     createdAt
   }
 }

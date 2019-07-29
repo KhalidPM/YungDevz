@@ -11,14 +11,15 @@ export function saveTeacherInfo(teacherInfo) {
   return async (dispatch) => {
     dispatch(saveTeacherInfoToDb(teacherInfo))
     try {
+      let {currentClassId, ...input} = teacherInfo;
+
+      //currentClassId param in gql mutation is teacherCurrentClassId
+      if(currentClassId !== undefined){
+        input = {teacherCurrentClassId: currentClassId, ...input}
+      }
+
       await API.graphql(graphqlOperation(updateTeacher, {
-        input: {
-          id: teacherInfo.id,
-          name: teacherInfo.name,
-          phoneNumber: teacherInfo.phoneNumber,
-          emailAddress: teacherInfo.emailAddress,
-          profileImageId: teacherInfo.profileImageId
-        }
+        input: {...input}
       }))
       console.log('teacher info saved successfully')
     } catch (err) {

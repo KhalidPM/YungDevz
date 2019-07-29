@@ -18,7 +18,9 @@ class LeftNavPane extends QcParentScreen {
   openClass = (id, className) => {
     //update current class index in redux
     this.props.saveTeacherInfo(
-      { currentClassId: id }
+      { 
+        id: this.props.id,
+        currentClassId: id }
     );
 
     //navigate to the selected class
@@ -95,10 +97,10 @@ const getTeacherClasses = (classIds, classes) => {
 }
 
 const mapStateToProps = state => {
-  const { name, profileImageId, currentClassId } = state.data.teacher;
+  const { name, profileImageId, currentClassId, id } = state.data.teacher;
   const classes = getTeacherClasses(state.data.teacher.classes, state.data.classes);
 
-  return { classes, name, profileImageId, currentClassId };
+  return { id, classes, name, profileImageId, currentClassId };
 };
 
 const mapDispatchToProps = dispatch => (
