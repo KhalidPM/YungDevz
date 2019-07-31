@@ -136,6 +136,9 @@ export const classReducer = (state = INITIAL_STATE, action) => {
 
         return newState;
       }
+    case actionTypes.RESET_DB:
+      return {...INITIAL_STATE}
+
     case actionTypes.SAVE_TEACHER_INFO:
       {
         //fetches current teacher info
@@ -144,10 +147,11 @@ export const classReducer = (state = INITIAL_STATE, action) => {
       }
     case actionTypes.EDIT_CURRENT_ASSIGNMENT:
       {
-        let { classId, studentId, newAssignmentName } = action;
+        let { classId, studentId, assignmentId, newAssignmentName } = action;
         let newAssignmentDate = new Date().toLocaleDateString("en-US");
 
         let newAssignment = {
+          id: assignmentId,
           name: newAssignmentName,
           startDate: newAssignmentDate
         }

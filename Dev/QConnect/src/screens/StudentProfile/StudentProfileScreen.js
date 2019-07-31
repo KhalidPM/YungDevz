@@ -28,12 +28,12 @@ class StudentProfileScreen extends QcParentScreen {
   }
 
   //method updates the current assignment of the student
-  editAssignment(classId, studentId, newAssignmentName) {
+  editAssignment(classId, studentId, assignmentId, newAssignmentName) {
     if (newAssignmentName.trim() === "") {
       Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
     } else {
-      this.props.editCurrentAssignment(classId, studentId, newAssignmentName);
       this.setState({ isDialogVisible: false });
+      this.props.editCurrentAssignment(classId, studentId, assignmentId, newAssignmentName);
     }
   }
 
@@ -84,22 +84,11 @@ class StudentProfileScreen extends QcParentScreen {
 
     return (
       <View style={styles.container}>
-        {/**To Be made into a component
-        so that we can add autocomplete. */ }
-        {/* <DialogInput
-          isDialogVisible={this.state.isDialogVisible}
-          title={strings.EditAssignment}
-          {...dialogInitialText}
-          dialogStyle={{ marginBottom: 100 }}
-          submitInput={(inputText) =>
-            this.editAssignment(classId, studentId, inputText)}
-          closeDialog={() => { this.setState({ isDialogVisible: false }) }} /> */}
-
           <AssignmentEntryComponent 
           visible= {this.state.isDialogVisible}
           screen = {this.name}
           onSubmit = {(inputText) =>
-          this.editAssignment(classId, studentId, inputText)} 
+          this.editAssignment(classId, studentId, currentAssignment.id, inputText)} 
           />
 
         <ImageSelectionModal
@@ -154,7 +143,8 @@ class StudentProfileScreen extends QcParentScreen {
                     {hasCurrentAssignment ? <TouchableHighlight onPress={() =>
                       this.props.navigation.push("EvaluationPage", {
                         studentId: studentId,
-                        classId: classId
+                        classId: classId,
+                        assignmentId: currentAssignment.id
                       })} >
                       <Text style={styles.assignmentActionText}>{strings.Grade}</Text>
                     </TouchableHighlight> : <View />}

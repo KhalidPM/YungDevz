@@ -70,6 +70,7 @@ export const deleteTeacherClass = `mutation DeleteTeacherClass($input: DeleteTea
     teacher {
       id
     }
+    createdAt
   }
 }
 `;
@@ -184,7 +185,6 @@ export const updateClassStudent = `mutation UpdateClassStudent($input: UpdateCla
         id
         name
         startDate
-        completionDate
       }
       nextToken
     }
@@ -348,126 +348,51 @@ export const deleteAttendance = `mutation DeleteAttendance($input: DeleteAttenda
   }
 }
 `;
-export const createAssignment = `mutation CreateAssignment($input: CreateAssignmentInput!) {
-  createAssignment(input: $input) {
+export const createPastAssignment = `mutation CreatePastAssignment($input: CreatePastAssignmentInput!) {
+  createPastAssignment(input: $input) {
     id
     name
     startDate
-    classStudent {
-      id
-      class {
-        id
-        name
-        imageId
-        createdAt
-      }
-      student {
-        id
-        name
-        imageId
-        createdAt
-      }
-      currentAssignments {
-        nextToken
-      }
-      pastAssignments {
-        nextToken
-      }
-      Attendance {
-        nextToken
-      }
-      grade
-      totalAssignments
-      createdAt
-    }
-    completionDate
-    evaluation {
-      grade
-      notes
-      improvements
-    }
   }
 }
 `;
-export const updateAssignment = `mutation UpdateAssignment($input: UpdateAssignmentInput!) {
-  updateAssignment(input: $input) {
+export const updatePastAssignment = `mutation UpdatePastAssignment($input: UpdatePastAssignmentInput!) {
+  updatePastAssignment(input: $input) {
     id
     name
     startDate
-    classStudent {
-      id
-      class {
-        id
-        name
-        imageId
-        createdAt
-      }
-      student {
-        id
-        name
-        imageId
-        createdAt
-      }
-      currentAssignments {
-        nextToken
-      }
-      pastAssignments {
-        nextToken
-      }
-      Attendance {
-        nextToken
-      }
-      grade
-      totalAssignments
-      createdAt
-    }
-    completionDate
-    evaluation {
-      grade
-      notes
-      improvements
-    }
   }
 }
 `;
-export const deleteAssignment = `mutation DeleteAssignment($input: DeleteAssignmentInput!) {
-  deleteAssignment(input: $input) {
+export const deletePastAssignment = `mutation DeletePastAssignment($input: DeletePastAssignmentInput!) {
+  deletePastAssignment(input: $input) {
     id
     name
     startDate
-    classStudent {
-      id
-      class {
-        id
-        name
-        imageId
-        createdAt
-      }
-      student {
-        id
-        name
-        imageId
-        createdAt
-      }
-      currentAssignments {
-        nextToken
-      }
-      pastAssignments {
-        nextToken
-      }
-      Attendance {
-        nextToken
-      }
-      grade
-      totalAssignments
-      createdAt
-    }
-    completionDate
-    evaluation {
-      grade
-      notes
-      improvements
-    }
+  }
+}
+`;
+export const createCurrentAssignment = `mutation CreateCurrentAssignment($input: CreateCurrentAssignmentInput!) {
+  createCurrentAssignment(input: $input) {
+    id
+    name
+    startDate
+  }
+}
+`;
+export const updateCurrentAssignment = `mutation UpdateCurrentAssignment($input: UpdateCurrentAssignmentInput!) {
+  updateCurrentAssignment(input: $input) {
+    id
+    name
+    startDate
+  }
+}
+`;
+export const deleteCurrentAssignment = `mutation DeleteCurrentAssignment($input: DeleteCurrentAssignmentInput!) {
+  deleteCurrentAssignment(input: $input) {
+    id
+    name
+    startDate
   }
 }
 `;

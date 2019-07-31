@@ -231,7 +231,6 @@ export const getClassStudent = `query GetClassStudent($id: ID!) {
         id
         name
         startDate
-        completionDate
       }
       nextToken
     }
@@ -388,8 +387,8 @@ export const listAttendances = `query ListAttendances(
   }
 }
 `;
-export const getAssignment = `query GetAssignment($id: ID!) {
-  getAssignment(id: $id) {
+export const getPastAssignment = `query GetPastAssignment($id: ID!) {
+  getPastAssignment(id: $id) {
     id
     name
     startDate
@@ -429,12 +428,12 @@ export const getAssignment = `query GetAssignment($id: ID!) {
   }
 }
 `;
-export const listAssignments = `query ListAssignments(
-  $filter: ModelAssignmentFilterInput
+export const listPastAssignments = `query ListPastAssignments(
+  $filter: ModelPastAssignmentFilterInput
   $limit: Int
   $nextToken: String
 ) {
-  listAssignments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+  listPastAssignments(filter: $filter, limit: $limit, nextToken: $nextToken) {
     items {
       id
       name
@@ -450,6 +449,66 @@ export const listAssignments = `query ListAssignments(
         grade
         notes
         improvements
+      }
+    }
+    nextToken
+  }
+}
+`;
+export const getCurrentAssignment = `query GetCurrentAssignment($id: ID!) {
+  getCurrentAssignment(id: $id) {
+    id
+    name
+    startDate
+    classStudent {
+      id
+      class {
+        id
+        name
+        imageId
+        createdAt
+      }
+      student {
+        id
+        name
+        imageId
+        createdAt
+      }
+      currentAssignments {
+        nextToken
+      }
+      pastAssignments {
+        nextToken
+      }
+      Attendance {
+        nextToken
+      }
+      grade
+      totalAssignments
+      createdAt
+    }
+  }
+}
+`;
+export const listCurrentAssignments = `query ListCurrentAssignments(
+  $filter: ModelCurrentAssignmentFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listCurrentAssignments(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+  ) {
+    items {
+      id
+      name
+      startDate
+      classStudent {
+        id
+        grade
+        totalAssignments
+        createdAt
       }
     }
     nextToken

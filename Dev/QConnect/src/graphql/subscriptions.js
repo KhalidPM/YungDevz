@@ -384,7 +384,6 @@ export const onCreateClassStudent = `subscription OnCreateClassStudent {
         id
         name
         startDate
-        completionDate
       }
       nextToken
     }
@@ -440,7 +439,6 @@ export const onUpdateClassStudent = `subscription OnUpdateClassStudent {
         id
         name
         startDate
-        completionDate
       }
       nextToken
     }
@@ -496,7 +494,6 @@ export const onDeleteClassStudent = `subscription OnDeleteClassStudent {
         id
         name
         startDate
-        completionDate
       }
       nextToken
     }
@@ -682,8 +679,8 @@ export const onDeleteAttendance = `subscription OnDeleteAttendance {
   }
 }
 `;
-export const onCreateAssignment = `subscription OnCreateAssignment {
-  onCreateAssignment {
+export const onCreatePastAssignment = `subscription OnCreatePastAssignment {
+  onCreatePastAssignment {
     id
     name
     startDate
@@ -723,8 +720,8 @@ export const onCreateAssignment = `subscription OnCreateAssignment {
   }
 }
 `;
-export const onUpdateAssignment = `subscription OnUpdateAssignment {
-  onUpdateAssignment {
+export const onUpdatePastAssignment = `subscription OnUpdatePastAssignment {
+  onUpdatePastAssignment {
     id
     name
     startDate
@@ -764,8 +761,8 @@ export const onUpdateAssignment = `subscription OnUpdateAssignment {
   }
 }
 `;
-export const onDeleteAssignment = `subscription OnDeleteAssignment {
-  onDeleteAssignment {
+export const onDeletePastAssignment = `subscription OnDeletePastAssignment {
+  onDeletePastAssignment {
     id
     name
     startDate
@@ -801,6 +798,111 @@ export const onDeleteAssignment = `subscription OnDeleteAssignment {
       grade
       notes
       improvements
+    }
+  }
+}
+`;
+export const onCreateCurrentAssignment = `subscription OnCreateCurrentAssignment {
+  onCreateCurrentAssignment {
+    id
+    name
+    startDate
+    classStudent {
+      id
+      class {
+        id
+        name
+        imageId
+        createdAt
+      }
+      student {
+        id
+        name
+        imageId
+        createdAt
+      }
+      currentAssignments {
+        nextToken
+      }
+      pastAssignments {
+        nextToken
+      }
+      Attendance {
+        nextToken
+      }
+      grade
+      totalAssignments
+      createdAt
+    }
+  }
+}
+`;
+export const onUpdateCurrentAssignment = `subscription OnUpdateCurrentAssignment {
+  onUpdateCurrentAssignment {
+    id
+    name
+    startDate
+    classStudent {
+      id
+      class {
+        id
+        name
+        imageId
+        createdAt
+      }
+      student {
+        id
+        name
+        imageId
+        createdAt
+      }
+      currentAssignments {
+        nextToken
+      }
+      pastAssignments {
+        nextToken
+      }
+      Attendance {
+        nextToken
+      }
+      grade
+      totalAssignments
+      createdAt
+    }
+  }
+}
+`;
+export const onDeleteCurrentAssignment = `subscription OnDeleteCurrentAssignment {
+  onDeleteCurrentAssignment {
+    id
+    name
+    startDate
+    classStudent {
+      id
+      class {
+        id
+        name
+        imageId
+        createdAt
+      }
+      student {
+        id
+        name
+        imageId
+        createdAt
+      }
+      currentAssignments {
+        nextToken
+      }
+      pastAssignments {
+        nextToken
+      }
+      Attendance {
+        nextToken
+      }
+      grade
+      totalAssignments
+      createdAt
     }
   }
 }

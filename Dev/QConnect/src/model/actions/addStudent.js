@@ -20,6 +20,8 @@ export function addStudent(classId, studentInfo) {
         }
       }));
 
+      //create ClassStudent: information of the student that is specific to this class 
+      // for example: grade, assignments, etc..
       let studentUniqueId = newStudent.data.createStudent.id;
       studentClassInfo = await API.graphql(graphqlOperation(createClassStudent, {
         input: {
