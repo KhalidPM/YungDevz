@@ -3,7 +3,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import colors from 'config/colors';
 import { Icon } from 'react-native-elements';
-import strings from '../../../../config/strings';
+import strings from 'config/strings';
 import QcParentScreen from "screens/QcParentScreen";
 
 export default class AllSettingsScreen extends QcParentScreen {
@@ -46,7 +46,7 @@ export default class AllSettingsScreen extends QcParentScreen {
                         color={colors.primaryDark} />
                 </TouchableOpacity>
             </View>
-            
+
         )
     }
 }

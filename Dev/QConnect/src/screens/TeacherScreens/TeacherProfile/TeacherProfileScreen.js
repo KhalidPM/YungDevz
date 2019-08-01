@@ -51,6 +51,9 @@ export class TeacherProfileScreen extends QcParentScreen {
     //this method saves the new profile information to the redux database
     saveProfileInfo = () => {
         const { name, phoneNumber, emailAddress, profileImageId } = this.state;
+        name = name.trim();
+        phoneNumber = phoneNumber.trim();
+        emailAddress = emailAddress.trim();
         if (!name ||
             !phoneNumber ||
             !emailAddress ||

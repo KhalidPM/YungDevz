@@ -21,8 +21,8 @@ class TopBanner extends FontLoadingComponent {
                 {this.state.fontLoaded ? (
                     <View style={styles.entireTopView}>
                         <View style={styles.topLeftView}  >
-                            <TouchableOpacity style={{ flex: 1, flexDirection: 'row', paddingLeft: 20, height: 100, justifyContent: 'flex-start', alignItems: 'center' }} onPress={() => { LeftOnPress() }} >
-                                {
+                            <TouchableOpacity style={{ flex: 1, flexDirection: 'row', paddingLeft: 20, height: 100, justifyContent: 'flex-start', alignItems: 'center' }} onPress={LeftOnPress ? () => { LeftOnPress() } : () => {}} >
+                               {
                                     (LeftIconName !== undefined) &&
                                     (LeftIconName !== '') && (
                                         <Icon
@@ -33,7 +33,7 @@ class TopBanner extends FontLoadingComponent {
 
                                 }
                                 <Text style={styles.leftText}
-                                    onPress={() => { LeftOnPress() }}>{LeftTextName}</Text>
+                                    onPress={LeftOnPress ? () => { LeftOnPress() } : () => {}}>{LeftTextName}</Text>
                             </TouchableOpacity>
                         </View>
 
@@ -42,7 +42,7 @@ class TopBanner extends FontLoadingComponent {
                         </View>
 
                         <View style={styles.topRightView} >
-                            <TouchableOpacity style={{ flex: 1, flexDirection: 'row', paddingRight: 20, height: 100, justifyContent: 'flex-end', alignItems: 'center' }} onPress={() => { RightOnPress() }}>
+                            <TouchableOpacity style={{ flex: 1, flexDirection: 'row', paddingRight: 20, height: 100, justifyContent: 'flex-end', alignItems: 'center' }} onPress={RightOnPress ? () => { RightOnPress() } : () => {}}>
                                 {
                                     (RightIconName !== undefined) &&
                                     (RightIconName !== '') && (
@@ -53,7 +53,7 @@ class TopBanner extends FontLoadingComponent {
                                     )
                                 }
                                 <Text style={styles.rightText}
-                                    onPress={() => { RightOnPress() }}>{RightTextName}</Text>
+                                    onPress={RightOnPress ? () => { RightOnPress() } : () => {}}>{RightTextName}</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { View, ImageBackground, Dimensions, StyleSheet, Modal, Text } from 'react-native';
+import { View, ImageBackground, Dimensions, StyleSheet } from 'react-native';
 import Form from './Form';
 import ButtonSubmit from './ButtonSubmit';
 import SignupSection from './SignupSection';
-import QcAppBanner from 'components/QcAppBanner'
+import QcAppBanner from 'components/QcAppBanner';
 import { authenticate, confirmUserLogin } from 'model/actions/authActions'
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -56,6 +56,10 @@ class LoginScreen extends Component {
     this.props.authenticate(username, password, this.props.navigation, "App")
   }
 
+  onForgotPassword = () => {
+    this.props.navigation.navigate('ForgotPassword');
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -75,6 +79,7 @@ class LoginScreen extends Component {
             screen="LoginScreen" />
           <SignupSection
             onCreateAccount={this.onCreateAccount.bind(this)}
+            onForgotPassword={this.onForgotPassword.bind(this)}
           />
          </ImageBackground>
       </View>

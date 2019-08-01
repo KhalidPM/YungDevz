@@ -21,7 +21,7 @@ class FirstRunScreen extends QcParentScreen {
   //Navigates to the student side
   onStudentFlow = () => {
     //todo: Change this to a login so that the correct student can be displayed
-    this.props.navigation.push('StudentScreensNavigator');
+    this.props.navigation.push('StudentMenu');
   }
 
   render() {
@@ -39,7 +39,7 @@ class FirstRunScreen extends QcParentScreen {
               onPress={this.onTeacherFlow}
               screen={this.name}
             />
-            <View style={{ flex: 1 }}></View>
+            <View style={{ flex: 1 }}/>
             <QcActionButton
               navigation={navigation}
               text={strings.IAmAStudent}

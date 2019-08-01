@@ -10,6 +10,20 @@ export default {
     Ready: 'Ready',
     NotReady: 'Not Ready',
 
+    //--------------------- Forgot Password Screen-------------------
+    emailPlaceHolder: "Email",
+    Submit: 'Submit',
+    AskForEmail: 'Please Enter Email Here',
+    EnterCode: 'Code',
+    EmailError: 'Please Enter Email',
+    EmailErrorHeader: "Error with Email",
+    NewPasswordPlaceholder: 'New Password',
+    ConfirmPasswordPlaceholder: 'Confirm Password',
+    EnterNewPassword: 'Please Enter New Password',
+    ConfirmPassword: 'Please Confirm Password',
+    Next: 'Next',
+    ErrorWithPassword: 'Error With Password',
+    ErrorWithConfirm: 'Must Confirm Password',
     //--------------------- Evaluation Page ---------------------
     None: 'None',
     HowWas: 'How was ',
@@ -36,6 +50,11 @@ export default {
     ErrorSigningIn: "Error signing in",
     InvalidPhoneNumber: "The phone number is invalid. Please enter a valid phone number.",
 
+
+    //----------------------- Teacher Main Screen ----------------------
+    EmptyClass:"Uh Oh! No students",
+    AddStudentButton: "Click Here to Add A Student",
+
     //--------------------- Student Profile Screen ---------------------
     EditAssignment: 'Edit Assignment',
     EnterAssignmentHere: 'Enter assignment here...',
@@ -48,6 +67,10 @@ export default {
     Grade: 'Grade',
     PleaseEnterAnAssignmentName: 'Please enter an assignment name',
     ImprovementAreas: 'Things to work on: ',
+
+    //--------------------- Join Class Screen ---------------------
+    JoinClass: 'Join Class',
+    TypeInAClassCode: 'Type in a class code...',
 
     //-------------------- Evaluation Sub-Categories -----------------------
     Memorization: "Memorization", 
@@ -78,19 +101,23 @@ export default {
     SaveAttendance: 'Save Attendance',
 
     //--------------------- Class Edit Screen ---------------------
+    YourClassCode: 'Your class code',
+    Done: 'Done',
     IsNowAddedToTheClass: ' is now added to the class',
     PleaseInputAName: 'Please input a name',
     StudentName: 'Student name...',
     AddStudent: 'Add Student',
-    Done: 'Done',
     ThereIsAlreadyAStudentWithThatName: 'There is already a student with that name',
     EnterYourStudentsName: 'Enter your student\'s name',
     Whoops: 'Whoops',
     FailedToAddStudent: "Bummer, we couldn't add the student info. Please make sure your device is connected to the internet.",
     FailedToDeleteStudent: "Bummer, we couldn't remove the student from the class. Please make sure your device is connected to the internet.",
+    AddStudents: 'Add Students',
+    JoinMyClass: 'Join my class on QuranConnect. Here is the class code: ',
+
     //--------------------- Class Header Navigator ---------------------
     StudentProfile: 'Student Profile',
-    EditClass: 'Edit Students',
+    EditClass: 'Edit Class',
     StudentEvaluation: 'Student Evaluation',
     Completed: 'Completed',
     Evaluation: 'Assignment Evaluation',

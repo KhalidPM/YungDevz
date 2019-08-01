@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Image, Text, TouchableWithoutFeedback, KeyboardAvoidingView, Keyboard, Alert, Modal, ScrollView, LayoutAnimation, Platform } from "react-native";
+import { StyleSheet, View, Image, Text, TouchableWithoutFeedback, TouchableOpacity, KeyboardAvoidingView, Keyboard, Alert, Modal, ScrollView, LayoutAnimation, Platform } from "react-native";
 import QcActionButton from "components/QcActionButton";
 import Toast, { DURATION } from "react-native-easy-toast";
 import { bindActionCreators } from "redux";
@@ -15,6 +15,8 @@ import FadeInView from "../../components/FadeInView";
 import { confirmUserSignUp, createUser } from 'model/actions/authActions'
 import { addTeacher} from 'model/actions/addTeacher'
 import { Input } from 'react-native-elements'
+import { createUser, confirmUserSignUp } from 'model/actions/authActions'
+import { Input, Icon } from 'react-native-elements'
 
 const initialState = {
   authCode: '',
@@ -79,9 +81,9 @@ export class TeacherWelcomeScreen extends QcParentScreen {
 
   //--- state captures the inputted user info ------------------
   state = {
-    phoneNumber: this.props.phoneNumber === undefined ? "" : this.props.phoneNumber,
-    emailAddress: this.props.emailAddress === undefined ? "" : this.props.emailAddress,
-    name: this.props.name === undefined ? "" : this.props.name,
+    phoneNumber: this.props.phoneNumber === undefined ? "" : this.props.phoneNumber.trim(),
+    emailAddress: this.props.emailAddress === undefined ? "" : this.props.emailAddress.trim(),
+    name: this.props.name === undefined ? "" : this.props.name.trim(),
     modalVisible: false,
     profileImageId: this.initialDefaultImageId,
     highlightedImagesIndices: this.getHighlightedImages(),
@@ -119,6 +121,10 @@ export class TeacherWelcomeScreen extends QcParentScreen {
   //it will add a new teacher record to the database and up to the server
   createTeacherProfile = teacherId => {
     const { name, phoneNumber, emailAddress, password, profileImageId } = this.state;
+    name = name.trim();
+    phoneNumber = phoneNumber.trim();
+    emailAddress = emailAddress.trim();
+    password = password.trim();
 
     //Reset the confirmation dialog state cancelation state
     //In case user canceled the confirmation code dialog before, we reset that state so we can show the dialog again upon new submission
@@ -213,14 +219,25 @@ export class TeacherWelcomeScreen extends QcParentScreen {
               />
 
               <View style={styles.picContainer}>
-                <FadeInView
-                  style={{ alignItems: 'center', justifyContent: 'center' }}>
-                  <Image
-                    style={styles.welcomeImage}
-                    source={require("assets/images/salam.png")}
-                  />
-                  <Text style={styles.quote}>{strings.TeacherWelcomeMessage}</Text>
-                </FadeInView>
+                <View style={{ flex: 1, alignSelf: 'flex-start', flexDirection: 'row' }}>
+                  <View style={{ flex: 0.25 }}></View>
+                  <TouchableOpacity style={{ flex: 1, alignItems: 'flex-start' }} onPress={() => { this.props.navigation.goBack() }}>
+                    <Icon
+                      name={'angle-left'}
+                      type="font-awesome" />
+                  </TouchableOpacity>
+                  <View style={{ flex: 3 }}></View>
+                </View>
+                <View style={{ flex: 10 }}>
+                  <FadeInView
+                    style={{ alignItems: 'center', justifyContent: 'center' }}>
+                    <Image
+                      style={styles.welcomeImage}
+                      source={require("assets/images/salam.png")}
+                    />
+                    <Text style={styles.quote}>{strings.TeacherWelcomeMessage}</Text>
+                  </FadeInView>
+                </View>
 
               </View>
               <View style={styles.editInfo} behavior="padding">

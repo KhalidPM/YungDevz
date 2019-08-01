@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Image, Text, StyleSheet, ScrollView, FlatList, TouchableHighlight, TouchableOpacity, Alert } from 'react-native';
 import colors from 'config/colors';
 import { Rating } from 'react-native-elements';
-import DialogInput from 'react-native-dialog-input';
 import { editCurrentAssignment } from 'model/actions/editCurrentAssignment';
 import { updateStudentImage } from 'model/actions/updateStudentImage';
 import { bindActionCreators } from "redux";
@@ -40,6 +39,10 @@ class StudentProfileScreen extends QcParentScreen {
   //---------- profile image views handlers --------------
   setModalVisible(visible) {
     this.setState({ isModalVisible: visible });
+  }
+
+  setDialogueVisible(visible){
+    this.setState({isDialogVisible: visible})
   }
 
   //this method saves the new profile information to the redux database
@@ -89,6 +92,7 @@ class StudentProfileScreen extends QcParentScreen {
           screen = {this.name}
           onSubmit = {(inputText) =>
           this.editAssignment(classId, studentId, currentAssignment.id, inputText)} 
+          onCancel = {() => this.setDialogueVisible(false)}
           />
 
         <ImageSelectionModal
@@ -155,13 +159,14 @@ class StudentProfileScreen extends QcParentScreen {
             </View>
 
             <ScrollView style={styles.prevAssignments}>
+
               <FlatList
                 data={assignmentsHistory}
                 keyExtractor={(item, index) => item.name + index}
                 renderItem={({ item, index }) => (
                   <TouchableOpacity onPress={() => this.props.navigation.push("EvaluationPage", {
                     classId: classId,
-	                  studentId: studentId,
+                    studentId: studentId,
                     assignmentName: item.name,
                     completionDate: item.completionDate,
                     rating: item.evaluation.grade,
@@ -196,7 +201,7 @@ class StudentProfileScreen extends QcParentScreen {
             </ScrollView>
           </View>
         ) : (
-            <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
               <LoadingSpinner isVisible={!this.state.fontLoaded} />
             </View>
           )
@@ -337,6 +342,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     marginLeft: 7,
     marginRight: 7,
+
+
   },
   prevAssignmentCard: {
     flexDirection: 'column',

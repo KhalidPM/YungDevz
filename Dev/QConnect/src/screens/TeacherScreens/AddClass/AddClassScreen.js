@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
 );
 
 const getTeacherClassNames = (classIds, classes) => {
-  return Object.values(classes).filter(c => classIds.includes(c.id)).map(cls => {return cls.name})
+  return Object.values(classes).filter(c => classIds.includes(c.id)).map(cls => { return cls.name })
 }
 
 const mapStateToProps = state => {
