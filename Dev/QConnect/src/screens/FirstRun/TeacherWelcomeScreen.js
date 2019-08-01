@@ -14,8 +14,6 @@ import QcParentScreen from "screens/QcParentScreen";
 import FadeInView from "../../components/FadeInView";
 import { confirmUserSignUp, createUser } from 'model/actions/authActions'
 import { addTeacher} from 'model/actions/addTeacher'
-import { Input } from 'react-native-elements'
-import { createUser, confirmUserSignUp } from 'model/actions/authActions'
 import { Input, Icon } from 'react-native-elements'
 
 const initialState = {

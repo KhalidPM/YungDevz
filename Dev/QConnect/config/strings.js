@@ -108,7 +108,7 @@ export default {
     StudentName: 'Student name...',
     AddStudent: 'Add Student',
     ThereIsAlreadyAStudentWithThatName: 'There is already a student with that name',
-    EnterYourStudentsName: 'Enter your student\'s name',
+    EnterYourStudentsName: 'Or enter your student\'s name',
     Whoops: 'Whoops',
     FailedToAddStudent: "Bummer, we couldn't add the student info. Please make sure your device is connected to the internet.",
     FailedToDeleteStudent: "Bummer, we couldn't remove the student from the class. Please make sure your device is connected to the internet.",
