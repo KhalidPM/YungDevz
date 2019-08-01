@@ -15,7 +15,7 @@ export function addTeacher(teacherInfo) {
           input: {...teacherInfo}
       }))
     } catch (err) {
-      logActionError(err, actionTypes.SAVE_TEACHER_INFO) 
+      logActionError(err, "addTeacher") 
     }
   }
 }

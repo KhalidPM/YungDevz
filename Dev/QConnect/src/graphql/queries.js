@@ -423,6 +423,13 @@ export const getPastAssignment = `query GetPastAssignment($id: ID!) {
     evaluation {
       grade
       notes
+      createdAt
+      assignment {
+        id
+        name
+        startDate
+        completionDate
+      }
       improvements
     }
   }
@@ -448,6 +455,7 @@ export const listPastAssignments = `query ListPastAssignments(
       evaluation {
         grade
         notes
+        createdAt
         improvements
       }
     }
@@ -519,6 +527,25 @@ export const getEvaluation = `query GetEvaluation($id: ID!) {
   getEvaluation(id: $id) {
     grade
     notes
+    createdAt
+    assignment {
+      id
+      name
+      startDate
+      classStudent {
+        id
+        grade
+        totalAssignments
+        createdAt
+      }
+      completionDate
+      evaluation {
+        grade
+        notes
+        createdAt
+        improvements
+      }
+    }
     improvements
   }
 }
@@ -532,6 +559,13 @@ export const listEvaluations = `query ListEvaluations(
     items {
       grade
       notes
+      createdAt
+      assignment {
+        id
+        name
+        startDate
+        completionDate
+      }
       improvements
     }
     nextToken

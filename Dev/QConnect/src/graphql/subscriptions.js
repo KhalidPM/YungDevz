@@ -715,6 +715,13 @@ export const onCreatePastAssignment = `subscription OnCreatePastAssignment {
     evaluation {
       grade
       notes
+      createdAt
+      assignment {
+        id
+        name
+        startDate
+        completionDate
+      }
       improvements
     }
   }
@@ -756,6 +763,13 @@ export const onUpdatePastAssignment = `subscription OnUpdatePastAssignment {
     evaluation {
       grade
       notes
+      createdAt
+      assignment {
+        id
+        name
+        startDate
+        completionDate
+      }
       improvements
     }
   }
@@ -797,6 +811,13 @@ export const onDeletePastAssignment = `subscription OnDeletePastAssignment {
     evaluation {
       grade
       notes
+      createdAt
+      assignment {
+        id
+        name
+        startDate
+        completionDate
+      }
       improvements
     }
   }
@@ -911,6 +932,25 @@ export const onCreateEvaluation = `subscription OnCreateEvaluation {
   onCreateEvaluation {
     grade
     notes
+    createdAt
+    assignment {
+      id
+      name
+      startDate
+      classStudent {
+        id
+        grade
+        totalAssignments
+        createdAt
+      }
+      completionDate
+      evaluation {
+        grade
+        notes
+        createdAt
+        improvements
+      }
+    }
     improvements
   }
 }
@@ -919,6 +959,25 @@ export const onUpdateEvaluation = `subscription OnUpdateEvaluation {
   onUpdateEvaluation {
     grade
     notes
+    createdAt
+    assignment {
+      id
+      name
+      startDate
+      classStudent {
+        id
+        grade
+        totalAssignments
+        createdAt
+      }
+      completionDate
+      evaluation {
+        grade
+        notes
+        createdAt
+        improvements
+      }
+    }
     improvements
   }
 }
@@ -927,6 +986,25 @@ export const onDeleteEvaluation = `subscription OnDeleteEvaluation {
   onDeleteEvaluation {
     grade
     notes
+    createdAt
+    assignment {
+      id
+      name
+      startDate
+      classStudent {
+        id
+        grade
+        totalAssignments
+        createdAt
+      }
+      completionDate
+      evaluation {
+        grade
+        notes
+        createdAt
+        improvements
+      }
+    }
     improvements
   }
 }

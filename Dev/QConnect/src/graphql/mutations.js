@@ -30,6 +30,7 @@ export const deleteTeacher = `mutation DeleteTeacher($input: DeleteTeacherInput!
     phoneNumber
     emailAddress
     profileImageId
+    createdAt
   }
 }
 `;
@@ -56,9 +57,6 @@ export const updateTeacherClass = `mutation UpdateTeacherClass($input: UpdateTea
       name
       imageId
       createdAt
-    }
-    currentClass {
-      id
     }
     createdAt
   }
@@ -214,7 +212,6 @@ export const updateClassStudent = `mutation UpdateClassStudent($input: UpdateCla
 export const deleteClassStudent = `mutation DeleteClassStudent($input: DeleteClassStudentInput!) {
   deleteClassStudent(input: $input) {
     id
-    createdAt
   }
 }
 `;
@@ -275,6 +272,8 @@ export const deleteStudent = `mutation DeleteStudent($input: DeleteStudentInput!
 export const createAttendance = `mutation CreateAttendance($input: CreateAttendanceInput!) {
   createAttendance(input: $input) {
     id
+    date
+    isPresent
   }
 }
 `;
