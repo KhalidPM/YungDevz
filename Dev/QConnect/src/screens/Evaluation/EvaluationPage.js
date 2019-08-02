@@ -45,11 +45,11 @@ export class EvaluationPage extends QcParentScreen {
       notes,
       improvementAreas
     }
-    this.props.completeCurrentAssignment(classId, studentId, evaluationDetails);
+    this.props.completeCurrentAssignment(classId, studentId, currentAssignment.name, currentAssignment.startDate, evaluationDetails);
 
     // keep the assignment name as the last assignment to reduce retype since most of the times the next assignment would be the same surah (next portion) or a redo.
     // todo: eventually right after grading we should have a step for the teacher to update the next assignment
-    this.props.editCurrentAssignment(classId, studentId, this.props.currentAssignment.name);
+    this.props.editCurrentAssignment(classId, studentId, this.props.currentAssignment.id, this.props.currentAssignment.name);
     this.props.navigation.pop();
   }
 

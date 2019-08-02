@@ -20,12 +20,12 @@ export const INITIAL_STATE = {
   },
   student: {
     id: "",
-    name: "Zyad",
+    name: "",
     imageId: 1,
     averageRating: 1,
     totalAssignments: 1,
     isReady: false,
-    currentAssignment: 'Al-Baqara',
+    currentAssignment: '',
     assignmentHistory: [],
     currentClassID: "",
     classes: []
@@ -69,11 +69,13 @@ export const classReducer = (state = INITIAL_STATE, action) => {
     case actionTypes.ADD_STUDENT:
       {
         let classId = action.classId
+        let newStudent = { ...action.studentInfo }
 
-        var nanoid = require('nanoid/non-secure')
-        let newStudentId = nanoid()
-
-        let newStudent = { id: newStudentId, ...action.studentInfo.studentInfo }
+        // classStudentID: the ID of the student specific to the current class
+        // this is used to identify a student in a particular class
+        // used for properties of a student that are specific to a class, 
+        // for example, attendance, asignments etc..
+        let newStudentId = action.studentInfo.id;
 
         newState = update(baseState, { students: { $merge: { [newStudentId]: newStudent } } });
         newState = update(newState, { classes: { [classId]: { students: { $push: [newStudentId] } } } });
@@ -83,7 +85,9 @@ export const classReducer = (state = INITIAL_STATE, action) => {
     case actionTypes.DELETE_STUDENT:
       {
         //remove student from the class's roster 
-        newState = update(baseState, { classes: { [action.classId]: { students: { $splice: [[action.studentId, 1]] } } } });
+
+        let index = baseState.classes[action.classId].students.indexOf(action.studentId);
+        newState = update(baseState, { classes: { [action.classId]: { students: { $splice: [[index, 1]] } } } });
 
         newState = update(newState, { currentAssignments: { byClassId: { [action.classId]: { byStudentId: { $unset: [action.studentId] } } } } });
 
@@ -106,6 +110,7 @@ export const classReducer = (state = INITIAL_STATE, action) => {
       }
     case actionTypes.ADD_CLASS:
       {
+        newState = baseState;
         newState = update(baseState, { classes: { $merge: { [action.classInfo.id]: action.classInfo } } });
         newState = update(newState, { teacher: { classes: { $push: [action.classInfo.id] } } });
         newState = update(newState, { teacher: { currentClassId: { $set: action.classInfo.id } } });
@@ -131,6 +136,9 @@ export const classReducer = (state = INITIAL_STATE, action) => {
 
         return newState;
       }
+    case actionTypes.RESET_DB:
+      return {...INITIAL_STATE}
+
     case actionTypes.SAVE_TEACHER_INFO:
       {
         //fetches current teacher info
@@ -145,10 +153,11 @@ export const classReducer = (state = INITIAL_STATE, action) => {
       }
     case actionTypes.EDIT_CURRENT_ASSIGNMENT:
       {
-        let { classId, studentId, newAssignmentName } = action;
+        let { classId, studentId, assignmentId, newAssignmentName } = action;
         let newAssignmentDate = new Date().toLocaleDateString("en-US");
 
         let newAssignment = {
+          id: assignmentId,
           name: newAssignmentName,
           startDate: newAssignmentDate
         }

@@ -1,0 +1,10 @@
+{
+    "AppSyncApiName": "QConnectCRUD",
+    "DynamoDBBillingMode": "PAY_PER_REQUEST",
+    "AuthCognitoUserPoolId": {
+        "Fn::GetAtt": [
+            "authcognitob1424da5",
+            "Outputs.UserPoolId"
+        ]
+    }
+}

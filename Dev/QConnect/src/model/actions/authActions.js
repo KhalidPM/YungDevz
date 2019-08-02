@@ -1,20 +1,3 @@
-import {
-  LOG_IN,
-  LOG_IN_SUCCESS,
-  LOG_IN_FAILURE,
-  LOG_OUT,
-  SIGN_UP,
-  SIGN_UP_SUCCESS,
-  SIGN_UP_FAILURE,
-  SHOW_SIGN_IN_CONFIRMATION_MODAL,
-  SHOW_SIGN_UP_CONFIRMATION_MODAL,
-  CONFIRM_SIGNUP,
-  CONFIRM_SIGNUP_SUCCESS,
-  CONFIRM_SIGNUP_FAILURE,
-  CONFIRM_LOGIN,
-  CONFIRM_LOGIN_SUCCESS,
-  CONFIRM_LOGIN_FAILURE
-} from 'model/reducers/auth'
 import * as actionTypes from './authActionTypes'
 import { setFirstRunCompleted } from "model/actions/setFirstRunCompleted";
 
@@ -23,6 +6,7 @@ import { Auth } from 'aws-amplify'
 import strings from 'config/strings'
 import Analytics from '@aws-amplify/analytics';
 import analyticsEvents from 'config/analyticsEvents'
+import {logActionError} from './logUtils.js'
 
 function signUp() {
   return {
@@ -44,10 +28,12 @@ function signUpFailure(err) {
   }
 }
 
-export function createUser(username, password, email, phone_number) {
+export function createUser(name, phoneNumber, emailAddress, password,  provisionUser, profileImageId, userId) {
   return (dispatch) => {
     dispatch(signUp())
-    let phone = phone_number
+    let phone = phoneNumber
+    let username = emailAddress
+    let email = emailAddress
 
     Auth.signUp({
       username,
@@ -58,19 +44,25 @@ export function createUser(username, password, email, phone_number) {
       }
     })
     .then(data => {
+      console.log("user created successfully.")
       Analytics.record({
         name: analyticsEvents.create_user_succeeded,
       })
 
       dispatch(signUpSuccess(data))
       dispatch(showSignUpConfirmationModal())
+
+      newTeacher = provisionUser({
+          id: userId,
+          name: name,
+          phoneNumber: phoneNumber,
+          emailAddress: emailAddress,
+          profileImageId: profileImageId
+      })
+
     })
     .catch(err => {
-      console.log('error signing up: ', err)
-      Analytics.record({
-        name: analyticsEvents.create_user_failed,
-        attributes:  {...err} 
-      })
+      logActionError(err, actionTypes.SIGN_UP) 
 
       setTimeout(() => {
         Alert.alert(strings.ErrorSigningUp, "" + (err.message || err))
@@ -137,11 +129,7 @@ export function authenticate(username, password, navigation, nextScreenName) {
         navigation.navigate(nextScreenName);
       })
       .catch(err => {
-        Analytics.record({
-          name: analyticsEvents.login_failed,
-          attributes:  {...err} 
-        })
-
+        logActionError(err, actionTypes.LOG_IN)
         Alert.alert(strings.ErrorSigningIn, "" + (err.message || err))
         dispatch(logInFailure(err))
       });
@@ -173,11 +161,7 @@ export function confirmUserSignUp(username, password, authCode, navigation, next
         dispatch(authenticate(username, password, navigation, nextScreenName))
       })
       .catch(err => {
-        console.log('error signing up: ', err)
-        Analytics.record({
-          name: analyticsEvents.confirm_new_user_failed,
-          attributes:  {...err} 
-        })
+        logActionError(err, actionTypes.CONFIRM_SIGNUP_FAILURE)
   
         setTimeout(() => {
           Alert.alert(strings.ErrorSigningUp, "" + (err.message || err))

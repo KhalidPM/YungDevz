@@ -114,6 +114,29 @@ export class ClassMainScreen extends QcParentScreen {
       );
     }
 
+    return (
+      <ScrollView style={styles.container}>
+        <FlatList
+          data={this.props.students}
+          keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
+          renderItem={({ item }) => (
+            <StudentCard
+              key={item.id}
+              studentName={item.name}
+              background={colors.white}
+              profilePic={studentImages.images[item.imageId]}
+              currentAssignment={this.props.currentAssignments.byStudentId[item.id]? this.props.currentAssignments.byStudentId[item.id][0].name : 'None'}
+              onPress={() =>
+                this.props.navigation.push("StudentProfile", {
+                  studentId: item.id,
+                  classId: classId
+                })
+              }
+            />
+          )}
+        />
+      </ScrollView>
+    );
   }
 }
 

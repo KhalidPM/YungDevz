@@ -23,9 +23,9 @@ class QcActionButton extends FontLoadingComponent {
         onPress={() => this.onButtonPress()}
       >
         {this.state.fontLoaded ? (
-          <Text style={styles.textStyle}>{text}</Text>
+          <Text style={[styles.textStyle, this.props.style]}>{text}</Text>
         ) : (
-            <Text style={styles.textStyleNoFont}>{text}</Text>
+            <Text style={[styles.textStyleNoFont, this.props.style]}>{text}</Text>
           )
         }
       </TouchableOpacity>
@@ -37,6 +37,7 @@ QcActionButton.propTypes = {
   text: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
   screen: PropTypes.string,
+  style: PropTypes.object, 
 };
 
 

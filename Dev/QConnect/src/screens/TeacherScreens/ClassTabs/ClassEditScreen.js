@@ -1,5 +1,5 @@
 import React from "react";
-import { ScrollView, View, StyleSheet, FlatList, TouchableWithoutFeedback, Keyboard, Text, Alert, Share } from "react-native";
+import { ScrollView, View, StyleSheet, FlatList, TouchableWithoutFeedback, Keyboard, Text, Alert, Share, TextInput } from "react-native";
 import { connect } from "react-redux";
 import StudentCard from "components/StudentCard";
 import colors from "config/colors";
@@ -11,6 +11,8 @@ import { Icon } from 'react-native-elements';
 import strings from "config/strings";
 import mapStateToCurrentClassProps from "screens/TeacherScreens/helpers/mapStateToCurrentClassProps";
 import QcParentScreen from "screens/QcParentScreen";
+import QcActionButton from "components/QcActionButton";
+import Toast, { DURATION } from 'react-native-easy-toast'
 
 export class ClassEditScreen extends QcParentScreen {
 
@@ -144,30 +146,45 @@ export class ClassEditScreen extends QcParentScreen {
         <View style={styles.container}>
           <View style={styles.shareCodeContainer}>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ fontSize: 20 }}>{strings.AddStudents}</Text>
+              <Text style={{ fontSize: 18 }}>{strings.AddStudents}</Text>
             </View>
             <View style={{
               flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flex: 1
+              flex: 1,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
             }}>
-              <View style={{ flex: 1 }}></View>
-              <View style={{ flexDirection: 'column', flex: 6, justifyContent: 'center' }}>
-                <Text style={{ fontSize: 18 }}>{strings.YourClassCode}</Text>
-                <Text style={{ fontSize: 16, color: colors.primaryDark }}>{classId}</Text>
+              <View style={{ flexDirection: 'column' }}>
+                <Text style={{ fontSize: 14 }}>{strings.YourClassCode}</Text>
+                <Text style={{ fontSize: 12, color: colors.primaryDark }}>{classId}</Text>
               </View>
-              <View style={{ flex: 1 }}></View>
-              <View style={{ flex: 1, justifyContent: 'center' }}>
+              <View style={{ flex: 1 }} />
+              <View style={{ flex: 1, justifyContent: 'flex-end' }}>
                 <Icon
                   raised
                   name='share'
                   type='font-awesome'
                   color={colors.primaryDark}
-                  size={20}
+                  size={15}
                   onPress={() => { Share.share({ message: strings.JoinMyClass + classId }) }} />
               </View>
-              <View style={{ flex: 1 }}></View>
+            </View>
+            <View style={{ flex: 1, flexDirection: 'row', paddingHorizontal: 10, paddingVertical: 5 }}>
+              <View style={{ flex: 1, justifyContent: 'flex-start' }}>
+                <Text style={[styles.inputName, { paddingBottom: 5 }]}>{strings.EnterYourStudentsName}</Text>
+                <TextInput
+                  placeholder={strings.StudentName}
+                  onChangeText={newStudentName => this.setState({ newStudentName })}
+                  value={this.state.newStudentName}
+                  style={{ paddingBottom: 10 }}
+                />
+              </View>
+              <QcActionButton
+                text={strings.AddStudent}
+                onPress={() => this.addNewStudent(classId)}
+                screen={this.name}
+                style={{margin: 0, paddingTop: 0, paddingBottom: 0, marginTop: 0, marginBottom: 0}}
+              />
             </View>
           </View>
           <ScrollView style={styles.flatList}>
@@ -195,7 +212,7 @@ export class ClassEditScreen extends QcParentScreen {
                             text: 'Delete', onPress: () => {
                               deleteStudent(
                                 classId,
-                                index
+                                item.id
                               );
                             }
                           },
@@ -205,6 +222,7 @@ export class ClassEditScreen extends QcParentScreen {
                       );
                     }} />} />
               )} />
+          <Toast ref="toast" />
           </ScrollView>
         </View>
       </TouchableWithoutFeedback>
@@ -226,7 +244,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     backgroundColor: colors.white,
     flex: 0.25,
-    alignItems: 'center',
   },
 });
 

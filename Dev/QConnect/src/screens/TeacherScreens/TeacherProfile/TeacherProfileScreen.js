@@ -50,7 +50,7 @@ export class TeacherProfileScreen extends QcParentScreen {
 
     //this method saves the new profile information to the redux database
     saveProfileInfo = () => {
-        let { name, phoneNumber, emailAddress } = this.state;
+        const { name, phoneNumber, emailAddress, profileImageId } = this.state;
         name = name.trim();
         phoneNumber = phoneNumber.trim();
         emailAddress = emailAddress.trim();
@@ -64,16 +64,14 @@ export class TeacherProfileScreen extends QcParentScreen {
         } else if (!this.state.isPhoneValid) {
             Alert.alert(strings.Whoops, strings.InvalidPhoneNumber);
         } else {
-            const { profileImageId, isPhoneValid } = this.state; // trick to remove modalVisible from state and pass in everything else
-            this.props.saveTeacherInfo(
-                {
-                    name,
-                    phoneNumber,
-                    emailAddress,
-                    profileImageId,
-                    isPhoneValid
-                }
-            );
+            const { modalVisible, isPhoneValid, fontLoaded, ...params } = this.state; // trick to remove modalVisible from state and pass in everything else
+            this.props.saveTeacherInfo({
+                id: this.props.id,
+                name: name,
+                phoneNumber: phoneNumber,
+                emailAddress: emailAddress,
+                profileImageId: profileImageId
+            });
             this.refs.toast.show(strings.YourProfileHasBeenSaved, DURATION.LENGTH_SHORT);
             //Just goes to the first class
             this.props.navigation.push('CurrentClass');
@@ -224,8 +222,8 @@ const styles = StyleSheet.create({
 })
 
 const mapStateToProps = state => {
-    const { name, phoneNumber, emailAddress, profileImageId } = state.data.teacher;
-    return { name, phoneNumber, emailAddress, profileImageId };
+    const { id, name, phoneNumber, emailAddress, profileImageId } = state.data.teacher;
+    return { id, name, phoneNumber, emailAddress, profileImageId };
 };
 
 const mapDispatchToProps = dispatch => (

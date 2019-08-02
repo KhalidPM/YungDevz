@@ -56,23 +56,11 @@ class LoginScreen extends Component {
     this.props.authenticate(username, password, this.props.navigation, "App")
   }
 
-  confirm() {
-    const { authCode } = this.state
-    this.props.confirmUserLogin(authCode, this.props.navigation)
-  }
-
   onForgotPassword = () => {
     this.props.navigation.navigate('ForgotPassword');
   }
 
   render() {
-    const { auth: {
-      loginErrorMessage,
-      isAuthenticating,
-      loginError,
-      showSignInConfirmationModal
-    } } = this.props
-
     return (
       <View style={{ flex: 1 }}>
         <ImageBackground source={BG_IMAGE} style={styles.bgImage}>

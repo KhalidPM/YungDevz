@@ -1,0 +1,77 @@
+type Teacher @model {
+  id: ID!
+  name: String!
+  phoneNumber: String!
+  emailAddress: String!
+  profileImageId: Int
+  currentClass: TeacherClass @connection(name: "TeachersDefaultClass")
+  classes: [TeacherClass] @connection(name: "TeacherClasses")
+   createdAt: AWSDateTime
+}
+
+type TeacherClass @model {
+  id: ID!
+  teacher: Teacher! @connection(name: "TeacherClasses")
+  class: Class! @connection(name: "ClassTeachers")
+  currentClass: Teacher @connection(name: "TeachersDefaultClass")
+  createdAt: AWSDateTime
+}
+
+type Class @model {
+  id: ID!
+  name: String!
+  imageId: Int
+  students: [ClassStudent] @connection(name: "ClassStudents")
+  teachers: [TeacherClass] @connection(name: "ClassTeachers")
+  createdAt: AWSDateTime
+}
+
+type ClassStudent 
+  @model {
+  id: ID!
+  class: Class! @connection(name: "ClassStudents")
+  student: Student! @connection(name: "StudentClasses")
+  currentAssignments: [CurrentAssignment] @connection(name: "StudentAssignment")
+  pastAssignments: [PastAssignment] @connection(name: "PastStudentAssignment")
+  Attendance: [Attendance] @connection(name: "StudentAttendance")
+  grade: Int
+  totalAssignments: Int
+  createdAt: AWSDateTime
+}
+
+type Student @model {
+  id: ID!
+  name: String!
+  imageId: Int
+  classes: [ClassStudent] @connection(name: "StudentClasses")
+  createdAt: AWSDateTime
+}
+type Attendance @model {
+  id: ID!
+  classStudent: ClassStudent! @connection(name: "StudentAttendance")
+  date: String!
+  isPresent: Boolean!
+}
+type PastAssignment @model{
+  id: ID!
+  name: String!
+  startDate: String!
+  classStudent: ClassStudent! @connection(name: "PastStudentAssignment")
+  completionDate: String
+  evaluation: Evaluation  @connection(name: "AssignmentEvaluation")
+}
+
+type CurrentAssignment @model{
+  id: ID!
+  name: String!
+  startDate: String!
+  classStudent: ClassStudent! @connection(name: "StudentAssignment")
+}
+
+type Evaluation @model {
+  grade: Int!
+  notes: String
+  createdAt: AWSDateTime
+  assignment: PastAssignment! @connection(name: "AssignmentEvaluation")
+  improvements: [String]
+}

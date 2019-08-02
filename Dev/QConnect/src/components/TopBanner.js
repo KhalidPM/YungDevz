@@ -22,10 +22,16 @@ class TopBanner extends FontLoadingComponent {
                     <View style={styles.entireTopView}>
                         <View style={styles.topLeftView}  >
                             <TouchableOpacity style={{ flex: 1, flexDirection: 'row', paddingLeft: 20, height: 100, justifyContent: 'flex-start', alignItems: 'center' }} onPress={LeftOnPress ? () => { LeftOnPress() } : () => {}} >
-                                <Icon
-                                    name={LeftIconName}
-                                    type="font-awesome"
-                                />
+                               {
+                                    (LeftIconName !== undefined) &&
+                                    (LeftIconName !== '') && (
+                                        <Icon
+                                            name={LeftIconName}
+                                            type="font-awesome"
+                                        />
+                                    )
+
+                                }
                                 <Text style={styles.leftText}
                                     onPress={LeftOnPress ? () => { LeftOnPress() } : () => {}}>{LeftTextName}</Text>
                             </TouchableOpacity>
@@ -37,10 +43,15 @@ class TopBanner extends FontLoadingComponent {
 
                         <View style={styles.topRightView} >
                             <TouchableOpacity style={{ flex: 1, flexDirection: 'row', paddingRight: 20, height: 100, justifyContent: 'flex-end', alignItems: 'center' }} onPress={RightOnPress ? () => { RightOnPress() } : () => {}}>
-                                <Icon
-                                    name={RightIconName}
-                                    type="font-awesome"
-                                />
+                                {
+                                    (RightIconName !== undefined) &&
+                                    (RightIconName !== '') && (
+                                        <Icon
+                                            name={RightIconName}
+                                            type="font-awesome"
+                                        />
+                                    )
+                                }
                                 <Text style={styles.rightText}
                                     onPress={RightOnPress ? () => { RightOnPress() } : () => {}}>{RightTextName}</Text>
                             </TouchableOpacity>
