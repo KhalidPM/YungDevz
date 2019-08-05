@@ -41,7 +41,7 @@ export class ClassMainScreen extends QcParentScreen {
         </View>
       )
     }
-    else if (this.props.students.length === 0) {
+    else if (!this.props.students || this.props.students.length === 0) {
       /**
        * ------Overview:
        * The Page will display a message that will redirect the teacher to the 
