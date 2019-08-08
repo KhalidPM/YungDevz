@@ -24,6 +24,7 @@ export default {
     Next: 'Next',
     ErrorWithPassword: 'Error With Password',
     ErrorWithConfirm: 'Must Confirm Password',
+    ErrorWithCode: 'PleaseEnterCode',
     //--------------------- Evaluation Page ---------------------
     None: 'None',
     HowWas: 'How was ',
