@@ -28,7 +28,15 @@ function signUpFailure(err) {
   }
 }
 
-export function createUser(name, phoneNumber, emailAddress, password,  provisionUser, profileImageId, userId) {
+//Creates the user in AWS
+//params: name, phoneNumber, emailAddress, password, profileImageId
+//        saveUserInfoLocally: the function to call in order to persist locally the user information.
+//        We need to save teacher info locally at this stage so that if the user exits the app before confirming the app, 
+//        they will still need to login later and confirm their email. 
+//        For the app to be able to push the teacher info to AWS AppSync, the user should be created and confirmed.
+//        So once the user logs in again and enter the confirmation code, we can then pick up teacher info from 
+//        local database and send it up to the service.
+export function createUser(name, phoneNumber, emailAddress, password, saveUserInfoLocally, profileImageId) {
   return (dispatch) => {
     dispatch(signUp())
     let phone = phoneNumber
@@ -50,20 +58,22 @@ export function createUser(name, phoneNumber, emailAddress, password,  provision
       })
 
       dispatch(signUpSuccess(data))
+      dispatch(saveUserInfoLocally({
+        name: name,
+        phoneNumber: phoneNumber,
+        emailAddress: emailAddress,
+        profileImageId: profileImageId
+    }))
       dispatch(showSignUpConfirmationModal())
-
-      newTeacher = provisionUser({
-          id: userId,
-          name: name,
-          phoneNumber: phoneNumber,
-          emailAddress: emailAddress,
-          profileImageId: profileImageId
-      })
 
     })
     .catch(err => {
       logActionError(err, actionTypes.SIGN_UP) 
 
+      let msg = (err.message || err)
+      if(err.code === "UsernameExistsException"){
+        msg = err.msg + " Please in instead."
+      }
       setTimeout(() => {
         Alert.alert(strings.ErrorSigningUp, "" + (err.message || err))
       }, 100);
@@ -130,8 +140,12 @@ export function authenticate(username, password, navigation, nextScreenName) {
       })
       .catch(err => {
         logActionError(err, actionTypes.LOG_IN)
-        Alert.alert(strings.ErrorSigningIn, "" + (err.message || err))
-        dispatch(logInFailure(err))
+        if(err.code === "UserNotConfirmedException"){
+          dispatch(showSignUpConfirmationModal())
+        } else {
+          Alert.alert(strings.ErrorSigningIn, "" + (err.message || err))
+          dispatch(logInFailure(err))
+        }
       });
   }
 }
@@ -148,7 +162,7 @@ export function showSignUpConfirmationModal() {
   }
 }
 
-export function confirmUserSignUp(username, password, authCode, navigation, nextScreenName) {
+export function confirmUserSignUp(name, username, password, authCode, navigation, nextScreenName, provisionUser, phoneNumber, profileImageId) {
   return (dispatch) => {
     dispatch(confirmSignUp())
     Auth.confirmSignUp(username, authCode)
@@ -158,7 +172,14 @@ export function confirmUserSignUp(username, password, authCode, navigation, next
         })
 
         dispatch(confirmSignUpSuccess())
-        dispatch(authenticate(username, password, navigation, nextScreenName))
+        authenticate(username, password, navigation, nextScreenName)
+        newUser = provisionUser({
+          name: name,
+          phoneNumber: phoneNumber,
+          emailAddress: username,
+          profileImageId: profileImageId
+       })
+        navigation.navigate(nextScreenName);
       })
       .catch(err => {
         logActionError(err, actionTypes.CONFIRM_SIGNUP_FAILURE)
