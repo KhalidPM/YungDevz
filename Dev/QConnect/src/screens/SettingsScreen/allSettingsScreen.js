@@ -58,6 +58,7 @@ export class AllSettingsScreen extends QcParentScreen {
                         iconStyle={{ marginRight: 20 }}
                         color={colors.primaryDark} />
                 </TouchableOpacity>
+                }
             </View>
 
         )
