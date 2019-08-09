@@ -5,8 +5,11 @@ import colors from 'config/colors';
 import { Icon } from 'react-native-elements';
 import strings from 'config/strings';
 import QcParentScreen from "screens/QcParentScreen";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import {reset} from 'model/actions/reset'
 
-export default class AllSettingsScreen extends QcParentScreen {
+export class AllSettingsScreen extends QcParentScreen {
 
     name = "AllSettingsScreen";
 
@@ -45,6 +48,16 @@ export default class AllSettingsScreen extends QcParentScreen {
                         iconStyle={{ marginRight: 20 }}
                         color={colors.primaryDark} />
                 </TouchableOpacity>
+                {//todo: debug only. We should put behind a flight or a debug flag. For now, do not push to prod with this,
+                // at least comment out the section below before pushing to prod.}
+                <TouchableOpacity style={[styles.cardStyle, { marginTop: 25 }]} onPress={() => this.props.reset()}>
+                    <Text style={styles.textStyle}>Reset database (debug only)</Text>
+                    <Icon
+                        name='angle-right'
+                        type='font-awesome'
+                        iconStyle={{ marginRight: 20 }}
+                        color={colors.primaryDark} />
+                </TouchableOpacity>
             </View>
 
         )
@@ -75,3 +88,20 @@ const styles = StyleSheet.create({
         marginLeft: 20
     },
 })
+
+const mapStateToProps = (state) => {
+    return {}
+  };
+  
+  const mapDispatchToProps = dispatch =>
+    bindActionCreators(
+      {
+        reset
+      },
+      dispatch
+    );
+  
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(AllSettingsScreen);
