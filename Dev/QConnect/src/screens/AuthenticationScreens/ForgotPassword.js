@@ -54,6 +54,7 @@ class ForgotPassword extends Component {
                                     this.setState({ isModalVisible: true })
                                     let emailText = this.state.emailText
                                     emailText = emailText.trim()
+                                    this.props.forgotPassword(emailText);
                                 }
                             }}
                         />
@@ -92,15 +93,16 @@ class ForgotPassword extends Component {
                             disabled={this.state.disabled}
                             text={strings.Next}
                             onPress={async () => {
-                                this.setState({ isModalVisible: false })
                                 try {
                                     await Auth.forgotPasswordSubmit(this.state.emailText, this.state.verificationCode, "Test123")
+                                    this.setState({ isModalVisible: false });
                                     this.props.navigation.push("NewPassword",
                                         {
                                             emailAddress: this.state.emailText,
                                             verificationCode: this.state.verificationCode
                                         })
                                 } catch (err) {
+                                    this.setState({ verificationCode: "" });
                                     Alert.alert("Please Enter the correct code")
                                 }
                             }}
