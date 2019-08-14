@@ -1,114 +1,65 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
+import React, { Component } from 'react';
+import FirstScreenNavigator from 'screens/FirstScreenLoader/FirstScreenNavigator'
+import { View, ActivityIndicator } from 'react-native';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { createStore, applyMiddleware } from 'redux';
+import classReducer from 'model/reducers/classReducer'
+import { persistStore, persistReducer, createMigrate } from 'redux-persist'
+import { AsyncStorage } from 'react-native';
+import Auth from '@aws-amplify/auth';
+import Analytics from '@aws-amplify/analytics';
+import migrateFromV0ToV1 from 'model/migrationScripts/migrateFromV0ToV1';
+import migrateFromV1ToV2 from 'model/migrationScripts/migrateFromV1ToV2';
+import thunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
-import React, {Fragment} from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+import awsconfig from './aws-exports';
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+// retrieve temporary AWS credentials and sign requests
+Auth.configure(awsconfig);
+// send analytics events to Amazon Pinpoint
+Analytics.configure(awsconfig);
 
-const App = () => {
-  return (
-    <Fragment>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.js</Text> to change this
-                screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </Fragment>
+const migrations = {
+  1: (state) => migrateFromV0ToV1(state),
+  2: (state) => migrateFromV1ToV2(state),
+}
+
+const persistConfig = {
+  key: 'qcstorealpha001',
+  storage: AsyncStorage,
+  version: 2,
+  debug: true,  //we should consider turn off verbose logs at some point, but we keep them now until we have enough validation.
+  migrate: createMigrate(migrations, { debug: true })
+}
+const persistedReducer = persistReducer(persistConfig, classReducer)
+
+export const store = createStore(
+  persistedReducer,
+  composeWithDevTools(applyMiddleware(thunk))
+  //This is to allow react native redux debugger to show redux content
+  //window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+);
+
+export const persistor = persistStore(store);
+export default class App extends Component {
+
+  renderLoading = () => (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <ActivityIndicator size="large" />
+    </View>
   );
-};
 
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-});
+  render() {
+    return (
+      <Provider store={store} >
+        <PersistGate persistor={persistor} loading={this.renderLoading()}>
+          <FirstScreenNavigator />
+        </PersistGate>
+      </Provider>
+    );
+  }
+}
 
-export default App;
+
