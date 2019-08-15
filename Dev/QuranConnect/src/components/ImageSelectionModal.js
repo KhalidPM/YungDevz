@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import ImageSelectionGrid from 'components/ImageSelectionGrid'
 import TouchableText from 'components/TouchableText'
 import colors from 'config/colors'
-import Analytics from '@aws-amplify/analytics';
 import analyticsEvents from 'config/analyticsEvents'
 
 //-------------------------------------------------------------
@@ -16,19 +15,11 @@ export default class ImageSelectionModal extends Component {
 
     //log event and dispatch image selection event to screen
     onImageSelected(index) {
-        Analytics.record({
-            name: analyticsEvents.image_selected_from_modal,
-            attributes: { screen: this.props.screen, imageIndex: this.props.index }
-        })
 
         this.props.onImageSelected(index);
     }
 
     render() {
-        Analytics.record({
-            name: analyticsEvents.image_selection_modal_launched,
-            attributes: { screen: this.props.screen }
-        })
 
         return (
             <Modal

@@ -11,8 +11,7 @@ import {
   ActivityIndicator,
   View,
 } from 'react-native';
-import colors from 'config/colors'
-import Analytics from '@aws-amplify/analytics';
+import colors from 'config/colors';
 import analyticsEvents from 'config/analyticsEvents';
 
 
@@ -35,11 +34,6 @@ export default class ButtonSubmit extends Component {
   }
 
   componentDidMount() {
-    Analytics.record({
-      name: analyticsEvents.button_pressed,
-      attributes: { text: this.props.text, screenName: this.props.screen }
-    })
-
     this._isMounted = true;
   }
 

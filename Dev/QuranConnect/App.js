@@ -7,19 +7,10 @@ import { createStore, applyMiddleware } from 'redux';
 import classReducer from 'model/reducers/classReducer'
 import { persistStore, persistReducer, createMigrate } from 'redux-persist'
 import { AsyncStorage } from 'react-native';
-import Auth from '@aws-amplify/auth';
-import Analytics from '@aws-amplify/analytics';
 import migrateFromV0ToV1 from 'model/migrationScripts/migrateFromV0ToV1';
 import migrateFromV1ToV2 from 'model/migrationScripts/migrateFromV1ToV2';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
-
-import awsconfig from './aws-exports';
-
-// retrieve temporary AWS credentials and sign requests
-Auth.configure(awsconfig);
-// send analytics events to Amazon Pinpoint
-Analytics.configure(awsconfig);
 
 const migrations = {
   1: (state) => migrateFromV0ToV1(state),

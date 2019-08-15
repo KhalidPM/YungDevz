@@ -7,7 +7,6 @@ import { Alert } from 'react-native'
 import { forgotPassword } from 'model/actions/authActions'
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import NewPassword from './NewPassword';
 
 
 
@@ -180,7 +179,7 @@ const mapDispatchToProps = dispatch =>
   );
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  
 })
 
 

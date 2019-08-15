@@ -3,8 +3,6 @@ import update from 'immutability-helper';
 export default function migrateFromV0ToV1(state) {
   let baseState = state.data;
   const { classes, fontLoaded, currentClassIndex, ...teacher } = baseState.teachers[0];
-  var nanoid = require('nanoid/non-secure')
-  let teacherId = nanoid()
 
   let classNameToClassId = {};
   let attendance = { byClassId: {} };
@@ -17,7 +15,6 @@ export default function migrateFromV0ToV1(state) {
 
   updatedClassesList = baseState.teachers[0].classes.reduce(
     function (trimmedClasses, cls) {
-      let newClassId = nanoid();
       classIds = classIds.concat(newClassId);
       if (clsIndex++ === currentClassIndex) { currentClassId = newClassId };
 
@@ -39,7 +36,6 @@ export default function migrateFromV0ToV1(state) {
     let studentIds = [];
     //trim down the older student object to hold only the student's info, attendance and assignments are now on separate objects
     newStudentsList = cls.students.reduce(function (trimmedStudentsInfo, std) {
-      let studentId = nanoid();
 
       //save class's student IDs to add later to the class object.
       studentIds = studentIds.concat(studentId);

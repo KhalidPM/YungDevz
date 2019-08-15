@@ -1,10 +1,7 @@
 import { combineReducers } from 'redux';
 import update from 'immutability-helper';
 import actionTypes from '../actions/actionTypes';
-import Analytics from '@aws-amplify/analytics';
-import analyticsEvents from 'config/analyticsEvents'
-import awsconfig from '../../../aws-exports';
-import auth from './auth';
+import analyticsEvents from 'config/analyticsEvents';
 
 export const INITIAL_STATE = {
   firstRunCompleted: false,
@@ -47,21 +44,11 @@ export const INITIAL_STATE = {
   }
 };
 
-// configure analytics for redux
-Analytics.configure(awsconfig);
-
 export const classReducer = (state = INITIAL_STATE, action) => {
   // pulls list of current student in current state
   const {
     id, name, phoneNumber, emailAddress, classes
   } = state.teacher;
-
-  if (Object.values(actionTypes).indexOf(action.type) > -1) {
-    Analytics.record({
-      name: analyticsEvents.action_dispatched,
-      attributes: { type: action.type }
-    })
-  }
 
   const baseState = { ...state };
 
@@ -69,9 +56,6 @@ export const classReducer = (state = INITIAL_STATE, action) => {
     case actionTypes.ADD_STUDENT:
       {
         let classId = action.classId
-
-        var nanoid = require('nanoid/non-secure')
-        let newStudentId = nanoid()
 
         let newStudent = { id: newStudentId, ...action.studentInfo.studentInfo }
 
@@ -206,7 +190,6 @@ export const classReducer = (state = INITIAL_STATE, action) => {
 
 export default combineReducers({
   data: classReducer,
-  auth: auth
 });
 
 //calculates new average grade from old average and total number of assignments

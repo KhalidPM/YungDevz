@@ -1,10 +1,9 @@
-import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
-import { Icon } from 'react-native-elements'
-import TouchableAvatar from 'components/TouchableAvatar'
-import colors from 'config/colors'
-import PropTypes from 'prop-types'
-import Analytics from '@aws-amplify/analytics';
+import React, { Component } from 'react';
+import { View, StyleSheet } from 'react-native';
+import { Icon } from 'react-native-elements';
+import TouchableAvatar from 'components/TouchableAvatar';
+import colors from 'config/colors';
+import PropTypes from 'prop-types';
 import analyticsEvents from 'config/analyticsEvents'
 
 //---------------------------------------------------------
@@ -16,10 +15,6 @@ export default class ImageSelectionRow extends Component {
 
     //log event and dispatch image selection event to screen
     onRowImageSelected(index) {
-        Analytics.record({
-            name: analyticsEvents.image_selected_from_highlights,
-            attributes: { screen: this.props.screen, imageIndex: this.props.index }
-        })
 
         this.props.onImageSelected(index);
     }

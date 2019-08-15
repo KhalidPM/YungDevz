@@ -3,17 +3,14 @@ import PropTypes from 'prop-types';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import colors from 'config/colors'
 import FontLoadingComponent from 'components/FontLoadingComponent'
-import Analytics from '@aws-amplify/analytics';
 import analyticsEvents from 'config/analyticsEvents'
 
 class QcActionButton extends FontLoadingComponent {
 
   onButtonPress() {
-    Analytics.record({
-      name: analyticsEvents.button_pressed,
-      attributes: { text: this.props.text, screenName: this.props.screen }
-    })
+
     this.props.onPress();
+    
   }
 
   render() {

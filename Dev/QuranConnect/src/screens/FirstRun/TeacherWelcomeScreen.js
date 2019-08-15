@@ -13,7 +13,6 @@ import teacherImages from "config/teacherImages";
 import strings from "config/strings";
 import QcParentScreen from "screens/QcParentScreen";
 import FadeInView from "../../components/FadeInView";
-import Auth from '@aws-amplify/auth';
 import { createUser, confirmUserSignUp } from 'model/actions/authActions'
 import { Input, Button, Icon } from 'react-native-elements'
 
@@ -38,13 +37,6 @@ export class TeacherWelcomeScreen extends QcParentScreen {
   confirm() {
     const { authCode, emailAddress, password } = this.state
     this.props.confirmUserSignUp(emailAddress, password, authCode, this.props.navigation, 'AddClass')
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { auth: { showSignUpConfirmationModal, confirmedSignUp } } = nextProps
-    if (!showSignUpConfirmationModal && this.props.auth.showSignUpConfirmationModal) {
-      this.setState(initialState)
-    }
   }
 
   name = "TeacherWelcomeScreen";
@@ -140,12 +132,6 @@ export class TeacherWelcomeScreen extends QcParentScreen {
 
     this.signUp(emailAddress, password, emailAddress, phoneNumber);
 
-    //generate a new id if this is a new teacher 
-    if (teacherID === undefined) {
-      var nanoid = require('nanoid/non-secure');
-      teacherID = nanoid();
-    }
-
     // save the relevant teacher properties
     this.props.saveTeacherInfo(
       { teacherID, ...params }
@@ -168,13 +154,8 @@ export class TeacherWelcomeScreen extends QcParentScreen {
     } else if (!this.state.isPhoneValid) {
       Alert.alert(strings.Whoops, strings.InvalidPhoneNumber);
     } else {
-      //if the account is already created yet we need to confirm, show confirmation dialog
-      if (this.props.auth.showSignUpConfirmationModal) {
-        this.setState({ showSignUpConfirmationModal: true, confirmationModalCanceled: false });
-      } else {
-        //else, create account and save profile info
-        this.saveProfileInfo()
-      }
+      //else, create account and save profile info
+      this.saveProfileInfo()
     }
   }
 
@@ -213,10 +194,6 @@ export class TeacherWelcomeScreen extends QcParentScreen {
   // -    ImageSelectionRow: a row with suggested avatars, and a button to invoke the pop up with more avatars
   //-----------------------------------------------------------
   render() {
-    const { auth: {
-      showSignUpConfirmationModal,
-      isAuthenticating,
-    } } = this.props
 
     return (
       <View><ScrollView>
@@ -398,7 +375,7 @@ const styles = StyleSheet.create({
 //-------------- Redux hooks ----------------------------------------------------
 const mapStateToProps = state => {
   const { name, phoneNumber, emailAddress, profileImageId } = state.data.teacher;
-  return { name, phoneNumber, emailAddress, profileImageId, auth: state.auth };
+  return { name, phoneNumber, emailAddress, profileImageId };
 };
 
 const mapDispatchToProps = dispatch =>

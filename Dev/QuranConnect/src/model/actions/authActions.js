@@ -1,27 +1,9 @@
-import {
-  LOG_IN,
-  LOG_IN_SUCCESS,
-  LOG_IN_FAILURE,
-  LOG_OUT,
-  SIGN_UP,
-  SIGN_UP_SUCCESS,
-  SIGN_UP_FAILURE,
-  SHOW_SIGN_IN_CONFIRMATION_MODAL,
-  SHOW_SIGN_UP_CONFIRMATION_MODAL,
-  CONFIRM_SIGNUP,
-  CONFIRM_SIGNUP_SUCCESS,
-  CONFIRM_SIGNUP_FAILURE,
-  CONFIRM_LOGIN,
-  CONFIRM_LOGIN_SUCCESS,
-  CONFIRM_LOGIN_FAILURE
-} from 'model/reducers/auth'
+
 import * as actionTypes from './authActionTypes'
 import { setFirstRunCompleted } from "model/actions/setFirstRunCompleted";
 
 import { Alert } from 'react-native'
-import { Auth } from 'aws-amplify'
 import strings from 'config/strings'
-import Analytics from '@aws-amplify/analytics';
 import analyticsEvents from 'config/analyticsEvents'
 
 function signUp() {
@@ -47,36 +29,7 @@ function signUpFailure(err) {
 export function createUser(username, password, email, phone_number) {
   return (dispatch) => {
     dispatch(signUp())
-    let phone = phone_number
-
-    Auth.signUp({
-      username,
-      password,
-      attributes: {
-        email,
-        phone_number: phone
-      }
-    })
-    .then(data => {
-      Analytics.record({
-        name: analyticsEvents.create_user_succeeded,
-      })
-
-      dispatch(signUpSuccess(data))
-      dispatch(showSignUpConfirmationModal())
-    })
-    .catch(err => {
-      console.log('error signing up: ', err)
-      Analytics.record({
-        name: analyticsEvents.create_user_failed,
-        attributes:  {...err} 
-      })
-
-      setTimeout(() => {
-        Alert.alert(strings.ErrorSigningUp, "" + (err.message || err))
-      }, 100);
-      dispatch(signUpFailure(err))
-    });
+    let phone = phone_number;
   }
 }
 
@@ -106,45 +59,21 @@ function logInFailure(err) {
   }
 }
 
-export function forgotPassword(username){
+export function forgotPassword(username) {
   return (dispatch) => {
-  Auth.forgotPassword(username)
-    .then(data => console.log(data))
-    .catch(err => console.log(err));
+
   }
 }
 
-export function renewPassword(username, code, new_password){
-  return(dispatch) => {
-  Auth.forgotPasswordSubmit(username, code, new_password)
-    .then(data => console.log(data))
-    .catch(err => console.log(err));
+export function renewPassword(username, code, new_password) {
+  return (dispatch) => {
+
   }
 }
 
 export function authenticate(username, password, navigation, nextScreenName) {
   return (dispatch) => {
     dispatch(logIn())
-    Auth.signIn(username, password)
-      .then(user => {
-        console.log("successful login")
-        Analytics.record({
-          name: analyticsEvents.login_succeeded,
-        })
-        
-        dispatch(logInSuccess(user))
-        dispatch(setFirstRunCompleted(true));
-        navigation.navigate(nextScreenName);
-      })
-      .catch(err => {
-        Analytics.record({
-          name: analyticsEvents.login_failed,
-          attributes:  {...err} 
-        })
-
-        Alert.alert(strings.ErrorSigningIn, "" + (err.message || err))
-        dispatch(logInFailure(err))
-      });
   }
 }
 
@@ -162,28 +91,7 @@ export function showSignUpConfirmationModal() {
 
 export function confirmUserSignUp(username, password, authCode, navigation, nextScreenName) {
   return (dispatch) => {
-    dispatch(confirmSignUp())
-    Auth.confirmSignUp(username, authCode)
-      .then(data => {
-        Analytics.record({
-          name: analyticsEvents.confirm_new_user_succeeded
-        })
-
-        dispatch(confirmSignUpSuccess())
-        dispatch(authenticate(username, password, navigation, nextScreenName))
-      })
-      .catch(err => {
-        console.log('error signing up: ', err)
-        Analytics.record({
-          name: analyticsEvents.confirm_new_user_failed,
-          attributes:  {...err} 
-        })
-  
-        setTimeout(() => {
-          Alert.alert(strings.ErrorSigningUp, "" + (err.message || err))
-        }, 100);
-        dispatch(confirmSignUpFailure(err))
-      });
+    
   }
 }
 

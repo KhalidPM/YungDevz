@@ -66,12 +66,6 @@ class LoginScreen extends Component {
   }
 
   render() {
-    const { auth: {
-      loginErrorMessage,
-      isAuthenticating,
-      loginError,
-      showSignInConfirmationModal
-    } } = this.props
 
     return (
       <View style={{ flex: 1 }}>
@@ -147,7 +141,7 @@ const mapDispatchToProps = dispatch =>
   );
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  
 })
 
 
