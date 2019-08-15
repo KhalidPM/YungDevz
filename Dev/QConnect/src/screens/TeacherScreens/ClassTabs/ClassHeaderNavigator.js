@@ -57,7 +57,6 @@ const ClassHeaderNavigator = createStackNavigator({
       )
     })
   },
-
 })
 
 

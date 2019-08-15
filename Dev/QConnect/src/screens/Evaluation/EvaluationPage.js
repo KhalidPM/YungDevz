@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import QcActionButton from 'components/QcActionButton';
 import { completeCurrentAssignment } from 'model/actions/completeCurrentAssignment';
 import { editCurrentAssignment } from 'model/actions/editCurrentAssignment';
+import TopBanner from 'components/TopBanner';
 import strings from 'config/strings';
 import studentImages from 'config/studentImages';
 import QcParentScreen from 'screens/QcParentScreen';
@@ -94,7 +95,29 @@ export class EvaluationPage extends QcParentScreen {
         <KeyboardAvoidingView
           style={styles.container}
           behavior="padding">
-
+          {
+            readOnly === true ? (
+              <TopBanner
+                LeftIconName="angle-left"
+                LeftOnPress={() => this.props.navigation.goBack()}
+                Title={strings.Evaluation}
+                RightIconName="edit"
+                RightOnPress={() => {
+                  this.setState({ readOnly: !readOnly });
+                }}
+              />
+            ) : (
+              <TopBanner
+                LeftIconName="angle-left"
+                LeftOnPress={() => this.props.navigation.goBack()}
+                Title={strings.Evaluation}
+                RightTextName={strings.Done}
+                RightOnPress={() => {
+                  this.setState({ readOnly: !readOnly });
+                }}
+              />
+            )
+          }
           <ScrollView>
             {this.props.navigation.state.params.newAssignment ? <TopBanner
               LeftIconName="angle-left"
