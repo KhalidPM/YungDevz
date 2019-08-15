@@ -69,6 +69,8 @@ export default {
     Grade: 'Grade',
     PleaseEnterAnAssignmentName: 'Please enter an assignment name',
     ImprovementAreas: 'Things to work on: ',
+    NoClass: "Uh Oh! No Classes",
+    addClassButton: "Click Here to Add A Class",
 
     //--------------------- Join Class Screen ---------------------
     JoinClass: 'Join Class',

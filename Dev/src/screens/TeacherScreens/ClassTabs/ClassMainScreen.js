@@ -5,6 +5,7 @@ import StudentCard from "components/StudentCard";
 import colors from "config/colors";
 import studentImages from "config/studentImages"
 import LoadingSpinner from '../../../components/LoadingSpinner';
+import { Font } from 'expo';
 import strings from 'config/strings';
 import mapStateToCurrentClassProps from 'screens/TeacherScreens/helpers/mapStateToCurrentClassProps'
 import QcParentScreen from "screens/QcParentScreen";
@@ -40,7 +41,38 @@ export class ClassMainScreen extends QcParentScreen {
         </View>
       )
     }
-    else if (this.props.students.length === 0) {
+    //---------------------------------no class state---------------------------------
+    else if (!this.props.students){
+      return (
+        <View
+          style={[styles.container, { alignItems: "center" , justifyContent: "center" }]}>
+
+          <Image
+            source={require('assets/emptyStateIdeas/ghostGif.gif')}
+            style={{
+              width: 300,
+              height: 150,
+              resizeMode: 'contain',
+            }}
+          />
+
+          <Text
+            style={{
+              fontSize: 30,
+              color: colors.primaryDark,
+              flexDirection: "row",
+            }}
+          >
+            {strings.NoClass}
+              </Text>
+
+          <QcActionButton
+            text={strings.AddClassButton}
+            onPress={() => this.props.navigation.push("ClassEdit")} />
+        </View>
+      )
+    }
+    else if (!this.props.students || this.props.students.length === 0) {
       /**
        * ------Overview:
        * The Page will display a message that will redirect the teacher to the 
