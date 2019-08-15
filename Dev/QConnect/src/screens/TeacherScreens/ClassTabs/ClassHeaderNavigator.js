@@ -37,13 +37,7 @@ const ClassHeaderNavigator = createStackNavigator({
   EvaluationPage: {
     screen: EvaluationPage,
     navigationOptions: ({ navigation }) => ({
-      header: (
-        <TopBanner
-          LeftIconName="angle-left"
-          LeftOnPress={() => navigation.goBack()}
-          Title={strings.Evaluation}
-        />
-      )
+      header: (null)
     })
   },
   //Will lead to the edit class screen. If the user clicks the left back button, the changes
@@ -61,19 +55,6 @@ const ClassHeaderNavigator = createStackNavigator({
       )
     })
   },
-  EvaluationPage: {
-    screen: EvaluationPage,
-    navigationOptions: ({ navigation }) => ({
-      header: (
-        <TopBanner
-          LeftIconName="angle-left"
-          LeftOnPress={() => navigation.goBack()}
-          Title={strings.StudentEvaluation}
-        />
-      )
-    })
-  },
-
 })
 
 

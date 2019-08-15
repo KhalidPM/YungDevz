@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 import QcActionButton from 'components/QcActionButton';
 import { completeCurrentAssignment } from 'model/actions/completeCurrentAssignment';
 import { editCurrentAssignment } from 'model/actions/editCurrentAssignment';
+import TopBanner from 'components/TopBanner';
 import strings from 'config/strings';
 import studentImages from 'config/studentImages';
 import QcParentScreen from 'screens/QcParentScreen';
@@ -20,8 +21,9 @@ export class EvaluationPage extends QcParentScreen {
   // -------------  Current evaluation state ---------------------
   state = {
     grade: 0,
-    notes: this.props.navigation.state.params.notes ?  this.props.navigation.state.params.notes : "",
-    improvementAreas: []
+    notes: this.props.navigation.state.params.notes ? this.props.navigation.state.params.notes : "",
+    improvementAreas: [],
+    readOnly: this.props.navigation.state.params.readOnly
   }
 
   areas = [strings.Memorization, strings.Makharej, strings.Edgham, strings.Ekhfae, strings.RulingsOfRaa, strings.Muduud, strings.Qalqalah]
@@ -75,7 +77,8 @@ export class EvaluationPage extends QcParentScreen {
 
   // --------------  Renders Evaluation scree UI --------------
   render() {
-    const { classId, studentId, readOnly, rating, assignmentName, completionDate, improvementAreas, notes } = this.props.navigation.state.params;
+    const { classId, studentId, rating, assignmentName, completionDate, improvementAreas, notes } = this.props.navigation.state.params;
+    const { readOnly } = this.state;
 
     const { imageId } = this.props;
 
@@ -90,7 +93,29 @@ export class EvaluationPage extends QcParentScreen {
         <KeyboardAvoidingView
           style={styles.container}
           behavior="padding">
-
+          {
+            readOnly === true ? (
+              <TopBanner
+                LeftIconName="angle-left"
+                LeftOnPress={() => this.props.navigation.goBack()}
+                Title={strings.Evaluation}
+                RightIconName="edit"
+                RightOnPress={() => {
+                  this.setState({ readOnly: !readOnly });
+                }}
+              />
+            ) : (
+              <TopBanner
+                LeftIconName="angle-left"
+                LeftOnPress={() => this.props.navigation.goBack()}
+                Title={strings.Evaluation}
+                RightTextName={strings.Done}
+                RightOnPress={() => {
+                  this.setState({ readOnly: !readOnly });
+                }}
+              />
+            )
+          }
           <ScrollView>
             <View style={styles.evaluationContainer}>
               <View style={styles.section}>
