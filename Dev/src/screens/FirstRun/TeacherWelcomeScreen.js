@@ -119,7 +119,10 @@ export class TeacherWelcomeScreen extends QcParentScreen {
       profileImageID
     }
 
-    await FirebaseFunctions.signUp(emailAddress, password, true, teacherObject);
+    const ID = await FirebaseFunctions.signUp(emailAddress, password, true, teacherObject);
+    this.props.navigation.push("TeacherScreens", {
+      userID: ID
+    });
 
   };
 

@@ -19,7 +19,7 @@ export default class FirebaseFunctions {
     //firebase authentication (will also sign the user in). Additionally, it will take
     //in a boolean to determine whether this is a student or a teacher account. Based
     //on that info, it will call another function to create the designated account object
-    //for this account (with the same ID)
+    //for this account (with the same ID). The function returns that ID
     static async signUp(email, password, isTeacher, accountObject) {
 
         const account = await this.auth.createUserWithEmailAndPassword(email, password);
@@ -33,7 +33,7 @@ export default class FirebaseFunctions {
             this.batch.set(ref, accountObject);
             await this.batch.commit();
             this.logEvent("TEACHER_SIGN_UP");
-            return 0;
+            return ID;
 
         } else {
 
@@ -41,7 +41,7 @@ export default class FirebaseFunctions {
             this.batch.set(ref, accountObject);
             await this.batch.commit();
             this.logEvent("STUDENT_SIGN_UP");
-            return 0;
+            return ID;
 
         }
 

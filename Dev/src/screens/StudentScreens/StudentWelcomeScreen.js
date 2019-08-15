@@ -91,11 +91,6 @@ export class StudentWelcomeScreen extends QcParentScreen {
     this.setModalVisible(false);
   }
 
-  onStudentFlow = () => {
-    //todo: get the first class to show from redux persist (current class)
-    this.props.navigation.push("StudentScreens");
-  };
-
   //this method saves the new profile information to the redux database
   // This is reused for student profile page and studnet welcome page
   // In studnet welcome page, student ID will be passed as undefined, in which case
@@ -118,7 +113,10 @@ export class StudentWelcomeScreen extends QcParentScreen {
       profileImageID
     }
 
-    await FirebaseFunctions.signUp(emailAddress, password, false, studentObject);
+    const ID = await FirebaseFunctions.signUp(emailAddress, password, false, studentObject);
+    this.props.navigation.push("StudentScreens", {
+      userID: ID
+    });
 
   };
 
