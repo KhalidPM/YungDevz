@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import { View, ImageBackground, Dimensions, StyleSheet } from 'react-native';
+import { View, ImageBackground, Dimensions, StyleSheet, Alert } from 'react-native';
 import Form from './Form';
 import ButtonSubmit from './ButtonSubmit';
 import SignupSection from './SignupSection';
 import QcAppBanner from 'components/QcAppBanner';
-import { authenticate, confirmUserLogin } from 'model/actions/authActions'
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import FirebaseFunctions from 'config/FirebaseFunctions';
 import strings from "config/strings";
 import colors from "config/colors";
 
@@ -17,6 +15,7 @@ const BG_IMAGE = require("assets/images/read_child_bg.jpg");
 
 
 class LoginScreen extends Component {
+
   _isMounted = false;
 
   componentDidMount() {
@@ -27,12 +26,13 @@ class LoginScreen extends Component {
     this._isMounted = false;
   }
 
+  //Fetches the passed in params that decide whether this is a teacher or a student
   state = {
     username: "",
     password: "",
     email: "",
     phone_number: "",
-    authCode: ""
+    isTeacher: this.props.navigation.state.params.isTeacher
   };
 
   onUserNameChange = (_username) => {
@@ -43,22 +43,36 @@ class LoginScreen extends Component {
     this.setState({ password: _pwd });
   }
 
-  onAuthCodeChanged = value => {
-    this.setState({ authCode: value })
-  }
-
   onCreateAccount = () => {
-    this.props.navigation.navigate('TeacherWelcomeScreen');
+
+    if (this.state.isTeacher === true) {
+      this.props.navigation.navigate('TeacherWelcomeScreen');
+    } else {
+      this.props.navigation.navigate('StudentWelcomeScreen');
+    }
   }
 
-  signIn() {
-    const { username, password } = this.state
-    this.props.authenticate(username, password, this.props.navigation, "App")
-  }
-
-  confirm() {
-    const { authCode } = this.state
-    this.props.confirmUserLogin(authCode, this.props.navigation)
+  //Logs the user in, fetches their ID, and then navigates to the correct screen according to whether they
+  //are a student or a teacher
+  async signIn() {
+    const { username, password } = this.state;
+    const account = await FirebaseFunctions.logIn(username, password);
+    if (account === -1) {
+      Alert.alert(strings.Whoops, strings.IncorrectInfo);
+    } else {
+      const userID = account.uid;
+      if (this.state.isTeacher === true) {
+        FirebaseFunctions.logEvent("TEACHER_LOG_IN");
+        this.props.navigation.push("TeacherScreens", {
+          userID
+        })
+      } else {
+        FirebaseFunctions.logEvent("STUDENT_LOG_IN");
+        this.props.navigation.push("StudentScreens", {
+          userID
+        });
+      }
+    }
   }
 
   onForgotPassword = () => {
@@ -87,7 +101,7 @@ class LoginScreen extends Component {
             onCreateAccount={this.onCreateAccount.bind(this)}
             onForgotPassword={this.onForgotPassword.bind(this)}
           />
-         </ImageBackground>
+        </ImageBackground>
       </View>
     );
   }
@@ -131,22 +145,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      authenticate,
-      confirmUserLogin
-    },
-    dispatch
-  );
-
-const mapStateToProps = state => ({
-  
-})
 
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LoginScreen);
+export default LoginScreen;
 

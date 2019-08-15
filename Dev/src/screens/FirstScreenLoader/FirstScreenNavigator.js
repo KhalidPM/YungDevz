@@ -8,7 +8,7 @@ import LoginScreen from '../AuthenticationScreens/LoginScreen';
 export default createAppContainer(createSwitchNavigator(
   {
     FirstScreenLoader: FirstScreenLoader,
-    App: TeacherMenu,
+    TeacherMenu: TeacherMenu,
     FirstRun: FirstRunNavigator,
     Login: LoginScreen,
   },

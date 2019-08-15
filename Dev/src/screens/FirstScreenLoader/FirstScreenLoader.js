@@ -18,7 +18,7 @@ class FirstScreenLoader extends React.Component {
     if (!firstRunCompleted) {
       this.props.navigation.navigate('FirstRun')
     } else {
-      this.props.navigation.navigate('App')
+      this.props.navigation.navigate('TeacherMenu')
     }
   };
 

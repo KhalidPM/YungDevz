@@ -14,7 +14,7 @@ export default class FirebaseFunctions {
     static analytics = firebase.analytics();
 
     //Methods that can be called from any other class
-    
+
     //This functions will take in an email and a password & will sign a user up using 
     //firebase authentication (will also sign the user in). Additionally, it will take
     //in a boolean to determine whether this is a student or a teacher account. Based
@@ -49,11 +49,15 @@ export default class FirebaseFunctions {
 
     //This function will take in a user's email & password and then log them in using Firebase 
     //Authentication. It will then return the account user object that can be used to retrieve info like the
-    //student/teacher object, etc.
+    //student/teacher object, etc. If the info is incorrect, the value -1 will be returned
     static async logIn(email, password) {
 
-        const account = await this.auth.signInWithEmailAndPassword(email, password);
-        return account.user;
+        try {
+            const account = await this.auth.signInWithEmailAndPassword(email, password);
+            return account.user;
+        } catch (err) {
+            return -1;
+        }
 
     }
 

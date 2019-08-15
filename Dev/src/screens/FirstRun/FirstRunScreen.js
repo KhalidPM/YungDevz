@@ -15,13 +15,17 @@ class FirstRunScreen extends QcParentScreen {
 
   onTeacherFlow = () => {
     //todo: get the first class to show from redux persist (current class)
-    this.props.navigation.push('LoginScreen');
+    this.props.navigation.push('LoginScreen', {
+      isTeacher: true
+    });
   }
 
   //Navigates to the student side
   onStudentFlow = () => {
     //todo: Change this to a login so that the correct student can be displayed
-    this.props.navigation.push('StudentWelcomeScreen');
+    this.props.navigation.push('LoginScreen', {
+      isTeacher: false
+    });
   }
 
   render() {

@@ -7,7 +7,6 @@ import { Alert } from 'react-native'
 import { forgotPassword } from 'model/actions/authActions'
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { Auth } from 'aws-amplify'
 
 class ForgotPassword extends Component {
     state = {
@@ -93,18 +92,7 @@ class ForgotPassword extends Component {
                             disabled={this.state.disabled}
                             text={strings.Next}
                             onPress={async () => {
-                                try {
-                                    await Auth.forgotPasswordSubmit(this.state.emailText, this.state.verificationCode, "Test123")
-                                    this.setState({ isModalVisible: false });
-                                    this.props.navigation.push("NewPassword",
-                                        {
-                                            emailAddress: this.state.emailText,
-                                            verificationCode: this.state.verificationCode
-                                        })
-                                } catch (err) {
-                                    this.setState({ verificationCode: "" });
-                                    Alert.alert("Please Enter the correct code")
-                                }
+                                
                             }}
                         />
                     </View>
@@ -188,7 +176,6 @@ const mapDispatchToProps = dispatch =>
     );
 
 const mapStateToProps = state => ({
-    auth: state.auth
 })
 
 

@@ -38,6 +38,7 @@ export default {
     IAmATeacher: 'I am a teacher',
     IAmAStudent: 'I am a student',
     Login: "LOGIN",
+    IncorrectInfo: 'Incorrect username or password',
 
     //--------------------- Teacher Welcome Screen ---------------------
     YourProfileHasBeenSaved: 'Your profile has been saved',

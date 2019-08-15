@@ -67,12 +67,6 @@ export function forgotPassword(username) {
 
 export function renewPassword(username, code, new_password) {
   return (dispatch) => {
-    
-  }
-}
-
-export function renewPassword(username, code, new_password) {
-  return (dispatch) => {
 
   }
 }

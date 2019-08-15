@@ -93,7 +93,7 @@ export class StudentWelcomeScreen extends QcParentScreen {
 
   onStudentFlow = () => {
     //todo: get the first class to show from redux persist (current class)
-    this.props.navigation.push("StudentMenu");
+    this.props.navigation.push("StudentScreens");
   };
 
   //this method saves the new profile information to the redux database
@@ -327,4 +327,4 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-)(TeacherWelcomeScreen);
+)(StudentWelcomeScreen);
