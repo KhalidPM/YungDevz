@@ -46,4 +46,29 @@ export default class FirebaseFunctions {
         }
 
     }
+
+    //This function will take in an ID of a teacher and return that teacher object
+    static async getTeacherByID(ID) {
+
+        const teacher = this.teachers.doc(ID);
+        return (await teacher.get());
+
+    }
+
+    //This function will take in an ID of a student and return that student's object
+    static async getStudentByID(ID) {
+
+        const student = this.students.doc(ID);
+        return (await student.get());
+
+    }
+
+    //This functions will take in an ID of a class and return that class objct
+    static async getClassByID(ID) {
+
+        const class = this.classes.doc(ID);
+        return (await class.get());
+
+    }
+
 }
