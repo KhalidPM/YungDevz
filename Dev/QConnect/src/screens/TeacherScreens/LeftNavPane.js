@@ -78,6 +78,8 @@ class LeftNavPane extends QcParentScreen {
             icon="cogs"
             onPress={() => this.props.navigation.push("Settings")} />
 
+          
+
         </SafeAreaView>
       </ScrollView>
     );
