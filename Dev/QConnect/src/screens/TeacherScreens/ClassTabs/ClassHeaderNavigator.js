@@ -37,7 +37,9 @@ const ClassHeaderNavigator = createStackNavigator({
   EvaluationPage: {
     screen: EvaluationPage,
     navigationOptions: ({ navigation }) => ({
-      header: (null)
+      header: (
+        null
+      )
     })
   },
   //Will lead to the edit class screen. If the user clicks the left back button, the changes

@@ -20,8 +20,9 @@ class TopBanner extends FontLoadingComponent {
             <View>
                 {this.state.fontLoaded ? (
                     <View style={styles.entireTopView}>
+                        <View style={{flex: 0.5}}/>
                         <View style={styles.topLeftView}  >
-                            <TouchableOpacity style={{ flex: 1, flexDirection: 'row', paddingLeft: 20, height: 100, justifyContent: 'flex-start', alignItems: 'center' }} onPress={LeftOnPress ? () => { LeftOnPress() } : () => {}} >
+                            <TouchableOpacity style={{ flex: 1, flexDirection: 'row', height: 100, justifyContent: 'flex-start', alignItems: 'center' }} onPress={LeftOnPress ? () => { LeftOnPress() } : () => {}} >
                                 <Icon
                                     name={LeftIconName}
                                     type="font-awesome"
@@ -36,7 +37,7 @@ class TopBanner extends FontLoadingComponent {
                         </View>
 
                         <View style={styles.topRightView} >
-                            <TouchableOpacity style={{ flex: 1, flexDirection: 'row', paddingRight: 20, height: 100, justifyContent: 'flex-end', alignItems: 'center' }} onPress={RightOnPress ? () => { RightOnPress() } : () => {}}>
+                            <TouchableOpacity style={{ flex: 1, flexDirection: 'row',  height: 100, justifyContent: 'flex-end', alignItems: 'center' }} onPress={RightOnPress ? () => { RightOnPress() } : () => {}}>
                                 <Icon
                                     name={RightIconName}
                                     type="font-awesome"
@@ -45,6 +46,7 @@ class TopBanner extends FontLoadingComponent {
                                     onPress={RightOnPress ? () => { RightOnPress() } : () => {}}>{RightTextName}</Text>
                             </TouchableOpacity>
                         </View>
+                        <View style={{flex: 0.5}}/>
                     </View>
                 ) : (
                         <View></View>
@@ -74,18 +76,16 @@ const styles = StyleSheet.create({
         backgroundColor: colors.white,
         borderBottomWidth: 0.25,
         borderBottomColor: colors.black,
-        paddingTop: 25,
     },
     topLeftView: {
         flex: 1.5
     },
     topMiddleView: {
         height: 100,
-        paddingBottom: 3,
         justifyContent: 'center',
         alignSelf: 'center',
         alignItems: 'center',
-        flex: 4
+        flex: 10
     },
     topRightView: {
         flex: 1.5,

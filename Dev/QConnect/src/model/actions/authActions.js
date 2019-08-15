@@ -118,7 +118,7 @@ export function renewPassword(username, code, new_password){
   return(dispatch) => {
   Auth.forgotPasswordSubmit(username, code, new_password)
     .then(data => console.log(data))
-    .catch(err => console.log(err));
+    .catch(err => Alert.alert("Please Enter the correct code"));
   }
 }
 
