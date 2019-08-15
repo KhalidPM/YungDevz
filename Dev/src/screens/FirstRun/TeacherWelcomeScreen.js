@@ -13,6 +13,7 @@ import teacherImages from "config/teacherImages";
 import strings from "config/strings";
 import QcParentScreen from "screens/QcParentScreen";
 import FadeInView from "../../components/FadeInView";
+import FirebaseFunctions from 'config/FirebaseFunctions';
 import { createUser, confirmUserSignUp } from 'model/actions/authActions'
 import { Input, Button, Icon } from 'react-native-elements'
 
@@ -80,7 +81,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
     emailAddress: this.props.emailAddress === undefined ? "" : this.props.emailAddress.trim(),
     name: this.props.name === undefined ? "" : this.props.name.trim(),
     modalVisible: false,
-    profileImageId: this.initialDefaultImageId,
+    profileImageID: this.initialDefaultImageId,
     highlightedImagesIndices: this.getHighlightedImages(),
     confirmationModalCanceled: false,
     isPhoneValid: this.props.phoneNumber === undefined ? false : true, //todo: this should be properly validated or saved
@@ -116,26 +117,26 @@ export class TeacherWelcomeScreen extends QcParentScreen {
   // This is reused for teacher profile page and teacher welcome page
   // In teacher welcome page, teacher ID will be passed as undefined, in which case
   // we will generate a new ID before saving to the store.
-  saveProfileInfo = teacherID => {
-    let { name, phoneNumber, emailAddress, password } = this.state;
+  async saveProfileInfo() {
+    
+    let { name, phoneNumber, emailAddress, password, profileImageID } = this.state;
     name = name.trim();
     phoneNumber = phoneNumber.trim();
     emailAddress = emailAddress.trim();
     password = password.trim();
 
-    //Reset the confirmation dialog state cancelation state
-    //In case user canceled the confirmation code dialog before, we reset that state so we can show the dialog again upon new submission
-    this.setState({ confirmationModalCanceled: false });
+    //Creates the teacher object to be sent up to the database
+    const teacherObject = {
+      classes: [],
+      currentClassID: "",
+      emailAddress,
+      name,
+      phoneNumber,
+      profileImageID
+    }
 
-    // trick to remove modalVisible and hilightedImagesIndices from state and pass in everything else
-    const { modalVisible, highlightedImagesIndices, ...params } = this.state;
+    await FirebaseFunctions.signUp(emailAddress, password, true, teacherObject);
 
-    this.signUp(emailAddress, password, emailAddress, phoneNumber);
-
-    // save the relevant teacher properties
-    this.props.saveTeacherInfo(
-      { teacherID, ...params }
-    );
   };
 
   //Creates new account, or launches confirmation dialog if account was created but not confirmed yet.
