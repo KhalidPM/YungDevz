@@ -32,7 +32,7 @@ export default {
     WriteANote: 'Write a note',
     Submit: 'Submit',
     AreYouSureYouWantToProceed: 'Students benefit from recieving feedback. Are you sure you want to proceed without giving a grade?',
-
+    Save: "Save",
     //--------------------- First Run Screen ---------------------
     IAmATeacher: 'I am a teacher',
     IAmAStudent: 'I am a student',

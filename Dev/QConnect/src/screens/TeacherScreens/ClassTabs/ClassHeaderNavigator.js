@@ -38,11 +38,7 @@ const ClassHeaderNavigator = createStackNavigator({
     screen: EvaluationPage,
     navigationOptions: ({ navigation }) => ({
       header: (
-        <TopBanner
-          LeftIconName="angle-left"
-          LeftOnPress={() => navigation.goBack()}
-          Title={strings.Evaluation}
-        />
+        null
       )
     })
   },
@@ -57,18 +53,6 @@ const ClassHeaderNavigator = createStackNavigator({
           Title={strings.EditClass}
           RightTextName={strings.Done}
           RightOnPress={() => navigation.goBack()}
-        />
-      )
-    })
-  },
-  EvaluationPage: {
-    screen: EvaluationPage,
-    navigationOptions: ({ navigation }) => ({
-      header: (
-        <TopBanner
-          LeftIconName="angle-left"
-          LeftOnPress={() => navigation.goBack()}
-          Title={strings.StudentEvaluation}
         />
       )
     })

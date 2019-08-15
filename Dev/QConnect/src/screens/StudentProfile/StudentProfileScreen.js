@@ -79,7 +79,7 @@ class StudentProfileScreen extends QcParentScreen {
   render() {
     const { classId, studentId, currentStudent, currentAssignment, assignmentsHistory } = this.props
     const hasCurrentAssignment = currentAssignment.name === 'None' ? false : true;
-
+      
     //retrieves the student's average rating. If the student hasn't had any assignments, then 
     //the rating will default to 0.
     averageRating = currentAssignment.grade;
@@ -148,7 +148,8 @@ class StudentProfileScreen extends QcParentScreen {
                     {hasCurrentAssignment ? <TouchableHighlight onPress={() =>
                       this.props.navigation.push("EvaluationPage", {
                         studentId: studentId,
-                        classId: classId
+                        classId: classId,
+                        newAssignment: true
                       })} >
                       <Text style={styles.assignmentActionText}>{strings.Grade}</Text>
                     </TouchableHighlight> : <View />}
