@@ -148,7 +148,8 @@ class StudentProfileScreen extends QcParentScreen {
                     {hasCurrentAssignment ? <TouchableHighlight onPress={() =>
                       this.props.navigation.push("EvaluationPage", {
                         studentId: studentId,
-                        classId: classId
+                        classId: classId,
+                        newAssignment: true
                       })} >
                       <Text style={styles.assignmentActionText}>{strings.Grade}</Text>
                     </TouchableHighlight> : <View />}

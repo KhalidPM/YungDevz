@@ -24,6 +24,7 @@ export default {
     Next: 'Next',
     ErrorWithPassword: 'Error With Password',
     ErrorWithConfirm: 'Must Confirm Password',
+    ErrorWithCode: 'PleaseEnterCode',
     //--------------------- Evaluation Page ---------------------
     None: 'None',
     HowWas: 'How was ',
@@ -31,6 +32,7 @@ export default {
     WriteANote: 'Write a note',
     Submit: 'Submit',
     AreYouSureYouWantToProceed: 'Students benefit from recieving feedback. Are you sure you want to proceed without giving a grade?',
+    Save: "Save",
 
     //--------------------- First Run Screen ---------------------
     IAmATeacher: 'I am a teacher',

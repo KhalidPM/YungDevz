@@ -67,6 +67,12 @@ export function forgotPassword(username) {
 
 export function renewPassword(username, code, new_password) {
   return (dispatch) => {
+    
+  }
+}
+
+export function renewPassword(username, code, new_password) {
+  return (dispatch) => {
 
   }
 }
@@ -91,7 +97,7 @@ export function showSignUpConfirmationModal() {
 
 export function confirmUserSignUp(username, password, authCode, navigation, nextScreenName) {
   return (dispatch) => {
-    
+
   }
 }
 

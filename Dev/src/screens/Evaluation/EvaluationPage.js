@@ -11,6 +11,7 @@ import strings from 'config/strings';
 import studentImages from 'config/studentImages';
 import QcParentScreen from 'screens/QcParentScreen';
 import FlowLayout from 'components/FlowLayout';
+import TopBanner from 'components/TopBanner'
 
 
 export class EvaluationPage extends QcParentScreen {
@@ -21,7 +22,8 @@ export class EvaluationPage extends QcParentScreen {
   state = {
     grade: 0,
     notes: this.props.navigation.state.params.notes ?  this.props.navigation.state.params.notes : "",
-    improvementAreas: []
+    improvementAreas: [],
+    readOnly: this.props.navigation.state.params.readOnly
   }
 
   areas = [strings.Memorization, strings.Makharej, strings.Edgham, strings.Ekhfae, strings.RulingsOfRaa, strings.Muduud, strings.Qalqalah]
@@ -75,9 +77,10 @@ export class EvaluationPage extends QcParentScreen {
 
   // --------------  Renders Evaluation scree UI --------------
   render() {
-    const { classId, studentId, readOnly, rating, assignmentName, completionDate, improvementAreas, notes } = this.props.navigation.state.params;
-
+    const { classId, studentId, rating, assignmentName, completionDate, improvementAreas, notes } = this.props.navigation.state.params;
+    const {readOnly} = this.state
     const { imageId } = this.props;
+    
 
     _rating = rating ? rating : 0;
     _improvementAreas = readOnly ? improvementAreas : this.areas;
@@ -87,11 +90,30 @@ export class EvaluationPage extends QcParentScreen {
       //----- outer view, gray background ------------------------
       //Makes it so keyboard is dismissed when clicked somewhere else
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        
         <KeyboardAvoidingView
           style={styles.container}
           behavior="padding">
 
           <ScrollView>
+            {this.props.navigation.state.params.newAssignment ? <TopBanner
+              LeftIconName="angle-left"
+              LeftOnPress={() => this.props.navigation.goBack()}
+              Title={strings.Evaluation}
+            /> : 
+              readOnly === true ?  <TopBanner
+              LeftIconName="angle-left"
+              LeftOnPress={() => this.props.navigation.goBack()}
+              Title={strings.Evaluation}
+              RightIconName="edit"
+              RightOnPress={() =>  {this.setState({readOnly:false})}}
+            /> :  <TopBanner
+            LeftIconName="angle-left"
+            LeftOnPress={() => this.props.navigation.goBack()}
+            Title={strings.Evaluation}
+           RightTextName = {strings.Save}
+           RightOnPress={() =>  {this.setState({readOnly:true})}}
+          />}
             <View style={styles.evaluationContainer}>
               <View style={styles.section}>
                 <Image source={studentImages.images[imageId]}

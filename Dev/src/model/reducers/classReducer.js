@@ -183,6 +183,10 @@ export const classReducer = (state = INITIAL_STATE, action) => {
         let newState = update(baseState, { student: { isReady: { $set: newStatus } } });
         return newState;
       }
+    case actionTypes.EDIT_PREVIOUS_ASSIGNMENT:
+      {
+
+      }
     default:
       return state
   }

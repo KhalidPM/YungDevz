@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, View, TextInput, Modal, KeyboardAvoidingView, ImageBackground, Dimensions } from 'react-native';
+import { Text, StyleSheet, View, TextInput, Modal, KeyboardAvoidingView, disabled, ImageBackground, Dimensions } from 'react-native';
 import strings from 'config/strings';
 import colors from 'config/colors';
 import QcActionButton from 'components/QcActionButton';
@@ -7,99 +7,109 @@ import { Alert } from 'react-native'
 import { forgotPassword } from 'model/actions/authActions'
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-
-
+import { Auth } from 'aws-amplify'
 
 class ForgotPassword extends Component {
-    state= {
+    state = {
         isModalVisible: false,
-        emailText: ""
+        emailText: "",
+        verificationCode: "",
+        disabled: true
     }
     render() {
         const { navigation } = this.props;
         return (
             <View style={styles.container}>
-                 
-                    <KeyboardAvoidingView style={styles.emailInputContainer}>
-                        
-                        <View >
-                            <Text style={styles.header}>
-                                Recover Your Password
+
+                <KeyboardAvoidingView style={styles.emailInputContainer}>
+
+                    <View >
+                        <Text style={styles.header}>
+                            Recover Your Password
                             </Text>
-                        </View>
-                        <View style={styles.mainTextContainer}>
-                            <Text>
-                                Please enter your email address
+                    </View>
+                    <View style={styles.mainTextContainer}>
+                        <Text>
+                            Please enter your email address
                             </Text>
-                        </View>
-                        <TextInput
-                            style={styles.notesStyle}
-                            returnKeyType={"done"}
-                            blurOnSubmit={true}
-                            placeholder={strings.emailPlaceHolder}
-                            placeholderColor={colors.black}
-                            value={this.state.emailText}
-                            onChangeText={(text) => { this.setState({ emailText: text }) }}
+                    </View>
+                    <TextInput
+                        style={styles.notesStyle}
+                        returnKeyType={"done"}
+                        blurOnSubmit={true}
+                        placeholder={strings.emailPlaceHolder}
+                        placeholderColor={colors.black}
+                        value={this.state.emailText}
+                        onChangeText={(text) => { this.setState({ emailText: text }) }}
+                        autoCapitalize="none"
+                    />
+                    <View style={styles.buttonsContainer}>
+                        <QcActionButton
+                            text={strings.Submit}
+                            onPress={() => {
+                                if (this.state.emailText == "") {
+                                    Alert.alert(strings.EmailErrorHeader, strings.EmailError)
+                                }
+                                else {
+                                    this.setState({ isModalVisible: true })
+                                    let emailText = this.state.emailText
+                                    emailText = emailText.trim()
+                                    this.props.forgotPassword(emailText);
+                                }
+                            }}
                         />
-                        <View style={styles.buttonsContainer}>
-                            <QcActionButton
-                                text={strings.Submit}
-                                onPress={()=>{
-                                    if (this.state.emailText == ""){
-                                        Alert.alert(strings.EmailErrorHeader, strings.EmailError)
-                                    }
-                                    else
-                                    { 
-                                     this.setState({isModalVisible: true})
-                                     let emailText = this.state.emailText
-                                     emailText = emailText.trim()
-                                     this.props.forgotPassword(emailText)
-                                     this.props.navigation.push("NewPassword", {
-                                        emailAddress: emailText})
-                                    }
-                                }}
-                            />
-                            <View style={styles.spacer} />
-                            <View style={{ flex: 1 }}>
-                                <View>
-                                    <View style={{ flex: 1 }} />
-                                </View>
+                        <View style={styles.spacer} />
+                        <View style={{ flex: 1 }}>
+                            <View>
                                 <View style={{ flex: 1 }} />
                             </View>
+                            <View style={{ flex: 1 }} />
                         </View>
-                    </KeyboardAvoidingView>
-                    <View style={{ flex: 1 }} />
-                    {/* <Modal
+                    </View>
+                </KeyboardAvoidingView>
+                <View style={{ flex: 1 }} />
+                <Modal
                     transparent={true}
                     visible={this.state.isModalVisible}
                     onRequestClode={() => { }}>
                     <View style={styles.modal}>
-                      <Text style={styles.mainTextContainer}>Enter Code</Text>
-                      <TextInput
-                       style={styles.notesStyle}
-                       returnKeyType={"done"}
-                       blurOnSubmit={true}
-                       placeholder={strings.EnterCode}
-                       placeholderColor={colors.black}
-                       onChangeText={(text) => {
-                           this.setState({verificationCode: text})
-                       }}
-                       value={this.state.verificationCode}
+                        <Text style={styles.mainTextContainer}>Enter Code</Text>
+                        <TextInput
+                            style={styles.notesStyle}
+                            returnKeyType={"done"}
+                            blurOnSubmit={true}
+                            placeholder={strings.EnterCode}
+                            placeholderColor={colors.black}
+                            onChangeText={(text) => {
+                                this.setState({ verificationCode: text })
+                                if (this.state.verificationCode.trim() !== "") {
+                                    this.setState({ disabled: false })
+                                }
+                            }}
+                            value={this.state.verificationCode}
 
-                      />
-                      <QcActionButton
-                          text={strings.Next}
-                          onPress={() => { 
-                              this.setState({ isModalVisible: false })
-                              this.props.navigation.push("NewPassword", 
-                              {
-                                emailAddress: this.state.emailText
-                                })
+                        />
+                        <QcActionButton
+                            disabled={this.state.disabled}
+                            text={strings.Next}
+                            onPress={async () => {
+                                try {
+                                    await Auth.forgotPasswordSubmit(this.state.emailText, this.state.verificationCode, "Test123")
+                                    this.setState({ isModalVisible: false });
+                                    this.props.navigation.push("NewPassword",
+                                        {
+                                            emailAddress: this.state.emailText,
+                                            verificationCode: this.state.verificationCode
+                                        })
+                                } catch (err) {
+                                    this.setState({ verificationCode: "" });
+                                    Alert.alert("Please Enter the correct code")
+                                }
                             }}
                         />
                     </View>
-                  </Modal> */}
-             
+                </Modal>
+
             </View>
         )
     }
@@ -133,11 +143,10 @@ const styles = StyleSheet.create({
         borderColor: colors.lightGrey,
         borderWidth: 1,
         marginTop: 220
-      },
+    },
     buttonsContainer: {
         alignItems: 'center',
         justifyContent: 'center',
-        // backgroundColor: colors.white,
     },
     mainTextContainer: {
         alignContent: 'center',
@@ -163,27 +172,27 @@ const styles = StyleSheet.create({
         marginRight: 45,
         paddingRight: 5,
         paddingLeft: 5
-      },
-      header: {
-          fontSize: 20
-      }
-   
+    },
+    header: {
+        fontSize: 20
+    }
+
 });
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      forgotPassword
-    },
-    dispatch
-  );
+    bindActionCreators(
+        {
+            forgotPassword
+        },
+        dispatch
+    );
 
 const mapStateToProps = state => ({
-  
+    auth: state.auth
 })
 
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(ForgotPassword);

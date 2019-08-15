@@ -47,6 +47,7 @@ export default TeacherInfoEntries = (props) => {
                         textContentType='emailAddress'
                         onChangeText={props.onEmailAddressChanged}
                         value={props.emailAddress}
+                        autoCapitalize="none"
                     />
                 </View>
             </View>
@@ -61,6 +62,7 @@ export default TeacherInfoEntries = (props) => {
                             onChangeText={props.onPasswordChanged}
                             secureTextEntry={true}
                             value={props.password}
+                            autoCapitalize="none"
                         />
                     </View>
                 </View>

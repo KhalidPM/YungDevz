@@ -14,7 +14,7 @@ class NewPassword extends Component {
         isModalVisible: false,
         newPassordText: "",
         confirmPasswordText: "",
-        verificationCode: "",
+        verificationCode: this.props.navigation.state.params.verificationCode,
         emailAddress: this.props.navigation.state.params.emailAddress
     }
     render() {
@@ -29,16 +29,6 @@ class NewPassword extends Component {
                                 Enter New Password
                             </Text>
                         </View>
-
-                        <TextInput
-                            style={styles.notesStyle}
-                            returnKeyType={"done"}
-                            blurOnSubmit={true}
-                            placeholder={strings.EnterCode}
-                            placeholderColor={colors.black}
-                            value={this.state.verificationCode}
-                            onChangeText={(text) => { this.setState({ verificationCode: text }) }}
-                        />
 
                         <TextInput
                             style={styles.notesStyle}
@@ -63,7 +53,7 @@ class NewPassword extends Component {
                             <QcActionButton
                                 text={strings.Submit}
                                 onPress={()=>{
-                                    if (this.state.newImprovementText == ""){
+                                    if (this.state.newPassordText == ""){
                                         Alert.alert(strings.ErrorWithPassword, strings.EnterNewPassword)
                                     }
                                     else if (this.state.confirmPasswordText == "")
@@ -171,7 +161,7 @@ const mapDispatchToProps = dispatch =>
   );
 
 const mapStateToProps = state => ({
- 
+  auth: state.auth
 })
 
 

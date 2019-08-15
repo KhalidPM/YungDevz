@@ -1,5 +1,7 @@
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import React from 'react';
+import { View } from 'react-native';
+import { Icon } from 'react-native-elements';
 import FirstRunScreen from './FirstRunScreen';
 import TeacherMenu from '../TeacherScreens/TeacherMenu';
 import TeacherWelcomeScreen from './TeacherWelcomeScreen';
@@ -10,6 +12,7 @@ import StudentMenu from '../StudentScreens/StudentMenu';
 import LoginScreen from 'screens/AuthenticationScreens/LoginScreen';
 import ForgotPassword from 'screens/AuthenticationScreens/ForgotPassword';
 import NewPassword from 'screens/AuthenticationScreens/NewPassword';
+import StudentWelcomeScren from 'screens/StudentScreens/StudentWelcomeScreen';
 
 const routeConfig = {
     FirstRunScreen: {
@@ -32,6 +35,9 @@ const routeConfig = {
     },
     LoginScreen: {
         screen: LoginScreen
+    },
+    StudentWelcomeScreen: {
+        screen: StudentWelcomeScren
     },
     AddClassScreenFirstRun: {
         screen: AddClassScreen,
