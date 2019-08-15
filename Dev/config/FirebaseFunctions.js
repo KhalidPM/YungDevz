@@ -32,7 +32,7 @@ export default class FirebaseFunctions {
             const ref = this.teachers.doc(ID);
             this.batch.set(ref, accountObject);
             await this.batch.commit();
-            await this.analytics.logEvent("TEACHER_SIGN_UP");
+            this.logEvent("TEACHER_SIGN_UP");
             return 0;
 
         } else {
@@ -40,10 +40,20 @@ export default class FirebaseFunctions {
             const ref = this.students.doc(ID);
             this.batch.set(ref, accountObject);
             await this.batch.commit();
-            await this.analytics.logEvent("STUDENT_SIGN_UP");
+            this.logEvent("STUDENT_SIGN_UP");
             return 0;
 
         }
+
+    }
+
+    //This function will take in a user's email & password and then log them in using Firebase 
+    //Authentication. It will then return the account user object that can be used to retrieve info like the
+    //student/teacher object, etc.
+    static async logIn(email, password) {
+
+        const account = await this.auth.signInWithEmailAndPassword(email, password);
+        return account.user;
 
     }
 
@@ -63,11 +73,26 @@ export default class FirebaseFunctions {
 
     }
 
-    //This functions will take in an ID of a class and return that class objct
+    //This function will take in an ID of a class and return that class objct
     static async getClassByID(ID) {
 
         const classByID = this.classes.doc(ID);
         return (await classByID.get());
+
+    }
+
+    //This function will take a name of an event and log it to firebase analytics (not async)
+    static logEvent(eventName) {
+
+        this.analytics.logEvent(eventName);
+
+    }
+
+    //This function will take in the name of a screen as well as the name of the class and set the
+    //current screen to those inputs in firebase analytics (not async)
+    static setCurrentScreen(screenName, screenClass) {
+
+        this.analytics.setCurrentScreen(screenName, screenClass);
 
     }
 

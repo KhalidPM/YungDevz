@@ -2,7 +2,6 @@ import React from "react";
 import { StyleSheet, View, Image, Text, TouchableWithoutFeedback, TouchableOpacity, KeyboardAvoidingView, Keyboard, Alert, Modal, ScrollView, LayoutAnimation, Platform } from "react-native";
 import QcActionButton from "components/QcActionButton";
 import Toast, { DURATION } from "react-native-easy-toast";
-import { saveTeacherInfo } from "model/actions/saveTeacherInfo";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import colors from "config/colors";
@@ -14,8 +13,7 @@ import strings from "config/strings";
 import QcParentScreen from "screens/QcParentScreen";
 import FadeInView from "../../components/FadeInView";
 import FirebaseFunctions from 'config/FirebaseFunctions';
-import { createUser, confirmUserSignUp } from 'model/actions/authActions'
-import { Input, Button, Icon } from 'react-native-elements'
+import { Input, Icon } from 'react-native-elements'
 
 const initialState = {
   authCode: '',
@@ -26,19 +24,6 @@ const initialState = {
 //to function dynamically
 export class TeacherWelcomeScreen extends QcParentScreen {
   state = initialState;
-
-  componentWillUnmount() {
-    this.setState({ isModalVisible: false });
-  }
-
-  signUp(username, password, email, phone_number) {
-    this.props.createUser(username, password, email, phone_number)
-  }
-
-  confirm() {
-    const { authCode, emailAddress, password } = this.state
-    this.props.confirmUserSignUp(emailAddress, password, authCode, this.props.navigation, 'AddClass')
-  }
 
   name = "TeacherWelcomeScreen";
 
@@ -80,10 +65,9 @@ export class TeacherWelcomeScreen extends QcParentScreen {
     phoneNumber: this.props.phoneNumber === undefined ? "" : this.props.phoneNumber.trim(),
     emailAddress: this.props.emailAddress === undefined ? "" : this.props.emailAddress.trim(),
     name: this.props.name === undefined ? "" : this.props.name.trim(),
-    modalVisible: false,
     profileImageID: this.initialDefaultImageId,
     highlightedImagesIndices: this.getHighlightedImages(),
-    confirmationModalCanceled: false,
+    modalVisible: false,
     isPhoneValid: this.props.phoneNumber === undefined ? false : true, //todo: this should be properly validated or saved
   };
 
@@ -118,7 +102,7 @@ export class TeacherWelcomeScreen extends QcParentScreen {
   // In teacher welcome page, teacher ID will be passed as undefined, in which case
   // we will generate a new ID before saving to the store.
   async saveProfileInfo() {
-    
+
     let { name, phoneNumber, emailAddress, password, profileImageID } = this.state;
     name = name.trim();
     phoneNumber = phoneNumber.trim();
@@ -177,9 +161,6 @@ export class TeacherWelcomeScreen extends QcParentScreen {
   };
   onPasswordChanged = value => {
     this.setState({ password: value })
-  }
-  onAuthCodeChanged = value => {
-    this.setState({ authCode: value })
   }
 
   componentWillMount() {
@@ -255,45 +236,12 @@ export class TeacherWelcomeScreen extends QcParentScreen {
               </View>
               <View style={styles.buttonsContainer}>
                 <QcActionButton
-                  text={showSignUpConfirmationModal ? strings.ConfirmAccount : strings.CreateAccount}
+                  text={strings.CreateAccount}
                   onPress={() => this.onCreateOrConfirmAccount()}
-                  isLoading={isAuthenticating}
                   screen={this.name}
                 />
               </View>
               <View style={styles.filler} />
-              {
-                showSignUpConfirmationModal &&
-                !this.state.confirmationModalCanceled && (
-                  <Modal
-                    transparent={true}
-                    onRequestClode={() => { }}>
-
-                    <View style={styles.modal}>
-                      <Text style={styles.confirmationMessage}>Please enter the validation code sent to your email</Text>
-                      <Input
-                        placeholder={strings.AuthorizatonConde}
-                        type='authCode'
-                        keyboardType='numeric'
-                        onChangeText={this.onAuthCodeChanged}
-                        value={this.state.authCode}
-                        keyboardType='numeric'
-                      />
-                      <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 5 }}>
-                        <QcActionButton
-                          text={strings.Confirm}
-                          onPress={this.confirm.bind(this)}
-                          isLoading={isAuthenticating}
-                        />
-                        <QcActionButton
-                          text={strings.Cancel}
-                          onPress={() => { this.setState({ confirmationModalCanceled: true }) }}
-                        />
-                      </View>
-                    </View>
-                  </Modal>
-                )
-              }
               <Toast ref="toast" />
             </View>
           </TouchableWithoutFeedback>
@@ -379,17 +327,6 @@ const mapStateToProps = state => {
   return { name, phoneNumber, emailAddress, profileImageId };
 };
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      saveTeacherInfo,
-      confirmUserSignUp,
-      createUser
-    },
-    dispatch
-  );
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
 )(TeacherWelcomeScreen);
