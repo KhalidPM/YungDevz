@@ -66,8 +66,8 @@ export default class FirebaseFunctions {
     //This functions will take in an ID of a class and return that class objct
     static async getClassByID(ID) {
 
-        const class = this.classes.doc(ID);
-        return (await class.get());
+        const classByID = this.classes.doc(ID);
+        return (await classByID.get());
 
     }
 
