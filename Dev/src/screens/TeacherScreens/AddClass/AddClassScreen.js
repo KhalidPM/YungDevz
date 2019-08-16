@@ -7,19 +7,39 @@ import QcParentScreen from "screens/QcParentScreen";
 import ImageSelectionModal from "components/ImageSelectionModal"
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import LoadingSpinner from 'components/LoadingSpinner';
 import { addClass } from "model/actions/addClass";
 import { saveTeacherInfo } from "model/actions/saveTeacherInfo";
+import FirebaseFunctions from 'config/FirebaseFunctions';
 import strings from 'config/strings';
 
 export class AddClassScreen extends QcParentScreen {
-  name = "AddClassScreen";
 
   //----------------------- state -------------------------------------
   state = {
     className: "",
     classImageId: Math.floor(Math.random() * 10),
     modalVisible: false,
+    isLoading: true,
+    userID: "",
+    teacher: ""
   };
+
+  //Sets the current screen for firebase analytics
+  async componentDidMount() {
+
+    if (this.props.navigation.state.params && this.props.navigation.state.params.userID && this.props.navigation.state.params.teacher) {
+      this.setState({
+        isLoading: false,
+        userID: this.props.navigation.state.params.userID,
+        teacher: this.props.navigation.state.params.teacher
+      })
+    } else {
+      this.setState({ isLoading: true });
+    }
+    FirebaseFunctions.setCurrentScreen("Add Class", "AddClassScreen");
+
+  }
 
 
   // -------- event handlers, respond to user initiated events ----------
@@ -34,9 +54,9 @@ export class AddClassScreen extends QcParentScreen {
 
   //---- helper function to determine if the entered class name is duplicate -------
   classNameAlreadyExists() {
-    let { teacherClassNames } = this.props;
-    for (let i = 0; i < teacherClassNames.length; i++) {
-      if (teacherClassNames[i].toLowerCase() === this.state.className.toLowerCase()) {
+    let { classes } = this.state.teacher;
+    for (let i = 0; i < classes.length; i++) {
+      if (classes[i].name.toLowerCase() === this.state.className.toLowerCase()) {
         return true;
       }
     }
@@ -45,7 +65,7 @@ export class AddClassScreen extends QcParentScreen {
   }
 
   // saves the class into redux
-  addNewClass() {
+  async addNewClass() {
 
     if (!this.state.className || this.state.className.trim().length === 0) {
       Alert.alert(strings.Whoops, strings.PleaseMakeSureAllFieldsAreFilledOut);
@@ -65,16 +85,12 @@ export class AddClassScreen extends QcParentScreen {
 
     let classInfo = {
       name: this.state.className,
-      imageId: this.state.classImageId,
-      students: []
+      classImageID: this.state.classImageId,
+      students: [],
+      teachers: [this.state.userID]
     };
 
-    classInfo = { id: newId, ...classInfo };
-
-    this.props.addClass(classInfo);
-    this.props.saveTeacherInfo(
-      { currentClassId: newId }
-    );
+    await FirebaseFunctions.addNewClass(classInfo, this.state.teacher);
 
     //Navigates to the class
     this.props.navigation.push("ClassEdit");
@@ -82,6 +98,13 @@ export class AddClassScreen extends QcParentScreen {
 
   // ------------ renders the UI of the screen ---------------------------
   render() {
+    if (this.state.isLoading === true) {
+      return (
+        <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+          <LoadingSpinner isVisible={true} />
+        </View>
+      )
+    }
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <KeyboardAvoidingView style={styles.container} behavior="padding">
@@ -165,7 +188,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightGrey,
     borderColor: colors.darkGrey,
     width: 250,
-    height: 30,
+    height: 40,
     textAlign: "center",
     alignItems: "center",
     justifyContent: "center"

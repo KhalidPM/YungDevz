@@ -65,7 +65,7 @@ export class ClassMainScreen extends QcParentScreen {
 
           <QcActionButton
             text={strings.AddClassButton}
-            onPress={() => this.props.navigation.push("ClassEdit")} />
+            onPress={() => this.props.navigation.push("AddClass")} />
         </View>
       )
     }

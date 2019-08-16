@@ -119,6 +119,50 @@ export default class FirebaseFunctions {
 
     }
 
+    //This function will take in an ID of a class document, and an updated object, and will update the
+    //document in firestore accordingly
+    static async updateClassObject(ID, newObject) {
+
+        const docRef = this.classes.doc(ID);
+        this.batch.update(docRef, newObject);
+        await this.batch.commit();
+        return 0;
+
+    }
+
+    //This function will take in an ID of a student document, and an updated object, and will update the
+    //document in firestore accordingly
+    static async updateStudentObject(ID, newObject) {
+
+        const docRef = this.students.doc(ID);
+        this.batch.update(docRef, newObject);
+        await this.batch.commit();
+        return 0;
+
+    }
+
+    //This function will take in a new class object, and a teacher object and create a new class
+    //that belongs to that teacher in the firestore database. It will do this by creating a new document
+    //in the "classes" collection, then linking that class to a certain teacher by relating them through
+    //IDs
+    static async addNewClass(newClassObject, teacher) {
+
+        //Adds the new class document and makes sure it has a reference to its own ID
+        const newClass = await this.classes.add(newClassObject);
+        this.updateClassObject(newClass.id, { ID: newClass.id });
+        
+        //Appends the class ID to the array of classes belonging to this teacher
+        const classesArray = teacher.classes;
+        classesArray.push(newClass.id);
+        teacher.classes = classesArray;
+        teacher.currentClassID = newClass.id;
+
+        //Updates the teacher object in firestore
+        await this.updateTeacherObject(teacher.ID, teacher);
+        return 0;
+
+    }
+
     //This function will take a name of an event and log it to firebase analytics (not async)
     static logEvent(eventName) {
 

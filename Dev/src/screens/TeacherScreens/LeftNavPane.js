@@ -84,7 +84,12 @@ class LeftNavPane extends QcParentScreen {
           <QcDrawerItem
             title={strings.AddNewClass}
             icon="plus"
-            onPress={() => this.props.navigation.push("AddClass")} />
+            onPress={() => {
+              this.props.navigation.push("AddClass", {
+                userID: this.state.userID,
+                teacher: this.state.teacher
+              })
+            }} />
 
           <QcDrawerItem
             title={strings.Settings}
