@@ -56,7 +56,8 @@ export default {
 
     //----------------------- Teacher Main Screen ----------------------
     EmptyClass:"Uh Oh! No students",
-    AddStudentButton: "Click Here to Add A Student",
+    AddStudentButton: "Click here to add a student",
+    AddClassButton: "Click here to add a class",
 
     //--------------------- Student Profile Screen ---------------------
     EditAssignment: 'Edit Assignment',

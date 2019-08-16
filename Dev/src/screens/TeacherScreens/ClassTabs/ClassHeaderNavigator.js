@@ -12,13 +12,21 @@ const ClassHeaderNavigator = createStackNavigator({
     screen: ClassTabsNavigator,
     navigationOptions: ({ navigation }) => ({
       header: (
-        <TopBanner
-          LeftIconName="navicon"
-          LeftOnPress={() => navigation.openDrawer()}
-          Title={(navigation.state.params && navigation.state.params.classTitle) ? navigation.state.params.classTitle : strings.titleNotPassed}
-          RightIconName="edit"
-          RightOnPress={() => navigation.push('ClassEdit', navigation.state.params)}
-        />
+        (navigation.state.params && navigation.state.params.classTitle) ? (
+          <TopBanner
+            LeftIconName="navicon"
+            LeftOnPress={() => navigation.openDrawer()}
+            Title={navigation.state.params.classTitle}
+            RightIconName="edit"
+            RightOnPress={() => navigation.push('ClassEdit', navigation.state.params)}
+          />
+        ) : (
+            <TopBanner
+              LeftIconName="navicon"
+              LeftOnPress={() => navigation.openDrawer()}
+              Title={strings.titleNotPassed}
+            />
+          )
       ),
     }),
   },

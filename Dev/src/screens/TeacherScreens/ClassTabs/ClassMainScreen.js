@@ -21,7 +21,7 @@ export class ClassMainScreen extends QcParentScreen {
     // pages before explicitly loading the fonts. 
     // Todo: figure out a safer way to do this without having to hold the UI until the font is loaded.
 
- 
+
 
 
     const { classId } = this.props;
@@ -41,11 +41,9 @@ export class ClassMainScreen extends QcParentScreen {
       )
     }
     //---------------------------------no class state---------------------------------
-    else if (!this.props.students){
+    else if (!this.props.students) {
       return (
-        <View
-          style={[styles.container, { alignItems: "center" , justifyContent: "center" }]}>
-
+        <View style={[styles.container, { alignItems: "center", justifyContent: "center" }]}>
           <Image
             source={require('assets/emptyStateIdeas/ghostGif.gif')}
             style={{
@@ -63,7 +61,7 @@ export class ClassMainScreen extends QcParentScreen {
             }}
           >
             {strings.NoClass}
-              </Text>
+          </Text>
 
           <QcActionButton
             text={strings.AddClassButton}
@@ -71,7 +69,7 @@ export class ClassMainScreen extends QcParentScreen {
         </View>
       )
     }
-    else if (!this.props.students || this.props.students.length === 0) {
+    else if (this.props.students.length === 0) {
       /**
        * ------Overview:
        * The Page will display a message that will redirect the teacher to the 
@@ -88,7 +86,7 @@ export class ClassMainScreen extends QcParentScreen {
        * triggering the message. */
       return (
         <View
-          style={[styles.container, { alignItems: "center" , justifyContent: "center" }]}>
+          style={[styles.container, { alignItems: "center", justifyContent: "center" }]}>
 
           <Image
             source={require('assets/emptyStateIdeas/ghostGif.gif')}
@@ -107,7 +105,7 @@ export class ClassMainScreen extends QcParentScreen {
             }}
           >
             {strings.EmptyClass}
-              </Text>
+          </Text>
 
           <QcActionButton
             text={strings.AddStudentButton}

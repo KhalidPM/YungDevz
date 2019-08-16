@@ -61,27 +61,53 @@ export default class FirebaseFunctions {
 
     }
 
-    //This function will take in an ID of a teacher and return that teacher object
+    //This function will take in an ID of a teacher and return that teacher object.
+    //Will return -1 if the document does not exist
     static async getTeacherByID(ID) {
 
-        const teacher = this.teachers.doc(ID);
-        return (await teacher.get());
+        const teacher = await this.teachers.doc(ID).get();
+        if (teacher.exists) {
+            return teacher.data();
+        } else {
+            return -1;
+        }
 
     }
 
     //This function will take in an ID of a student and return that student's object
+    //Will return -1 if the document does not exist
     static async getStudentByID(ID) {
 
-        const student = this.students.doc(ID);
-        return (await student.get());
+        const student = await this.students.doc(ID).get();
+        if (student.exists) {
+            return student.data();
+        } else {
+            return -1;
+        }
 
     }
 
-    //This function will take in an ID of a class and return that class objct
+    //This function will take in an ID of a class and return that class object
+    //Will return -1 if the document does not exist
     static async getClassByID(ID) {
 
-        const classByID = this.classes.doc(ID);
-        return (await classByID.get());
+        const classByID = await this.classes.doc(ID).get();
+        if (classByID.exists) {
+            return classByID.data();
+        } else {
+            return -1;
+        }
+
+    }
+
+    //This function will take in an ID of a teacher document, and an updated object, and will update
+    //the document in firestore accordingly
+    static async updateTeacherObject(ID, newObject) {
+
+        const docRef = this.teachers.doc(ID);
+        this.batch.update(docRef, newObject);
+        await this.batch.commit();
+        return 0;
 
     }
 

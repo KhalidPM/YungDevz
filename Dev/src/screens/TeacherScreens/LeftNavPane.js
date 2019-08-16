@@ -3,6 +3,7 @@ import { View, FlatList, ScrollView, StyleSheet } from "react-native";
 import colors from "config/colors";
 import classImages from "config/classImages";
 import { saveTeacherInfo } from "model/actions/saveTeacherInfo";
+import FirebaseFunctions from 'config/FirebaseFunctions';
 import { connect } from "react-redux";
 import { bindActionCreators } from 'redux';
 import { SafeAreaView } from "react-navigation";
@@ -13,13 +14,25 @@ import strings from '../../../config/strings';
 import QcParentScreen from "screens/QcParentScreen";
 
 class LeftNavPane extends QcParentScreen {
-  name = "LeftNavPane";
 
-  openClass = (id, className) => {
-    //update current class index in redux
-    this.props.saveTeacherInfo(
-      { currentClassId: id }
-    );
+  state = {
+    teacher: "",
+    userID: this.props.navigation.state.params.userID
+  }
+
+  //Fetches the data from firestore based on the passed in user ID
+  async componentDidMount() {
+
+    FirebaseFunctions.setCurrentScreen("LeftNavPane", "LeftNavPane");
+    const teacher = await FirebaseFunctions.getTeacherByID(this.state.userID);
+    this.setState({ teacher });
+
+  }
+
+  async openClass(classID, className) {
+
+    await FirebaseFunctions.updateTeacherObject(this.state.userID, classID);
+    FirebaseFunctions.logEvent("OPEN_CLASS");
 
     //navigate to the selected class
     this.props.navigation.push("CurrentClass");
@@ -29,10 +42,10 @@ class LeftNavPane extends QcParentScreen {
   //todo: change the ListItem header and footer below to the shared drawer component intead
   // generalize the QcDrawerItem to accept either an image or an icon
   render() {
-    const { name, profileImageId } = this.props;
+    const { name, profileImageID, classes } = this.state.teacher;
 
     const profileCaption = name + strings.sProfile
-    const teacherImageId = profileImageId ? profileImageId : 0
+    const teacherImageId = profileImageID ? profileImageID : 0
 
     return (
       <ScrollView style={{ flex: 1, backgroundColor: colors.lightGrey }}>
@@ -58,7 +71,7 @@ class LeftNavPane extends QcParentScreen {
           />
 
           <FlatList
-            data={this.props.classes}
+            data={classes}
             keyExtractor={(item, index) => item.name} // fix, should be item.id (add id to classes)
             renderItem={({ item, index }) => (
               <QcDrawerItem
@@ -90,22 +103,5 @@ const styles = StyleSheet.create({
   }
 });
 
-const getTeacherClasses = (classIds, classes) => {
-  return Object.values(classes).filter(c => classIds.includes(c.id))
-}
-
-const mapStateToProps = state => {
-  const { name, profileImageId, currentClassId } = state.data.teacher;
-  const classes = getTeacherClasses(state.data.teacher.classes, state.data.classes);
-
-  return { classes, name, profileImageId, currentClassId };
-};
-
-const mapDispatchToProps = dispatch => (
-  bindActionCreators({
-    saveTeacherInfo
-  }, dispatch)
-);
-
-export default connect(mapStateToProps, mapDispatchToProps)(LeftNavPane);
+export default LeftNavPane;
 
