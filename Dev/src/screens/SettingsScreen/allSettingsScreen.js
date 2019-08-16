@@ -5,6 +5,7 @@ import colors from 'config/colors';
 import { Icon } from 'react-native-elements';
 import strings from 'config/strings';
 import QcParentScreen from "screens/QcParentScreen";
+import FirebaseFunctions from 'config/FirebaseFunctions';
 
 export default class AllSettingsScreen extends QcParentScreen {
 
@@ -36,6 +37,7 @@ export default class AllSettingsScreen extends QcParentScreen {
                 </TouchableOpacity>
 
                 <TouchableOpacity style={[styles.cardStyle, { marginTop: 25 }]} onPress={() => {
+                    FirebaseFunctions.logOut();
                     this.props.navigation.push("FirstRun");
                 }}>
                     <Text style={styles.textStyle}>{strings.LogOut}</Text>

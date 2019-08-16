@@ -61,6 +61,14 @@ export default class FirebaseFunctions {
 
     }
 
+    //This functions will log out whatever user is currently signed into the device
+    static logOut() {
+
+        this.logEvent("LOG_OUT");
+        this.auth.signOut();
+
+    }
+
     //This function will take in an ID of a teacher and return that teacher object.
     //Will return -1 if the document does not exist
     static async getTeacherByID(ID) {
