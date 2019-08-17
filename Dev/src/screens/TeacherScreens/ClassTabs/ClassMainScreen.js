@@ -8,32 +8,39 @@ import LoadingSpinner from '../../../components/LoadingSpinner';
 import strings from 'config/strings';
 import mapStateToCurrentClassProps from 'screens/TeacherScreens/helpers/mapStateToCurrentClassProps'
 import QcParentScreen from "screens/QcParentScreen";
-import QcActionButton from "components/QcActionButton"
+import QcActionButton from "components/QcActionButton";
+import FirebaseFunctions from 'config/FirebaseFunctions';
 
 export class ClassMainScreen extends QcParentScreen {
 
-  name = "ClassMainScreen";
+  state = {
+    isLoading: true,
+    teacher: '',
+    userID: '',
+    currentClass: '',
+    currentClassID: ''
+  }
 
   async componentDidMount() {
-    super.componentDidMount();
-    //This may not be the eventual right approach here.. but this is a current mitigation to the 
-    // fact that we get an error about 'regular' font not loaded yet if we redirect to add class or edit class 
-    // pages before explicitly loading the fonts. 
-    // Todo: figure out a safer way to do this without having to hold the UI until the font is loaded.
 
+    FirebaseFunctions.setCurrentScreen("Class Main Screen", "ClassMainScreen");
+    this.setState({ isLoading: true });
+    const { teacher, userID } = this.props.navigation.state.params;
+    const { currentClassID } = teacher;
+    const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
+    this.setState({
+      isLoading: false,
+      teacher,
+      userID,
+      currentClass,
+      currentClassID
+    });
 
-
-
-    const { classId } = this.props;
-
-    if (classId === -1) {
-      this.props.navigation.push('AddClass');
-    }
   }
 
   render() {
-    const classId = this.props.classId;
-    if (this.state.fontLoaded === false) {
+    const { isLoading, teacher, userID, currentClass, currentClassID } = this.state;
+    if (isLoading === true) {
       return (
         <View style={styles.container}>
           <LoadingSpinner isVisible={true} />
@@ -41,7 +48,7 @@ export class ClassMainScreen extends QcParentScreen {
       )
     }
     //---------------------------------no class state---------------------------------
-    else if (!this.props.students) {
+    else if (currentClass === -1 || currentClassID === "") {
       return (
         <View style={[styles.container, { alignItems: "center", justifyContent: "center" }]}>
           <Image
@@ -65,11 +72,16 @@ export class ClassMainScreen extends QcParentScreen {
 
           <QcActionButton
             text={strings.AddClassButton}
-            onPress={() => this.props.navigation.push("AddClass")} />
+            onPress={() => {
+              this.props.navigation.push("AddClass", {
+                userID: this.state.userID,
+                teacher: this.state.teacher
+              })
+            }} />
         </View>
       )
     }
-    else if (this.props.students.length === 0) {
+    else if (currentClass.students.length === 0) {
       /**
        * ------Overview:
        * The Page will display a message that will redirect the teacher to the 
@@ -120,7 +132,7 @@ export class ClassMainScreen extends QcParentScreen {
       return (
         <ScrollView style={styles.container}>
           <FlatList
-            data={this.props.students}
+            data={currentClass.students}
             keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
             renderItem={({ item }) => (
               <StudentCard
@@ -158,9 +170,4 @@ const styles = StyleSheet.create({
   }
 });
 
-
-const mapStateToProps = (state) => {
-  return mapStateToCurrentClassProps(state)
-};
-
-export default connect(mapStateToProps)(ClassMainScreen);
+export default ClassMainScreen;

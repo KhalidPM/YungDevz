@@ -1,11 +1,9 @@
+/* eslint-disable no-extra-semi */
 import React from "react";
 import { View, FlatList, ScrollView, StyleSheet } from "react-native";
 import colors from "config/colors";
 import classImages from "config/classImages";
-import { saveTeacherInfo } from "model/actions/saveTeacherInfo";
 import FirebaseFunctions from 'config/FirebaseFunctions';
-import { connect } from "react-redux";
-import { bindActionCreators } from 'redux';
 import { SafeAreaView } from "react-navigation";
 import QcAppBanner from "components/QcAppBanner";
 import QcDrawerItem from "components/QcDrawerItem";
@@ -16,22 +14,22 @@ import QcParentScreen from "screens/QcParentScreen";
 class LeftNavPane extends QcParentScreen {
 
   state = {
-    teacher: "",
+    teacher: this.props.navigation.state.params.teacher,
     userID: this.props.navigation.state.params.userID
   }
 
-  //Fetches the data from firestore based on the passed in user ID
+  //Sets the screen name
   async componentDidMount() {
 
     FirebaseFunctions.setCurrentScreen("LeftNavPane", "LeftNavPane");
-    const teacher = await FirebaseFunctions.getTeacherByID(this.state.userID);
-    this.setState({ teacher });
 
   }
 
   async openClass(classID, className) {
 
-    await FirebaseFunctions.updateTeacherObject(this.state.userID, classID);
+    await FirebaseFunctions.updateTeacherObject(this.state.userID, {
+      currentClassID: classID
+    });
     FirebaseFunctions.logEvent("OPEN_CLASS");
 
     //navigate to the selected class

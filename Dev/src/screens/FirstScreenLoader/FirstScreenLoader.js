@@ -1,26 +1,35 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { ActivityIndicator, StatusBar, View } from 'react-native';
-import { connect } from "react-redux";
-import analyticsEvents from 'config/analyticsEvents'
+import FirebaseFunctions from 'config/FirebaseFunctions';
 
-class FirstScreenLoader extends React.Component {
-  constructor(props) {
-    super(props);
-    this._bootstrapAsync();
+class FirstScreenLoader extends Component {
+
+  //Checks if a user has been logged in. If a user has, it navigates the correct screen depending if they
+  //are a student or a teacher
+  async componentDidMount() {
+
+    await FirebaseFunctions.auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        this.props.navigation.push("FirstRun");
+        return;
+      }
+      const student = await FirebaseFunctions.getStudentByID(user.uid);
+      if (student !== -1) {
+        this.props.navigation.push("StudentScreens", {
+          userID: user.uid,
+          student
+        });
+        return;
+      }
+      const teacher = await FirebaseFunctions.getTeacherByID(user.uid);
+      this.props.navigation.push("TeacherScreens", {
+        userID: user.uid,
+        teacher
+      });
+      return;
+    });
+
   }
-
-  // Fetch the firstRunCompleted flag from storage then navigate to our appropriate place
-  _bootstrapAsync = async () => {
-    const { firstRunCompleted } = this.props;
-
-    // This will switch to the App screen or FirstRun screens and this loading
-    // screen will be unmounted and thrown away.
-    if (!firstRunCompleted) {
-      this.props.navigation.navigate('FirstRun')
-    } else {
-      this.props.navigation.navigate('TeacherMenu')
-    }
-  };
 
   // Placeholder loading in case async fetch takes too long
   render() {
@@ -37,9 +46,4 @@ class FirstScreenLoader extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  const firstRunCompleted = state.data.firstRunCompleted;
-  return { firstRunCompleted };
-};
-
-export default connect(mapStateToProps)(FirstScreenLoader);
+export default FirstScreenLoader;

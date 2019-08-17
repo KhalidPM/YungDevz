@@ -22,14 +22,14 @@ export default class FirebaseFunctions {
     //for this account (with the same ID). The function returns that ID
     static async signUp(email, password, isTeacher, accountObject) {
 
-        const account = await this.auth.createUserWithEmailAndPassword(email, password);
+        let account = await this.auth.createUserWithEmailAndPassword(email, password);
 
         //Creates the firestore object with an ID that matches this one
-        const ID = account.user.uid;
+        let ID = account.user.uid;
         accountObject.ID = ID;
         if (isTeacher === true) {
 
-            const ref = this.teachers.doc(ID);
+            let ref = this.teachers.doc(ID);
             this.batch.set(ref, accountObject);
             await this.batch.commit();
             this.logEvent("TEACHER_SIGN_UP");
@@ -37,7 +37,7 @@ export default class FirebaseFunctions {
 
         } else {
 
-            const ref = this.students.doc(ID);
+            let ref = this.students.doc(ID);
             this.batch.set(ref, accountObject);
             await this.batch.commit();
             this.logEvent("STUDENT_SIGN_UP");
@@ -53,7 +53,7 @@ export default class FirebaseFunctions {
     static async logIn(email, password) {
 
         try {
-            const account = await this.auth.signInWithEmailAndPassword(email, password);
+            let account = await this.auth.signInWithEmailAndPassword(email, password);
             return account.user;
         } catch (err) {
             return -1;
@@ -73,7 +73,7 @@ export default class FirebaseFunctions {
     //Will return -1 if the document does not exist
     static async getTeacherByID(ID) {
 
-        const teacher = await this.teachers.doc(ID).get();
+        let teacher = await this.teachers.doc(ID).get();
         if (teacher.exists) {
             return teacher.data();
         } else {
@@ -86,7 +86,7 @@ export default class FirebaseFunctions {
     //Will return -1 if the document does not exist
     static async getStudentByID(ID) {
 
-        const student = await this.students.doc(ID).get();
+        let student = await this.students.doc(ID).get();
         if (student.exists) {
             return student.data();
         } else {
@@ -99,7 +99,7 @@ export default class FirebaseFunctions {
     //Will return -1 if the document does not exist
     static async getClassByID(ID) {
 
-        const classByID = await this.classes.doc(ID).get();
+        let classByID = await this.classes.doc(ID).get();
         if (classByID.exists) {
             return classByID.data();
         } else {
@@ -112,7 +112,7 @@ export default class FirebaseFunctions {
     //the document in firestore accordingly
     static async updateTeacherObject(ID, newObject) {
 
-        const docRef = this.teachers.doc(ID);
+        let docRef = this.teachers.doc(ID);
         this.batch.update(docRef, newObject);
         await this.batch.commit();
         return 0;
@@ -123,7 +123,7 @@ export default class FirebaseFunctions {
     //document in firestore accordingly
     static async updateClassObject(ID, newObject) {
 
-        const docRef = this.classes.doc(ID);
+        let docRef = this.classes.doc(ID);
         this.batch.update(docRef, newObject);
         await this.batch.commit();
         return 0;
@@ -134,7 +134,7 @@ export default class FirebaseFunctions {
     //document in firestore accordingly
     static async updateStudentObject(ID, newObject) {
 
-        const docRef = this.students.doc(ID);
+        let docRef = this.students.doc(ID);
         this.batch.update(docRef, newObject);
         await this.batch.commit();
         return 0;
@@ -145,20 +145,20 @@ export default class FirebaseFunctions {
     //that belongs to that teacher in the firestore database. It will do this by creating a new document
     //in the "classes" collection, then linking that class to a certain teacher by relating them through
     //IDs
-    static async addNewClass(newClassObject, teacher) {
+    static async addNewClass(newClassObject, teacherID) {
 
         //Adds the new class document and makes sure it has a reference to its own ID
-        const newClass = await this.classes.add(newClassObject);
-        this.updateClassObject(newClass.id, { ID: newClass.id });
-        
+        let newClass = await this.classes.add(newClassObject);
+        await this.updateClassObject(newClass.id, {
+            ID: newClass.id
+        });
         //Appends the class ID to the array of classes belonging to this teacher
-        const classesArray = teacher.classes;
-        classesArray.push(newClass.id);
-        teacher.classes = classesArray;
-        teacher.currentClassID = newClass.id;
-
-        //Updates the teacher object in firestore
-        await this.updateTeacherObject(teacher.ID, teacher);
+        let ref = this.teachers.doc(teacherID);
+        this.batch.update(ref, {
+            currentClassID: newClass.id,
+            classes: firebase.firestore.FieldValue.arrayUnion(newClass.id)
+        })
+        await this.batch.commit();
         return 0;
 
     }

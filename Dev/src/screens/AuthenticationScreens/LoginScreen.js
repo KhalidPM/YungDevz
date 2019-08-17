@@ -7,6 +7,7 @@ import QcAppBanner from 'components/QcAppBanner';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import strings from "config/strings";
 import colors from "config/colors";
+import LoadingSpinner from 'components/LoadingSpinner';
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
@@ -32,7 +33,8 @@ class LoginScreen extends Component {
     password: "",
     email: "",
     phone_number: "",
-    isTeacher: this.props.navigation.state.params.isTeacher
+    isTeacher: this.props.navigation.state.params.isTeacher,
+    isLoading: false
   };
 
   onUserNameChange = (_username) => {
@@ -55,20 +57,27 @@ class LoginScreen extends Component {
   //Logs the user in, fetches their ID, and then navigates to the correct screen according to whether they
   //are a student or a teacher
   async signIn() {
+    this.setState({ isLoading: true });
     const { username, password } = this.state;
+
     const account = await FirebaseFunctions.logIn(username, password);
     if (account === -1) {
+      this.setState({ isLoading: false });
       Alert.alert(strings.Whoops, strings.IncorrectInfo);
     } else {
       const userID = account.uid;
       if (this.state.isTeacher === true) {
         FirebaseFunctions.logEvent("TEACHER_LOG_IN");
+        const teacher = await FirebaseFunctions.getTeacherByID(userID);
         this.props.navigation.push("TeacherScreens", {
+          teacher,
           userID
         })
       } else {
         FirebaseFunctions.logEvent("STUDENT_LOG_IN");
+        const student = await FirebaseFunctions.getTeacherByID(userID);
         this.props.navigation.push("StudentScreens", {
+          student,
           userID
         });
       }
@@ -81,6 +90,17 @@ class LoginScreen extends Component {
 
   render() {
 
+    if (this.state.isLoading === true) {
+      return (
+        <View style={{ flex: 1 }}>
+          <ImageBackground source={BG_IMAGE} style={styles.bgImage}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+              <LoadingSpinner isVisible={true} />
+            </View>
+          </ImageBackground>
+        </View>
+      )
+    }
     return (
       <View style={{ flex: 1 }}>
         <ImageBackground source={BG_IMAGE} style={styles.bgImage}>

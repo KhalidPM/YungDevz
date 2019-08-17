@@ -21,11 +21,9 @@ export class ClassAttendanceScreen extends QcParentScreen {
     getAttendance = (date) => {
         const { students, attendance } = this.props;
         let absent = [];
-        console.log(attendance);
         //Capture absent students to flag them in the UI.
         students.map((student, i) => {
             let wasHere = attendance.byStudentId[student.id][date];
-            console.log(wasHere);
             if (wasHere === false) {
                 absent.push(i);
             }

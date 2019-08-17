@@ -1,18 +1,19 @@
 import FirstRunNavigator from 'screens/FirstRun/FirstRunNavigator'
 import TeacherMenu from 'screens/TeacherScreens/TeacherMenu';
 import FirstScreenLoader from './FirstScreenLoader'
-import { createSwitchNavigator, createAppContainer } from 'react-navigation';
+import StudentMenu from '../StudentScreens/StudentMenu';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
 import LoginScreen from '../AuthenticationScreens/LoginScreen';
 
 
-export default createAppContainer(createSwitchNavigator(
-  {
-    FirstScreenLoader: FirstScreenLoader,
-    TeacherMenu: TeacherMenu,
-    FirstRun: FirstRunNavigator,
-    Login: LoginScreen,
-  },
-  {
+export default createAppContainer(createStackNavigator({
+  FirstScreenLoader: { screen: FirstScreenLoader },
+  TeacherMenu: { screen: TeacherMenu },
+  FirstRun: { screen: FirstRunNavigator },
+  Login: { screen: LoginScreen },
+  TeacherScreens: { screen: TeacherMenu },
+  StudentScreens: { screen: StudentMenu }
+}, {
     initialRouteName: 'FirstScreenLoader',
-  }
-));
+    headerMode: 'none'
+  }));
