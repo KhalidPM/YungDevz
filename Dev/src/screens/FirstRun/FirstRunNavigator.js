@@ -9,7 +9,6 @@ import strings from 'config/strings';
 import StudentMenu from '../StudentScreens/StudentMenu';
 import LoginScreen from 'screens/AuthenticationScreens/LoginScreen';
 import ForgotPassword from 'screens/AuthenticationScreens/ForgotPassword';
-import NewPassword from 'screens/AuthenticationScreens/NewPassword';
 import StudentWelcomeScren from 'screens/StudentScreens/StudentWelcomeScreen';
 
 const routeConfig = {
@@ -19,9 +18,6 @@ const routeConfig = {
     ForgotPassword:{
         screen: ForgotPassword
     },
-    NewPassword:{
-        screen: NewPassword
-    },  
     TeacherWelcomeScreen: {
         screen: TeacherWelcomeScreen,
     },

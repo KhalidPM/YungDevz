@@ -23,6 +23,7 @@ export class ClassMainScreen extends QcParentScreen {
 
   async componentDidMount() {
 
+    console.log(this.props.navigation.state.params);
     FirebaseFunctions.setCurrentScreen("Class Main Screen", "ClassMainScreen");
     this.setState({ isLoading: true });
     const { teacher, userID } = this.props.navigation.state.params;

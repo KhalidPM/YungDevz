@@ -61,6 +61,13 @@ export default class FirebaseFunctions {
 
     }
 
+    //This function takes in a user's email and sends them a code to reset their password (not async)
+    static sendForgotPasswordCode(email) {
+
+        this.auth.sendPasswordResetEmail(email);
+
+    }
+
     //This functions will log out whatever user is currently signed into the device
     static logOut() {
 

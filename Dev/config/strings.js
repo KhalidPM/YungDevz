@@ -16,6 +16,7 @@ export default {
     AskForEmail: 'Please Enter Email Here',
     EnterCode: 'Code',
     EmailError: 'Please Enter Email',
+    PleaseEnterYourEmailAddress: 'Please enter your email address',
     EmailErrorHeader: "Error with Email",
     NewPasswordPlaceholder: 'New Password',
     ConfirmPasswordPlaceholder: 'Confirm Password',
@@ -23,8 +24,14 @@ export default {
     ConfirmPassword: 'Please Confirm Password',
     Next: 'Next',
     ErrorWithPassword: 'Error With Password',
+    EnterCode: 'Enter code',
     ErrorWithConfirm: 'Must Confirm Password',
     ErrorWithCode: 'PleaseEnterCode',
+    RecoverYourPassword: 'Recover your password',
+    EmailSent: 'Email Sent',
+    CheckEmail: 'We\'ve sent a link to your email to reset your password',
+    Ok: 'Ok',
+
     //--------------------- Evaluation Page ---------------------
     None: 'None',
     HowWas: 'How was ',

@@ -15,7 +15,7 @@ const routeConfig = {
   },
   CurrentClass: {
     screen: ClassHeaderNavigator,
-    path: 'teacher/class/tabs', //todo: the path should have class id as a param to be unique
+    path: 'teacher/class/tabs',
     navigationOptions: ({ navigation }) => ({
       title: 'Quran Class',
     }),

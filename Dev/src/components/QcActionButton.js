@@ -10,13 +10,13 @@ class QcActionButton extends FontLoadingComponent {
   onButtonPress() {
 
     this.props.onPress();
-    
+
   }
 
   render() {
     const { text, disabled } = this.props;
     return (
-      <TouchableOpacity  disabled={disabled ? disabled:false} style={styles.buttonStyle}
+      <TouchableOpacity disabled={disabled ? disabled : false} style={styles.buttonStyle}
         onPress={() => this.onButtonPress()}
       >
         {this.state.fontLoaded ? (

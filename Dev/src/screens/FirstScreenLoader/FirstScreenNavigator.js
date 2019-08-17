@@ -8,7 +8,6 @@ import LoginScreen from '../AuthenticationScreens/LoginScreen';
 
 export default createAppContainer(createStackNavigator({
   FirstScreenLoader: { screen: FirstScreenLoader },
-  TeacherMenu: { screen: TeacherMenu },
   FirstRun: { screen: FirstRunNavigator },
   Login: { screen: LoginScreen },
   TeacherScreens: { screen: TeacherMenu },

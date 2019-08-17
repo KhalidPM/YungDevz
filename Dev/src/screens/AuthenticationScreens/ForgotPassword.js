@@ -1,36 +1,31 @@
 import React, { Component } from 'react';
-import { Text, StyleSheet, View, TextInput, Modal, KeyboardAvoidingView, disabled, ImageBackground, Dimensions } from 'react-native';
+import { Text, StyleSheet, View, TextInput, KeyboardAvoidingView } from 'react-native';
 import strings from 'config/strings';
 import colors from 'config/colors';
 import QcActionButton from 'components/QcActionButton';
-import { Alert } from 'react-native'
-import { forgotPassword } from 'model/actions/authActions'
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+import { Alert } from 'react-native';
+import FirebaseFunctions from 'config/FirebaseFunctions';
 
 class ForgotPassword extends Component {
+
     state = {
         isModalVisible: false,
         emailText: "",
         verificationCode: "",
         disabled: true
     }
+
     render() {
-        const { navigation } = this.props;
         return (
             <View style={styles.container}>
 
                 <KeyboardAvoidingView style={styles.emailInputContainer}>
 
                     <View >
-                        <Text style={styles.header}>
-                            Recover Your Password
-                            </Text>
+                        <Text style={styles.header}>{strings.RecoverYourPassword}</Text>
                     </View>
                     <View style={styles.mainTextContainer}>
-                        <Text>
-                            Please enter your email address
-                            </Text>
+                        <Text>{strings.PleaseEnterYourEmailAddress}</Text>
                     </View>
                     <TextInput
                         style={styles.notesStyle}
@@ -40,11 +35,11 @@ class ForgotPassword extends Component {
                         placeholderColor={colors.black}
                         value={this.state.emailText}
                         onChangeText={(text) => { this.setState({ emailText: text }) }}
-                        autoCapitalize="none"
-                    />
+                        autoCapitalize="none" />
                     <View style={styles.buttonsContainer}>
                         <QcActionButton
                             text={strings.Submit}
+                            disabled={false}
                             onPress={() => {
                                 if (this.state.emailText == "") {
                                     Alert.alert(strings.EmailErrorHeader, strings.EmailError)
@@ -53,7 +48,14 @@ class ForgotPassword extends Component {
                                     this.setState({ isModalVisible: true })
                                     let emailText = this.state.emailText
                                     emailText = emailText.trim()
-                                    this.props.forgotPassword(emailText);
+                                    FirebaseFunctions.sendForgotPasswordCode(emailText);
+                                    Alert.alert(strings.EmailSent, strings.CheckEmail, [
+                                        {
+                                            text: strings.Ok,
+                                            onPress: () => { this.props.navigation.goBack() },
+                                            style: 'cancel',
+                                        }
+                                    ]);
                                 }
                             }}
                         />
@@ -67,37 +69,6 @@ class ForgotPassword extends Component {
                     </View>
                 </KeyboardAvoidingView>
                 <View style={{ flex: 1 }} />
-                <Modal
-                    transparent={true}
-                    visible={this.state.isModalVisible}
-                    onRequestClode={() => { }}>
-                    <View style={styles.modal}>
-                        <Text style={styles.mainTextContainer}>Enter Code</Text>
-                        <TextInput
-                            style={styles.notesStyle}
-                            returnKeyType={"done"}
-                            blurOnSubmit={true}
-                            placeholder={strings.EnterCode}
-                            placeholderColor={colors.black}
-                            onChangeText={(text) => {
-                                this.setState({ verificationCode: text })
-                                if (this.state.verificationCode.trim() !== "") {
-                                    this.setState({ disabled: false })
-                                }
-                            }}
-                            value={this.state.verificationCode}
-
-                        />
-                        <QcActionButton
-                            disabled={this.state.disabled}
-                            text={strings.Next}
-                            onPress={async () => {
-                                
-                            }}
-                        />
-                    </View>
-                </Modal>
-
             </View>
         )
     }
@@ -167,19 +138,5 @@ const styles = StyleSheet.create({
 
 });
 
-const mapDispatchToProps = dispatch =>
-    bindActionCreators(
-        {
-            forgotPassword
-        },
-        dispatch
-    );
 
-const mapStateToProps = state => ({
-})
-
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(ForgotPassword);
+export default ForgotPassword;
