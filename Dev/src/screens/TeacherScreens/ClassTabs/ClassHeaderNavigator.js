@@ -11,23 +11,7 @@ const ClassHeaderNavigator = createStackNavigator({
   CurrentClass: {
     screen: ClassTabsNavigator,
     navigationOptions: ({ navigation }) => ({
-      header: (
-        (navigation.state.params && navigation.state.params.classTitle) ? (
-          <TopBanner
-            LeftIconName="navicon"
-            LeftOnPress={() => navigation.openDrawer()}
-            Title={navigation.state.params.classTitle}
-            RightIconName="edit"
-            RightOnPress={() => navigation.push('ClassEdit', navigation.state.params)}
-          />
-        ) : (
-            <TopBanner
-              LeftIconName="navicon"
-              LeftOnPress={() => navigation.openDrawer()}
-              Title={strings.titleNotPassed}
-            />
-          )
-      ),
+      header: null
     }),
   },
   StudentProfile: {

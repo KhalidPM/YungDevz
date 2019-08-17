@@ -114,6 +114,9 @@ export default {
     SaveAttendance: 'Save Attendance',
 
     //--------------------- Class Edit Screen ---------------------
+    Remove: 'Remove',
+    RemoveStudent: 'Remove student',
+    AreYouSureYouWantToRemoveStudent: 'Are you sure you want to remove this student?',
     YourClassCode: 'Your class code',
     Done: 'Done',
     IsNowAddedToTheClass: ' is now added to the class',

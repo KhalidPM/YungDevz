@@ -170,6 +170,36 @@ export default class FirebaseFunctions {
 
     }
 
+    //This function will take in a student ID & a class ID and remove the connection between that student
+    //and the class 
+    static async removeStudent(classID, studentID) {
+
+        //First removes the student from the class
+        let theClass = await this.getClassByID(classID);
+        let arrayOfClassStudents = theClass.students;
+        let indexOfStudent = arrayOfClassStudents.findIndex((student) => {
+            return student.ID === studentID;
+        });
+        arrayOfClassStudents.splice(indexOfStudent, 1);
+        await this.updateClassObject(classID, {
+            students: arrayOfClassStudents
+        });
+
+        //Then removes the class's reference from the student's array of classes
+        let theStudent = await this.getStudentByID(studentID);
+        let arrayOfStudentClasses = theStudent.classes;
+        let indexOfClass = arrayOfStudentClasses.findIndex((eachClass) => {
+            return eachClass === classID;
+        });
+        arrayOfClassStudents.splice(indexOfClass, 1);
+        await this.updateStudentObject(studentID, {
+            classes: arrayOfClassStudents
+        });
+
+        return 0;
+
+    }
+
     //This function will take a name of an event and log it to firebase analytics (not async)
     static logEvent(eventName) {
 

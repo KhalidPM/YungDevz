@@ -23,7 +23,6 @@ export class ClassMainScreen extends QcParentScreen {
 
   async componentDidMount() {
 
-    console.log(this.props.navigation.state.params);
     FirebaseFunctions.setCurrentScreen("Class Main Screen", "ClassMainScreen");
     this.setState({ isLoading: true });
     const { teacher, userID } = this.props.navigation.state.params;
@@ -52,6 +51,25 @@ export class ClassMainScreen extends QcParentScreen {
     else if (currentClass === -1 || currentClassID === "") {
       return (
         <View style={[styles.container, { alignItems: "center", justifyContent: "center" }]}>
+          {(this.props.navigation.state.params && navigation.state.params.classTitle) ? (
+            <TopBanner
+              LeftIconName="navicon"
+              LeftOnPress={() => this.props.navigation.openDrawer()}
+              Title={this.props.navigation.state.params.classTitle}
+              RightIconName="edit"
+              RightOnPress={() => this.props.navigation.push('ClassEdit', {
+                classID: currentClassID,
+                currentClass
+              })}
+            />
+          ) : (
+              <TopBanner
+                LeftIconName="navicon"
+                LeftOnPress={() => navigation.openDrawer()}
+                Title={strings.titleNotPassed}
+              />
+            )
+          }
           <Image
             source={require('assets/emptyStateIdeas/ghostGif.gif')}
             style={{
@@ -122,7 +140,10 @@ export class ClassMainScreen extends QcParentScreen {
 
           <QcActionButton
             text={strings.AddStudentButton}
-            onPress={() => this.props.navigation.push("ClassEdit")} />
+            onPress={() => this.props.navigation.push("ClassEdit", {
+              classID: currentClassID,
+              currentClass
+            })} />
         </View>
       )
     }
