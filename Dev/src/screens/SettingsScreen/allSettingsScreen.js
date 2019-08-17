@@ -38,7 +38,7 @@ export default class AllSettingsScreen extends QcParentScreen {
 
                 <TouchableOpacity style={[styles.cardStyle, { marginTop: 25 }]} onPress={() => {
                     FirebaseFunctions.logOut();
-                    this.props.navigation.push("FirstRun");
+                    this.props.navigation.push("FirstScreenLoader");
                 }}>
                     <Text style={styles.textStyle}>{strings.LogOut}</Text>
                     <Icon
