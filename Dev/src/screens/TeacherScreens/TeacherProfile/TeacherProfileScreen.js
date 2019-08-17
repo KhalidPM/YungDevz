@@ -12,31 +12,29 @@ import ImageSelectionModal from 'components/ImageSelectionModal'
 import TeacherInfoEntries from 'components/TeacherInfoEntries';
 import strings from 'config/strings';
 import QcParentScreen from 'screens/QcParentScreen';
+import FirebaseFunctions from 'config/FirebaseFunctions'
 
 //To-Do: All info in this class is static, still needs to be hooked up to data base in order
 //to function dynamically
 export class TeacherProfileScreen extends QcParentScreen {
-    name = "TeacherProfileScreen";
+    
+    //Sets the current screen for firebase analytics
+    componentDidMount() {
+
+        FirebaseFunctions.setCurrentScreen("Teacher Profile Screen", "TeacherProfileScreen");
+
+    }
 
     state = {
-        name: this.props.name,
-        phoneNumber: this.props.phoneNumber,
-        emailAddress: this.props.emailAddress,
-        profileImageId: this.props.profileImageId,
-        modalVisible: false,
-        isPhoneValid: this.props.phoneNumber === undefined ? false : true, //todo: this should be properly validated or saved
-    }
-    //this method resets the text inputs back to the teacher's info
-    resetProfileInfo = (teacherID) => {
-        this.setState({
-            name: this.props.name,
-            phoneNumber: this.props.phoneNumber,
-            emailAddress: this.props.emailAddress,
-            profileImageId: this.props.profileImageId,
-            isPhoneValid: this.props.phoneNumber === undefined ? false : true, //todo: this should be properly validated or saved
-        });
-        //Just goes to the first class
-        this.props.navigation.push('CurrentClass');
+
+        teacher: this.props.navigation.state.params.teacher,
+        userID: this.props.navigation.state.params.userID,
+        name: this.props.navigation.state.params.teacher.name,
+        phoneNumber: this.props.navigation.state.params.teacher.phoneNumber,
+        emailAddress: this.props.navigation.state.params.teacher.emailAddress,
+        profileImageID: this.props.navigation.state.params.teacher.profileImageID,
+        isPhoneValid: true
+
     }
 
     setModalVisible(visible) {
@@ -44,13 +42,13 @@ export class TeacherProfileScreen extends QcParentScreen {
     }
 
     //to-do: method must be able to update the profile picture
-    editProfilePic = (teacherID) => {
+    editProfilePic() {
         this.setModalVisible(true);
     }
 
     //this method saves the new profile information to the redux database
-    saveProfileInfo = () => {
-        let { name, phoneNumber, emailAddress } = this.state;
+    saveProfileInfo() {
+        let { userID, name, phoneNumber, emailAddress, profileImageID } = this.state;
         name = name.trim();
         phoneNumber = phoneNumber.trim();
         emailAddress = emailAddress.trim();
@@ -64,16 +62,12 @@ export class TeacherProfileScreen extends QcParentScreen {
         } else if (!this.state.isPhoneValid) {
             Alert.alert(strings.Whoops, strings.InvalidPhoneNumber);
         } else {
-            const { profileImageId, isPhoneValid } = this.state; // trick to remove modalVisible from state and pass in everything else
-            this.props.saveTeacherInfo(
-                {
-                    name,
-                    phoneNumber,
-                    emailAddress,
-                    profileImageId,
-                    isPhoneValid
-                }
-            );
+            await FirebaseFunctions.updateTeacherObject(userID, {
+                name,
+                phoneNumber,
+                emailAddress,
+                profileImageID
+            });
             this.refs.toast.show(strings.YourProfileHasBeenSaved, DURATION.LENGTH_SHORT);
             //Just goes to the first class
             this.props.navigation.push('CurrentClass');
@@ -97,12 +91,14 @@ export class TeacherProfileScreen extends QcParentScreen {
     }
 
     onImageSelected(index) {
-        this.setState({ profileImageId: index, })
+        this.setState({ profileImageID: index, })
         this.setModalVisible(false);
     }
 
     //-----------renders the teacher profile UI ------------------------------------
     render() {
+
+        const { ID, emailAddress, name, phoneNumber, profileImageID } = this.state;
         return (
             <View>
             <ScrollView>
@@ -115,21 +111,20 @@ export class TeacherProfileScreen extends QcParentScreen {
                             cancelText={strings.Cancel}
                             setModalVisible={this.setModalVisible.bind(this)}
                             onImageSelected={this.onImageSelected.bind(this)}
-                            screen={this.name}
                         />
                         <View style={styles.picContainer}>
                             <Image
                                 style={styles.profilePic}
-                                source={teacherImages.images[this.state.profileImageId]} />
+                                source={teacherImages.images[profileImageID]} />
                             <TouchableText
                                 text={strings.UpdateProfileImage}
-                                onPress={() => this.editProfilePic(0)} />
+                                onPress={() => this.editProfilePic()} />
                         </View>
 
                         <TeacherInfoEntries
-                            name={this.state.name}
-                            phoneNumber={this.state.phoneNumber}
-                            emailAddress={this.state.emailAddress}
+                            name={name}
+                            phoneNumber={phoneNumber}
+                            emailAddress={emailAddress}
                             onNameChanged={this.onNameChanged}
                             onPhoneNumberChanged={this.onPhoneNumberChanged}
                             onEmailAddressChanged={this.onEmailAddressChanged}
@@ -137,14 +132,14 @@ export class TeacherProfileScreen extends QcParentScreen {
                         <View style={styles.buttonsContainer}>
                             <QcActionButton
                                 text={strings.Cancel}
-                                onPress={() => this.resetProfileInfo()}
-                                screen={this.name}
+                                onPress={() => {
+                                    //Just goes back without saving anything
+                                    this.props.navigation.push('CurrentClass');
+                                }}
                             />
                             <QcActionButton
                                 text={strings.Save}
-                                onPress={() => this.saveProfileInfo(0)} //to-do: Make sure that teacher ID 
-                                screen={this.name}
-                            //is passed instead of 0
+                                onPress={() => this.saveProfileInfo()}
                             />
                         </View>
                         <View style={styles.filler}></View>
@@ -221,18 +216,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         flex: 1
     }
-})
+});
 
-const mapStateToProps = state => {
-    const { name, phoneNumber, emailAddress, profileImageId } = state.data.teacher;
-    return { name, phoneNumber, emailAddress, profileImageId };
-};
-
-const mapDispatchToProps = dispatch => (
-    bindActionCreators({
-        saveTeacherInfo
-    }, dispatch)
-);
-
-export default connect(mapStateToProps, mapDispatchToProps)(TeacherProfileScreen);
+export default TeacherProfileScreen;
 

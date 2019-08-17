@@ -21,11 +21,11 @@ class LeftNavPane extends QcParentScreen {
   //Sets the screen name
   async componentDidMount() {
 
-    FirebaseFunctions.setCurrentScreen("LeftNavPane", "LeftNavPane");
+    FirebaseFunctions.setCurrentScreen("Left Nav Pane", "LeftNavPane");
 
   }
 
-  async openClass(classID, className) {
+  async openClass(classID) {
 
     await FirebaseFunctions.updateTeacherObject(this.state.userID, {
       currentClassID: classID
@@ -65,7 +65,10 @@ class LeftNavPane extends QcParentScreen {
           <QcDrawerItem
             title={profileCaption}
             image={teacherImages.images[teacherImageId]}
-            onPress={() => this.props.navigation.push("TeacherProfile")}
+            onPress={() => this.props.navigation.push("TeacherProfile", {
+              teacher: this.state.teacher,
+              userID: this.state.userID
+            })}
           />
 
           <FlatList
@@ -75,7 +78,7 @@ class LeftNavPane extends QcParentScreen {
               <QcDrawerItem
                 title={item.name}
                 image={classImages.images[item.imageId]}
-                onPress={() => this.openClass(item.id, item.name)}
+                onPress={() => this.openClass(item.id)}
               />
             )} />
 

@@ -1,14 +1,7 @@
 import React, { Component } from 'react';
-import Dimensions from 'Dimensions';
-import {
-  StyleSheet,
-  KeyboardAvoidingView,
-  View,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import { StyleSheet, KeyboardAvoidingView, View, TouchableOpacity, Image } from 'react-native';
 
-import UserInput from './UserInput';
+import UserInput from 'components/UserInput';
 import usernameImg from '../images/username.png';
 import passwordImg from '../images/password.png';
 import eyeImg from '../images/eye_black.png';
@@ -61,9 +54,6 @@ export default class Form extends Component {
     );
   }
 }
-
-const DEVICE_WIDTH = Dimensions.get('window').width;
-const DEVICE_HEIGHT = Dimensions.get('window').height;
 
 const styles = StyleSheet.create({
   container: {
