@@ -183,12 +183,14 @@ export default class FirebaseFunctions {
 
     }
 
-    //This method will allow a student to join a class. It will take in a studentID and a classID.
+    //This method will allow a student to join a class. It will take in a student object and a classID.
     //It will add that student to the array of students within the class object. Then it will add
     //the classID to the array of classes withint the student object. Then it will finally update
     //the "currentClassID" property within the student object. If the class does not exist, the method
     //will return a value of -1, otherwise it will return 0;
-    static async joinClass(studentID, classID) {
+    static async joinClass(student, classID) {
+
+        const studentID = student.ID;
 
         const classToJoin = await this.classes.doc(classID).get();
         if (!classToJoin.exists) {
@@ -196,12 +198,44 @@ export default class FirebaseFunctions {
         }
 
         await this.updateClassObject(classID, {
-            students: firebase.firestore.FieldValue.arrayUnion(studentID)
+            students: firebase.firestore.FieldValue.arrayUnion({
+                ID: studentID,
+                assignmentHistory: [],
+                attendanceHistory: [],
+                averageRating: 0,
+                currentAssignment: 'None',
+                isReady: true,
+                name: student.name,
+                totalAssignments: 0
+            })
         });
 
         await this.updateStudentObject(studentID, {
             classes: firebase.firestore.FieldValue.arrayUnion(classID),
             currentClassID: classID
+        });
+
+        return 0;
+
+    }
+
+    //This function will update the assignment status of a particular student within a class. It will
+    //simply reverse whatever the property is at the moment (true --> false & vice verca). This property
+    //is located within a student object that is within a class object
+    static async updateAssignmentStatus(classID, studentID) {
+
+        const ref = this.classes.doc(classID);
+        const doc = await ref.get();
+        
+        let arrayOfStudents = doc.data().students;
+        let studentIndex = arrayOfStudents.findIndex((student) => {
+            return student.ID === studentID;
+        });
+
+        arrayOfStudents[studentIndex].isReady = !(arrayOfStudents[studentIndex].isReady);
+
+        await this.updateClassObject(classID, {
+            students: arrayOfStudents
         });
 
         return 0;

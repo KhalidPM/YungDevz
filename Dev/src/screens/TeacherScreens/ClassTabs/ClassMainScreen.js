@@ -6,7 +6,6 @@ import colors from "config/colors";
 import studentImages from "config/studentImages"
 import LoadingSpinner from '../../../components/LoadingSpinner';
 import strings from 'config/strings';
-import mapStateToCurrentClassProps from 'screens/TeacherScreens/helpers/mapStateToCurrentClassProps'
 import QcParentScreen from "screens/QcParentScreen";
 import QcActionButton from "components/QcActionButton";
 import FirebaseFunctions from 'config/FirebaseFunctions';

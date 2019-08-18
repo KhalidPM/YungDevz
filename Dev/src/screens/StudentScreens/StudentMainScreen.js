@@ -7,31 +7,50 @@ import studentImages from 'config/studentImages';
 import { Rating } from 'react-native-elements';
 import colors from 'config/colors'
 import strings from 'config/strings';
-import { connect } from "react-redux";
-import mapStateToCurrentStudentProps from './helpers/mapStateToCurrentStudentProps';
-import { updateAssignmentStatus } from 'model/actions/updateAssignmentStatus';
-import { bindActionCreators } from "redux";
+import FirebaseFunctions from 'config/FirebaseFunctions';
 
 class StudentMainScreen extends QcParentScreen {
 
-    name = "StudentMainScreen";
-
-    componentDidMount() {
-        super.componentDidMount();
-        //Fetches the data for this student and sets it to the state
-
+    state = {
+        isLoading: true,
+        student: '',
+        userID: '',
+        currentClass: '',
+        currentClassID: '',
+        thisClassInfo: '',
+        isReady: ''
     }
 
-    //All the following data values are hard coded, we need to make them variable
-    state = {
-        student: this.props.student,
-        isReady: this.props.student.isReady
+    //Fetches all the values for the state from the firestore database
+    async componentDidMount() {
+
+        super.componentDidMount();
+
+        //Sets the screen name in firebase analytics
+        FirebaseFunctions.setCurrentScreen("Student Main Screen", "StudentMainScreen");
+
+        const { student, userID } = this.props.navigation.state.params;
+        const { currentClassID } = student;
+        const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
+        const thisClassInfo = currentClass.students.find((student) => {
+            return student.ID === userID;
+        });
+        const { isReady } = thisClassInfo;
+        this.setState({
+            student,
+            userID,
+            currentClass,
+            currentClassID,
+            thisClassInfo,
+            isReady
+        });
+
     }
 
     //Returns the correct caption based on the student's average grade
     getRatingCaption() {
         let caption = strings.GetStarted;
-        let { averageGrade } = this.state;
+        let { averageGrade } = this.state.thisClassInfo;
 
         if (averageGrade > 4) {
             caption = strings.OutStanding
@@ -49,7 +68,15 @@ class StudentMainScreen extends QcParentScreen {
     //Renders the screen
     render() {
 
-        const { student } = this.state;
+        const { userID, isLoading, student, currentClassID, thisClassInfo, isReady } = this.state;
+
+        if (isLoading === true) {
+            return (
+                <View style={{ flex: 1 }}>
+                    <LoadingSpinner isVisible={true} />
+                </View>
+            )
+        }
 
         return (
             <View style={styles.container}>
@@ -61,9 +88,9 @@ class StudentMainScreen extends QcParentScreen {
                             <View style={styles.profileInfoTopRight}>
                                 <Text numberOfLines={1} style={styles.bigText}>{student.name.toUpperCase()}</Text>
                                 <View style={{ flexDirection: 'row', height: 25 }}>
-                                    <Rating readonly={true} startingValue={student.averageRating} imageSize={25} />
+                                    <Rating readonly={true} startingValue={thisClassInfo.averageRating} imageSize={25} />
                                     <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-                                        <Text style={styles.ratingText}>{student.averageRating === 0 ? "" : parseFloat(student.averageRating).toFixed(1)}</Text>
+                                        <Text style={styles.ratingText}>{thisClassInfo.averageRating === 0 ? "" : parseFloat(thisClassInfo.averageRating).toFixed(1)}</Text>
                                     </View>
                                 </View>
                                 <Text style={styles.ratingDescText}>{this.getRatingCaption()}</Text>
@@ -73,21 +100,21 @@ class StudentMainScreen extends QcParentScreen {
                             <View style={styles.profileInfoTopLeft}>
                                 <Image
                                     style={styles.profilePic}
-                                    source={studentImages.images[student.imageId]} />
+                                    source={studentImages.images[student.profileImageID]} />
                             </View>
                             <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'column', height: 59 }}>
-                                <Text numberOfLines={1} style={styles.assignmentTextLarge}>{student.currentAssignment.toUpperCase()}</Text>
-                                <Text style={styles.assignmentTextLarge}>{strings.TotalAssignments + " " + student.totalAssignments + "  "}</Text>
+                                <Text numberOfLines={1} style={styles.assignmentTextLarge}>{thisClassInfo.currentAssignment.toUpperCase()}</Text>
+                                <Text style={styles.assignmentTextLarge}>{strings.TotalAssignments + " " + thisClassInfo.totalAssignments + "  "}</Text>
                             </View>
                         </View>
                     </View>
                 </View>
-                <View style={[styles.middleView, { backgroundColor: (this.state.isReady === true ? colors.green : colors.red) }]}>
+                <View style={[styles.middleView, { backgroundColor: (isReady === true ? colors.green : colors.red) }]}>
                     <TouchableOpacity style={{ flex: 1 }} onPress={() => {
                         //To-Do: Updates the state of the assignment & communicates it with the teacher
-                        if (student.currentAssignment !== "None") {
-                            this.props.updateAssignmentStatus(!student.isReady);
-                            this.setState({ isReady: !this.state.isReady });
+                        if (thisClassInfo.currentAssignment !== "None") {
+                            FirebaseFunctions.updateAssignmentStatus(currentClassID, userID);
+                            this.setState({ isReady: !isReady });
                         }
                     }}>
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -95,11 +122,11 @@ class StudentMainScreen extends QcParentScreen {
                             <Text>{" "}</Text>
                             <Text style={styles.studentNameStyle}>{strings.CurrentAssignment}</Text>
                             <Text>{" "}</Text>
-                            <Text style={[styles.studentNameStyle, { fontSize: 20 }]}>{student.currentAssignment}</Text>
+                            <Text style={[styles.studentNameStyle, { fontSize: 20 }]}>{thisClassInfo.currentAssignment}</Text>
                         </View>
                         <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
                             <Text>{"  "}</Text>
-                            <Text style={styles.ratingDescText}>{this.state.isReady ? strings.Ready : strings.NotReady}</Text>
+                            <Text style={styles.ratingDescText}>{isReady ? strings.Ready : strings.NotReady}</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -107,7 +134,7 @@ class StudentMainScreen extends QcParentScreen {
                     <View style={{ flex: 0.1 }}></View>
                     <ScrollView style={styles.prevAssignments}>
                         <FlatList
-                            data={student.assignmentHistory}
+                            data={thisClassInfo.assignmentHistory}
                             keyExtractor={(item, index) => item.name + index}
                             renderItem={({ item, index }) => (
                                 <TouchableOpacity onPress={() => {
@@ -292,16 +319,4 @@ const styles = StyleSheet.create({
     },
 });
 
-const mapStateToProps = (state) => {
-    return mapStateToCurrentStudentProps(state)
-};
-
-const mapDispatchToProps = dispatch =>
-    bindActionCreators(
-        {
-            updateAssignmentStatus
-        },
-        dispatch
-    );
-
-export default connect(mapStateToProps, mapDispatchToProps)(StudentMainScreen);
+export default StudentMainScreen;
