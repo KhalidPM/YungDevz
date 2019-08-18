@@ -8,6 +8,13 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 
 class ForgotPassword extends Component {
 
+     //Sets the screen for firebase analytics
+     componentDidMount() {
+
+        FirebaseFunctions.setCurrentScreen("Forgot Password", "ForgotPassword");
+
+    }
+
     state = {
         isModalVisible: false,
         emailText: "",

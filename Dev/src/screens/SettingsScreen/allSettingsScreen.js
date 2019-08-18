@@ -9,7 +9,12 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 
 export default class AllSettingsScreen extends QcParentScreen {
 
-    name = "AllSettingsScreen";
+    //Sets the screen for firebase analytics
+    componentDidMount() {
+
+        FirebaseFunctions.setCurrentScreen("All Settings Screen", "AllSettingsScreen");
+
+    }
 
     render() {
         return (

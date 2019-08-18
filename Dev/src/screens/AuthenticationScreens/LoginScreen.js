@@ -18,9 +18,12 @@ const BG_IMAGE = require("assets/images/read_child_bg.jpg");
 class LoginScreen extends Component {
 
   _isMounted = false;
-
+  //Sets the screen for firebase analytics
   componentDidMount() {
+
     this._isMounted = true;
+    FirebaseFunctions.setCurrentScreen("Log In Screen", "LogInScreen");
+
   }
 
   componentWillUnmount() {
@@ -98,7 +101,7 @@ class LoginScreen extends Component {
       return (
         <View style={{ flex: 1 }}>
           <ImageBackground source={BG_IMAGE} style={styles.bgImage}>
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
               <LoadingSpinner isVisible={true} />
             </View>
           </ImageBackground>

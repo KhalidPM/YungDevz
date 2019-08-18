@@ -45,13 +45,13 @@ export class EvaluationPage extends QcParentScreen {
   }
   // --------------  Updates state to reflect a change in a category rating --------------
 
-  //Saves the evaluation 
-  doSubmitRating() {
+  //Saves the evaluation as a new assignment
+  async doSubmitRating() {
 
     let { rating, notes, improvementAreas, assignmentName, classID, studentID, classStudent } = this.state;
     notes = notes.trim();
     let evaluationDetails = {
-      ID: (studentID + (classStudent.totalAssignments + 1) + ""), 
+      ID: (studentID + (classStudent.totalAssignments + 1) + ""),
       name: assignmentName,
       completionDate: new Date().toLocaleDateString("en-US"),
       evaluation: {
@@ -72,6 +72,11 @@ export class EvaluationPage extends QcParentScreen {
 
   }
 
+  //Overwrites a previously saved assignment with the new data
+  async saveRating() {
+    
+  }
+
   //------------  Ensures a rating is inputted before submitting it -------
   submitRating() {
     if (this.state.rating === 0) {
@@ -81,14 +86,22 @@ export class EvaluationPage extends QcParentScreen {
         [
           {
             text: 'Yes', style: 'cancel', onPress: () => {
-              this.doSubmitRating()
+              if (this.props.navigation.state.params.newAssignment === true) {
+                this.doSubmitRating()
+              } else {
+                this.saveRating();
+              }
             }
           },
           { text: 'No', style: 'cancel' }
         ]
       );
     } else {
-      this.doSubmitRating();
+      if (this.props.navigation.state.params.newAssignment === true) {
+        this.doSubmitRating()
+      } else {
+        this.saveRating();
+      }
     }
   }
 
@@ -129,8 +142,6 @@ export class EvaluationPage extends QcParentScreen {
                   LeftIconName="angle-left"
                   LeftOnPress={() => this.props.navigation.goBack()}
                   Title={strings.Evaluation}
-                  RightTextName={strings.Save}
-                  RightOnPress={() => { this.setState({ readOnly: true }) }}
                 />}
             <View style={styles.evaluationContainer}>
               <View style={styles.section}>
@@ -185,7 +196,9 @@ export class EvaluationPage extends QcParentScreen {
               <QcActionButton
                 text={strings.Submit}
 
-                onPress={() => { this.submitRating() }}
+                onPress={() => {
+                  this.submitRating()
+                }}
                 screen={this.name}
               /> : <View></View>}
           </View>
