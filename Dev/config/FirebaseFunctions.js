@@ -115,6 +115,19 @@ export default class FirebaseFunctions {
 
     }
 
+    //This function will take in an array of class IDs and return an array of class objects that'll
+    //be fetched from firestore
+    static async getClassesByIDs(classIDs) {
+
+        let arrayOfClassObjects = await classIDs.map((classID) => {
+            const classObject = await this.getClassByID(classID);
+            return classObject;
+        });
+
+        return arrayOfClassObjects;
+
+    }
+
     //This function will take in an ID of a teacher document, and an updated object, and will update
     //the document in firestore accordingly
     static async updateTeacherObject(ID, newObject) {
@@ -166,6 +179,31 @@ export default class FirebaseFunctions {
             classes: firebase.firestore.FieldValue.arrayUnion(newClass.id)
         })
         await this.batch.commit();
+        return 0;
+
+    }
+
+    //This method will allow a student to join a class. It will take in a studentID and a classID.
+    //It will add that student to the array of students within the class object. Then it will add
+    //the classID to the array of classes withint the student object. Then it will finally update
+    //the "currentClassID" property within the student object. If the class does not exist, the method
+    //will return a value of -1, otherwise it will return 0;
+    static async joinClass(studentID, classID) {
+
+        const classToJoin = await this.classes.doc(classID).get();
+        if (!classToJoin.exists) {
+            return -1;
+        }
+
+        await this.updateClassObject(classID, {
+            students: firebase.firestore.FieldValue.arrayUnion(studentID)
+        });
+
+        await this.updateStudentObject(studentID, {
+            classes: firebase.firestore.FieldValue.arrayUnion(classID),
+            currentClassID: classID
+        });
+
         return 0;
 
     }
