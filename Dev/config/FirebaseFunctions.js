@@ -119,7 +119,7 @@ export default class FirebaseFunctions {
     //be fetched from firestore
     static async getClassesByIDs(classIDs) {
 
-        let arrayOfClassObjects = await classIDs.map((classID) => {
+        let arrayOfClassObjects = await classIDs.map(async (classID) => {
             const classObject = await this.getClassByID(classID);
             return classObject;
         });

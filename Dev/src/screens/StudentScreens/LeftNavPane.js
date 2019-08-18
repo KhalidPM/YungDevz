@@ -59,7 +59,7 @@ class LeftNavPane extends QcParentScreen {
 
     }
 
-    openClass(id) {
+    async openClass(id) {
         //update current class index in firebase
         await FirebaseFunctions.updateStudentObject(this.state.userID, {
             currentClassID: id
