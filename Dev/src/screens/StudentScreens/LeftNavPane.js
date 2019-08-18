@@ -1,7 +1,7 @@
 //This will be the actual drawer items that will display from the student side when the click on
 //the hamburger icon
 import React from "react";
-import { View, FlatList, ScrollView, StyleSheet, Modal, Text } from "react-native";
+import { View, FlatList, ScrollView, StyleSheet, Modal, Text, Alert } from "react-native";
 import colors from "config/colors";
 import classImages from "config/classImages";
 import { SafeAreaView } from "react-navigation";
@@ -12,27 +12,59 @@ import strings from 'config/strings';
 import QcParentScreen from "screens/QcParentScreen";
 import { Input } from 'react-native-elements';
 import QcActionButton from 'components/QcActionButton';
-import { saveStudentInfo } from "model/actions/saveStudentInfo";
-import { connect } from "react-redux";
-import { bindActionCreators } from 'redux';
+import FirebaseFunctions from 'config/FirebaseFunctions';
+import LoadingSpinner from 'components/LoadingSpinner';
 
 class LeftNavPane extends QcParentScreen {
-    name = "LeftNavPane";
 
     state = {
+        student: this.props.navigation.state.params.student,
+        userID: this.props.navigation.state.params.userID,
+        classes: this.props.navigation.state.params.classes,
         modalVisible: false,
-        authCode: ""
+        classCode: "",
+        isLoading: false
     }
 
-    joinClass() {
-        //Add method to join the class
+    //Sets the screen name for firebase analytics
+    componentDidMount() {
+
+        FirebaseFunctions.setCurrentScreen("Student Left Nav Pane", "LeftNavPane");
+
     }
 
-    openClass = (id, className) => {
-        //update current class index in redux
-        this.props.saveStudentInfo(
-            { currentClassID: id }
-        );
+    //Joins the class by first testing if this class exists. If the class doesn't exist, then it will
+    //alert the user that it does not exist. If the class does exist, then it will join the class, and
+    //navigate to the current class screen.
+    async joinClass() {
+
+        this.setState({ isLoading: true });
+        const { userID, classCode } = this.state;
+
+        const didJoinClass = await FirebaseFunctions.joinClass(userID, classCode);
+        if (didJoinClass === -1) {
+            Alert.alert(strings.Whoops, strings.IncorrectClassCode);
+        } else {
+            //Refetches the student object to reflect the updated database
+            const student = await FirebaseFunctions.getStudentByID(userID);
+            this.setState({
+                isLoading: false,
+                modalVisible: false
+            })
+            this.props.navigation.push("CurrentClass", {
+                userID,
+                student
+            });
+        }
+
+    }
+
+    openClass(id) {
+        //update current class index in firebase
+        await FirebaseFunctions.updateStudentObject(this.state.userID, {
+            currentClassID: id
+        });
+
 
         //navigate to the selected class
         this.props.navigation.push("CurrentClass");
@@ -42,10 +74,11 @@ class LeftNavPane extends QcParentScreen {
     //todo: change the ListItem header and footer below to the shared drawer component intead
     //generalize the QcDrawerItem to accept either an image or an icon
     render() {
-        const { classes, name, imageId } = this.props;
+        const { student } = this.state;
+        const { classes, name, profileImageID } = student;
 
         const profileCaption = name + strings.sProfile
-        const studentImageId = imageId;
+        const studentImageId = profileImageID;
 
         return (
             <ScrollView style={{ flex: 1, backgroundColor: colors.lightGrey }}>
@@ -73,8 +106,8 @@ class LeftNavPane extends QcParentScreen {
                         renderItem={({ item, index }) => (
                             <QcDrawerItem
                                 title={item.name}
-                                image={classImages.images[item.imageId]}
-                                onPress={() => this.openClass(item.id, item.name)}
+                                image={classImages.images[item.classImageID]}
+                                onPress={() => this.openClass(item.ID)}
                             />
                         )} />
 
@@ -94,27 +127,36 @@ class LeftNavPane extends QcParentScreen {
                         transparent={true}
                         visible={this.state.modalVisible}
                         onRequestClode={() => { }}>
-
                         <View style={styles.modal}>
-                            <Text style={styles.confirmationMessage}>{strings.TypeInAClassCode}</Text>
-                            <Input
-                                type='authCode'
-                                keyboardType='numeric'
-                                onChangeText={(text) => { this.setState({ authCode: text }) }}
-                                value={this.state.authCode}
-                                keyboardType='numeric' />
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 5 }}>
-                                <QcActionButton
-                                    text={strings.Cancel}
-                                    onPress={() => { this.setState({ modalVisible: false }) }} />
-                                <QcActionButton
-                                    text={strings.Confirm}
-                                    onPress={() => {
-                                        //Joins the class
-                                        this.joinClass();
-                                        this.setState({ modalVisible: false });
-                                    }} />
-                            </View>
+                            {
+                                this.state.isLoading === true ? (
+                                    <View>
+                                        <LoadingSpinner isVisible={true} />
+                                    </View>
+                                ) : (
+                                        <View>
+                                            <Text style={styles.confirmationMessage}>{strings.TypeInAClassCode}</Text>
+                                            <Input
+                                                type='authCode'
+                                                keyboardType='numeric'
+                                                onChangeText={(text) => { this.setState({ classCode: text }) }}
+                                                value={this.state.classCode}
+                                                keyboardType='numeric' />
+                                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 5 }}>
+                                                <QcActionButton
+                                                    text={strings.Cancel}
+                                                    onPress={() => { this.setState({ modalVisible: false }) }} />
+                                                <QcActionButton
+                                                    text={strings.Confirm}
+                                                    onPress={() => {
+                                                        //Joins the class
+                                                        this.joinClass();
+                                                    }} />
+                                            </View>
+                                        </View>
+                                    )
+                            }
+
                         </View>
                     </Modal>
 
@@ -156,22 +198,5 @@ const styles = StyleSheet.create({
     },
 });
 
-const getStudentClasses = (classIds, classes) => {
-    return Object.values(classes).filter(c => classIds.includes(c.id))
-}
-
-const mapStateToProps = state => {
-    const { name, imageId, currentClassID } = state.data.student;
-    const classes = getStudentClasses(state.data.student.classes, state.data.classes);
-
-    return { classes, name, imageId, currentClassID };
-};
-
-const mapDispatchToProps = dispatch => (
-    bindActionCreators({
-        saveStudentInfo
-    }, dispatch)
-);
-
-export default connect(mapStateToProps, mapDispatchToProps)(LeftNavPane);
+export default LeftNavPane;
 

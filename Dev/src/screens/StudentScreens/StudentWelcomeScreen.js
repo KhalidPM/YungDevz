@@ -114,8 +114,12 @@ export class StudentWelcomeScreen extends QcParentScreen {
     }
 
     const ID = await FirebaseFunctions.signUp(emailAddress, password, false, studentObject);
+    const student = await FirebaseFunctions.getStudentByID(ID);
+    const classes = await FirebaseFunctions.getClassesByIDs(student.classes);
     this.props.navigation.push("StudentScreens", {
-      userID: ID
+      userID: ID,
+      student,
+      classes
     });
 
   };

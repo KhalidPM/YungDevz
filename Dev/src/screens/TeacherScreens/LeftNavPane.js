@@ -15,13 +15,14 @@ class LeftNavPane extends QcParentScreen {
 
   state = {
     teacher: this.props.navigation.state.params.teacher,
-    userID: this.props.navigation.state.params.userID
+    userID: this.props.navigation.state.params.userID,
+    classes: this.props.navigation.state.params.classes
   }
 
   //Sets the screen name
   async componentDidMount() {
 
-    FirebaseFunctions.setCurrentScreen("Left Nav Pane", "LeftNavPane");
+    FirebaseFunctions.setCurrentScreen("Teacher Left Nav Pane", "LeftNavPane");
 
   }
 
@@ -30,7 +31,7 @@ class LeftNavPane extends QcParentScreen {
     await FirebaseFunctions.updateTeacherObject(this.state.userID, {
       currentClassID: classID
     });
-    FirebaseFunctions.logEvent("OPEN_CLASS");
+    FirebaseFunctions.logEvent("TEACHER_OPEN_CLASS");
 
     //navigate to the selected class
     this.props.navigation.push("CurrentClass");
@@ -40,7 +41,8 @@ class LeftNavPane extends QcParentScreen {
   //todo: change the ListItem header and footer below to the shared drawer component intead
   // generalize the QcDrawerItem to accept either an image or an icon
   render() {
-    const { name, profileImageID, classes } = this.state.teacher;
+    const { name, profileImageID } = this.state.teacher;
+    const { classes } = this.state;
 
     const profileCaption = name + strings.sProfile
     const teacherImageId = profileImageID ? profileImageID : 0
@@ -77,8 +79,8 @@ class LeftNavPane extends QcParentScreen {
             renderItem={({ item, index }) => (
               <QcDrawerItem
                 title={item.name}
-                image={classImages.images[item.imageId]}
-                onPress={() => this.openClass(item.id)}
+                image={classImages.images[item.classImageID]}
+                onPress={() => this.openClass(item.ID)}
               />
             )} />
 

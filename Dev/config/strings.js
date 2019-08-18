@@ -84,6 +84,7 @@ export default {
     //--------------------- Join Class Screen ---------------------
     JoinClass: 'Join Class',
     TypeInAClassCode: 'Type in a class code...',
+    IncorrectClassCode: 'There doesn\'t seem to be a class with this code',
 
     //-------------------- Evaluation Sub-Categories -----------------------
     Memorization: "Memorization", 

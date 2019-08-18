@@ -69,16 +69,20 @@ class LoginScreen extends Component {
       if (this.state.isTeacher === true) {
         FirebaseFunctions.logEvent("TEACHER_LOG_IN");
         const teacher = await FirebaseFunctions.getTeacherByID(userID);
+        const classes = await FirebaseFunctions.getClassesByIDs(teacher.classes);
         this.props.navigation.push("TeacherScreens", {
           teacher,
-          userID
+          userID,
+          classes
         })
       } else {
         FirebaseFunctions.logEvent("STUDENT_LOG_IN");
         const student = await FirebaseFunctions.getTeacherByID(userID);
+        const classes = await FirebaseFunctions.getClassesByIDs(student.classes);
         this.props.navigation.push("StudentScreens", {
           student,
-          userID
+          userID,
+          classes
         });
       }
     }
