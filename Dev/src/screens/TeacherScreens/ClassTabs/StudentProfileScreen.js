@@ -2,62 +2,65 @@ import React from 'react';
 import { View, Image, Text, StyleSheet, ScrollView, FlatList, TouchableHighlight, TouchableOpacity, Alert } from 'react-native';
 import colors from 'config/colors';
 import { Rating } from 'react-native-elements';
-import { editCurrentAssignment } from 'model/actions/editCurrentAssignment';
-import { updateStudentImage } from 'model/actions/updateStudentImage';
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
 import strings from 'config/strings';
 import studentImages from 'config/studentImages';
-import TouchableText from 'components/TouchableText'
-import ImageSelectionModal from 'components/ImageSelectionModal';
-import LoadingSpinner from '../../components/LoadingSpinner';
+import LoadingSpinner from 'components/LoadingSpinner';
 import QcParentScreen from 'screens/QcParentScreen';
 import AssignmentEntryComponent from 'components/AssignmentEntryComponent';
+import FirebaseFunctions from 'config/FirebaseFunctions';
+import LoadingSpinner from 'components/LoadingSpinner';
 
 
 
 class StudentProfileScreen extends QcParentScreen {
 
-  name = "StudentProfileScreen";
-
   state = {
+    studentID: this.props.navigation.state.params.studentID,
+    currentClass: this.props.navigation.state.params.currentClass,
+    classID: this.props.navigation.state.params.currentClassID,
+    currentAssignment: '',
+    classStudent: '',
     isDialogVisible: false,
-    averageGrade: 0,
-    isModalVisible: false
+    isLoading: true
+  }
+
+  //Sets the screen for firebase analytics & fetches the correct student from this class
+  componentDidMount() {
+
+    FirebaseFunctions.setCurrentScreen("Student Profile Screen", "StudentProfileScreen");
+    const { currentClass, studentID } = this.state;
+    const student = currentClass.students.find((eachStudent) => {
+      return eachStudent.ID === studentID;
+    });
+
+    this.setState({
+      classStudent: student,
+      currentAssignment: student.currentAssignment,
+      isLoading: false
+    });
+
   }
 
   //method updates the current assignment of the student
-  editAssignment(classId, studentId, newAssignmentName) {
+  editAssignment(newAssignmentName) {
+
     if (newAssignmentName.trim() === "") {
       Alert.alert(strings.Whoops, strings.PleaseEnterAnAssignmentName);
     } else {
-      this.props.editCurrentAssignment(classId, studentId, newAssignmentName);
-      this.setState({ isDialogVisible: false });
+
+      const { classID, studentID } = this.state;
+      //Updates the local state then pushes to firestore
+      this.setState({ isDialogVisible: false, currentAssignment: newAssignmentName });
+      FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, newAssignmentName);
     }
+
   }
 
-  //---------- profile image views handlers --------------
-  setModalVisible(visible) {
-    this.setState({ isModalVisible: visible });
-  }
-
-  setDialogueVisible(visible){
-    this.setState({isDialogVisible: visible})
+  setDialogueVisible(visible) {
+    this.setState({ isDialogVisible: visible })
   }
 
   //this method saves the new profile information to the redux database
-  saveProfileInfo = (teacherID) => {
-
-    this.refs.toast.show("Your profile has been saved", DURATION.LENGTH_SHORT);
-  }
-
-  onImageSelected(index) {
-    this.setState({ profileImageId: index })
-    let { classId, studentId } = this.props.navigation.state.params;
-    this.props.updateStudentImage(classId, studentId, index)
-    this.setModalVisible(false);
-  }
-
   getRatingCaption() {
     let caption = strings.GetStarted;
 
@@ -77,32 +80,27 @@ class StudentProfileScreen extends QcParentScreen {
 
   //---------- main UI render ===============================
   render() {
-    const { classId, studentId, currentStudent, currentAssignment, assignmentsHistory } = this.props
+    const { classStudent, isLoading } = this.state;
+    const { currentAssignment, assignmentsHistory, averageRating, name } = classStudent;
     const hasCurrentAssignment = currentAssignment.name === 'None' ? false : true;
 
-    //retrieves the student's average rating. If the student hasn't had any assignments, then 
-    //the rating will default to 0.
-    averageRating = currentAssignment.grade;
-    const dialogInitialText = currentAssignment.name === 'None' ? { hintInput: strings.EnterAssignmentHere } : { initValueTextInput: currentAssignment.name }
+    //If the screen is loading, a spinner will display
+    if (isLoading === true) {
+      return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <LoadingSpinner isVisible={true} />
+        </View>
+      )
+    }
 
     return (
       <View style={styles.container}>
 
         <AssignmentEntryComponent
           visible={this.state.isDialogVisible}
-          screen={this.name}
           onSubmit={(inputText) =>
-            this.editAssignment(classId, studentId, inputText)}
-          onCancel = {() => this.setDialogueVisible(false)}
-        />
-
-        <ImageSelectionModal
-          visible={this.state.isModalVisible}
-          images={studentImages.images}
-          cancelText="Cancel"
-          setModalVisible={this.setModalVisible.bind(this)}
-          onImageSelected={this.onImageSelected.bind(this)}
-          screen={this.name}
+            this.editAssignment(inputText)}
+          onCancel={() => this.setDialogueVisible(false)}
         />
 
         {this.state.fontLoaded ? (
@@ -115,7 +113,7 @@ class StudentProfileScreen extends QcParentScreen {
 
                 </View>
                 <View style={styles.profileInfoTopRight}>
-                  <Text numberOfLines={1} style={styles.bigText}>{currentStudent.name.toUpperCase()}</Text>
+                  <Text numberOfLines={1} style={styles.bigText}>{name.toUpperCase()}</Text>
                   <View style={{ flexDirection: 'row', height: 25 }}>
                     <Rating readonly={true} startingValue={averageRating} imageSize={25} />
                     <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
@@ -131,11 +129,6 @@ class StudentProfileScreen extends QcParentScreen {
                   <Image
                     style={styles.profilePic}
                     source={studentImages.images[this.state.profileImageId >= 0 ? this.state.profileImageId : currentStudent.imageId]} />
-                  <TouchableText
-                    text="update image"
-                    onPress={() => this.setModalVisible(true)}
-                    style={{ paddingRight: 0, paddingLeft: 0, marginLeft: 0, fontSize: 12 }}
-                  />
                 </View>
                 <View style={{ flex: 1, flexDirection: 'column', height: 59 }}>
                   <Text numberOfLines={1} style={styles.assignmentTextLarge}>{currentAssignment.name.toUpperCase()}</Text>
@@ -355,33 +348,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state, ownProps) => {
-  const { classId, studentId } = ownProps.navigation.state.params;
-  const currentStudent = state.data.students[studentId];
-  let currentAssignment = { name: 'None', date: '' };
-  let assignmentsHistory = []
-
-  if (state.data.currentAssignments.byClassId[classId] &&
-    state.data.currentAssignments.byClassId[classId].byStudentId[studentId] &&
-    state.data.currentAssignments.byClassId[classId].byStudentId[studentId][0]) {
-    currentAssignment = state.data.currentAssignments.byClassId[classId].byStudentId[studentId][0];
-  }
-
-  if (state.data.assignmentsHistory.byStudentId[studentId] &&
-    state.data.assignmentsHistory.byStudentId[studentId].byClassId[classId]) {
-    assignmentsHistory = state.data.assignmentsHistory.byStudentId[studentId].byClassId[classId];
-  }
-
-  return { classId, studentId, currentStudent, currentAssignment, assignmentsHistory };
-};
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      editCurrentAssignment,
-      updateStudentImage
-    },
-    dispatch
-  );
-
-export default connect(mapStateToProps, mapDispatchToProps)(StudentProfileScreen);
+export default StudentProfileScreen;

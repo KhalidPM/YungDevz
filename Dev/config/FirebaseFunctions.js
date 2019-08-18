@@ -222,12 +222,11 @@ export default class FirebaseFunctions {
     //This function will update the assignment status of a particular student within a class. It will
     //simply reverse whatever the property is at the moment (true --> false & vice verca). This property
     //is located within a student object that is within a class object
-    static async updateAssignmentStatus(classID, studentID) {
+    static async updateStudentAssignmentStatus(classID, studentID) {
 
-        const ref = this.classes.doc(classID);
-        const doc = await ref.get();
+        let currentClass = await this.getClassByID(classID);
         
-        let arrayOfStudents = doc.data().students;
+        let arrayOfStudents = currentClass.students;
         let studentIndex = arrayOfStudents.findIndex((student) => {
             return student.ID === studentID;
         });
@@ -239,6 +238,28 @@ export default class FirebaseFunctions {
         });
 
         return 0;
+
+    }
+
+    //This method will update the currentAssignment property of a student within a class.
+    //To locate the correct student, the method will take in params of the classID, the studentID,
+    //and finally, the name of the new assignment which it will set the currentAssignment property 
+    //to
+    static async updateStudentCurrentAssignment(classID, studentID, newAssignmentName) {
+
+        let currentClass = await this.getClassByID(classID);
+
+        let arrayOfStudents = currentClass.students;
+        let studentIndex = arrayOfStudents.findIndex((student) => {
+            return student.ID === studentID;
+        });
+
+        arrayOfStudents[studentIndex].currentAssignment = newAssignmentName;
+
+        await this.updateClassObject(classID, {
+            students: arrayOfStudents
+        });
+
 
     }
 

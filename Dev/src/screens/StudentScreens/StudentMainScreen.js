@@ -113,7 +113,7 @@ class StudentMainScreen extends QcParentScreen {
                     <TouchableOpacity style={{ flex: 1 }} onPress={() => {
                         //To-Do: Updates the state of the assignment & communicates it with the teacher
                         if (thisClassInfo.currentAssignment !== "None") {
-                            FirebaseFunctions.updateAssignmentStatus(currentClassID, userID);
+                            FirebaseFunctions.updateStudentAssignmentStatus(currentClassID, userID);
                             this.setState({ isReady: !isReady });
                         }
                     }}>

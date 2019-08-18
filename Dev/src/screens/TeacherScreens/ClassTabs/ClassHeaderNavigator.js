@@ -2,7 +2,7 @@ import React from 'react';
 import TopBanner from 'components/TopBanner'
 import { createStackNavigator } from 'react-navigation';
 import ClassTabsNavigator from './ClassTabsNavigator';
-import StudentProfileScreen from 'screens/StudentProfile/StudentProfileScreen';
+import StudentProfileScreen from 'screens/TeacherScreens/ClassTabs/StudentProfileScreen';
 import ClassEditScreen from 'screens/TeacherScreens/ClassTabs/ClassEditScreen';
 import EvaluationPage from 'screens/Evaluation/EvaluationPage';
 import strings from 'config/strings';
