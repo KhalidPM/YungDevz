@@ -260,7 +260,40 @@ export default class FirebaseFunctions {
             students: arrayOfStudents
         });
 
+        return 0;
 
+    }
+
+    //This function will complete a current assignment that belongs to a certain student within a class
+    //It will take params of a studentID, a classID, and an evaluation object that it will add
+    //to the array of the student's assignment history. Also increments the total assignment
+    //count by 1. Then it calculates the new average grade for the student.
+    static async completeCurrentAssignment(classID, studentID, evaluationDetails) {
+        
+
+        let currentClass = await this.getClassByID(classID);
+
+        let arrayOfStudents = currentClass.students;
+        let studentIndex = arrayOfStudents.findIndex((student) => {
+            return student.ID === studentID;
+        });
+
+        arrayOfStudents[studentIndex].totalAssignments = arrayOfStudents[studentIndex].totalAssignments + 1;
+        arrayOfStudents[studentIndex].assignmentHistory.push(evaluationDetails);
+
+        let avgGrade = 0;
+        arrayOfStudents[studentIndex].assignmentHistory.forEach((assignment) => {
+            avgGrade += assignment.evaluation.rating;
+        });
+        avgGrade /= arrayOfStudents[studentIndex].totalAssignments;
+        arrayOfStudents[studentIndex].averageRating = avgGrade;
+
+        await this.updateClassObject(classID, {
+            students: arrayOfStudents
+        });
+
+        return 0;
+        
     }
 
     //This function will take in a student ID & a class ID and remove the connection between that student

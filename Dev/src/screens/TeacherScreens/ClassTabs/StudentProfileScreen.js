@@ -80,7 +80,7 @@ class StudentProfileScreen extends QcParentScreen {
 
   //---------- main UI render ===============================
   render() {
-    const { classStudent, isLoading } = this.state;
+    const { classStudent, isLoading, classID, studentID } = this.state;
     const { currentAssignment, assignmentsHistory, averageRating, name } = classStudent;
     const hasCurrentAssignment = currentAssignment.name === 'None' ? false : true;
 
@@ -140,9 +140,13 @@ class StudentProfileScreen extends QcParentScreen {
 
                     {hasCurrentAssignment ? <TouchableHighlight onPress={() =>
                       this.props.navigation.push("EvaluationPage", {
-                        studentId: studentId,
-                        classId: classId,
-                        newAssignment: true
+                        classID: classID,
+                        studentID: studentID,
+                        assignmentName: currentAssignment,
+                        classStudent: classStudent,
+                        newAssignment: true,
+                        readOnly: false,
+                        currentClass: this.state.currentClass
                       })} >
                       <Text style={styles.assignmentActionText}>{strings.Grade}</Text>
                     </TouchableHighlight> : <View />}
@@ -159,14 +163,17 @@ class StudentProfileScreen extends QcParentScreen {
                 keyExtractor={(item, index) => item.name + index}
                 renderItem={({ item, index }) => (
                   <TouchableOpacity onPress={() => this.props.navigation.push("EvaluationPage", {
-                    classId: classId,
-                    studentId: studentId,
+                    classID: classID,
+                    studentID: studentID,
+                    classStudent: classStudent,
                     assignmentName: item.name,
                     completionDate: item.completionDate,
                     rating: item.evaluation.grade,
                     notes: item.evaluation.notes,
                     improvementAreas: item.evaluation.improvementAreas,
-                    readOnly: true
+                    readOnly: true,
+                    newAssignment: false,
+                    currentClass: this.state.currentClass
                   })}>
                     <View style={styles.prevAssignmentCard} key={index}>
                       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
