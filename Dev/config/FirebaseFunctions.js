@@ -296,6 +296,30 @@ export default class FirebaseFunctions {
         
     }
 
+    //This function will take in an assignment details object and overwrite an old evaluation with the new data.
+    //It will take in a classID, a studentID, and an evaluationID in order to locate the correct evaluation object
+    static async overwriteOldEvaluation(classID, studentID, evaluationID, newEvaluation) {
+
+        let currentClass = await this.getClassByID(classID);
+        let arrayOfStudents = currentClass.students;
+        let studentIndex = arrayOfStudents.findIndex((student) => {
+            return student.ID === studentID;
+        });
+
+        let copyOfEvaluationObjectIndex = arrayOfStudents[studentIndex].assignmentHistory.findIndex((assignment) => {
+            return assignment.ID === evaluationID;
+        });
+
+        arrayOfStudents[studentIndex].assignmentHistory[copyOfEvaluationObjectIndex].evaluation = newEvaluation;
+
+        await this.updateClassObject(classID, {
+            students: arrayOfStudents
+        });
+
+        return 0;
+
+    } 
+
     //This function will take in a student ID & a class ID and remove the connection between that student
     //and the class 
     static async removeStudent(classID, studentID) {

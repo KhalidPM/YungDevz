@@ -40,6 +40,9 @@ export class EvaluationPage extends QcParentScreen {
     }
 
     const studentObject = await FirebaseFunctions.getStudentByID(this.state.studentID);
+
+    //Fetches the ID for the evaluation (if there is none, it is created)
+    const evaluationID = this.props.navigation.state.params.evaluationID ? this.props.navigation.state.params.evaluationID : (this.state.studentID + (this.state.classStudent.totalAssignments + 1) + "");
     this.state({ studentObject, isLoading: false });
 
   }
@@ -48,10 +51,10 @@ export class EvaluationPage extends QcParentScreen {
   //Saves the evaluation as a new assignment
   async doSubmitRating() {
 
-    let { rating, notes, improvementAreas, assignmentName, classID, studentID, classStudent } = this.state;
+    let { rating, notes, improvementAreas, assignmentName, classID, studentID, classStudent, evaluationID } = this.state;
     notes = notes.trim();
     let evaluationDetails = {
-      ID: (studentID + (classStudent.totalAssignments + 1) + ""),
+      ID: evaluationID,
       name: assignmentName,
       completionDate: new Date().toLocaleDateString("en-US"),
       evaluation: {
@@ -62,19 +65,38 @@ export class EvaluationPage extends QcParentScreen {
     }
     this.setState({ isLoading: true });
     await FirebaseFunctions.completeCurrentAssignment(classID, studentID, evaluationDetails);
+    const currentClass = await FirebaseFunctions.getClassByID(this.state.classID);
     this.setState({ isLoading: false });
 
     this.props.navigation.push("StudentProfile", {
       studentID: this.state.studentID,
-      currentClass: this.props.navigation.state.paramscurrentClass,
+      currentClass,
       classID: this.state.classID
     });
 
   }
 
   //Overwrites a previously saved assignment with the new data
-  async saveRating() {
-    
+  async overwriteOldEvaluation() {
+
+    const { classID, studentID, evaluationID, notes, rating, improvementAreas } = this.state;
+
+    this.setState({ isLoading: true });
+    let evaluationDetails = {
+      rating,
+      notes,
+      improvementAreas,
+    }
+
+    await FirebaseFunctions.overwriteOldEvaluation(classID, studentID, evaluationID, evaluationDetails);
+
+    const currentClass = await FirebaseFunctions.getClassByID(this.state.classID);
+    this.props.navigation.push("StudentProfile", {
+      studentID: this.state.studentID,
+      currentClass,
+      classID: this.state.classID
+    });
+
   }
 
   //------------  Ensures a rating is inputted before submitting it -------
@@ -89,7 +111,7 @@ export class EvaluationPage extends QcParentScreen {
               if (this.props.navigation.state.params.newAssignment === true) {
                 this.doSubmitRating()
               } else {
-                this.saveRating();
+                this.overwriteOldEvaluation();
               }
             }
           },
@@ -100,7 +122,7 @@ export class EvaluationPage extends QcParentScreen {
       if (this.props.navigation.state.params.newAssignment === true) {
         this.doSubmitRating()
       } else {
-        this.saveRating();
+        this.overwriteOldEvaluation();
       }
     }
   }

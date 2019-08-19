@@ -146,7 +146,6 @@ class StudentProfileScreen extends QcParentScreen {
                         classStudent: classStudent,
                         newAssignment: true,
                         readOnly: false,
-                        currentClass: this.state.currentClass
                       })} >
                       <Text style={styles.assignmentActionText}>{strings.Grade}</Text>
                     </TouchableHighlight> : <View />}
@@ -173,7 +172,6 @@ class StudentProfileScreen extends QcParentScreen {
                     improvementAreas: item.evaluation.improvementAreas,
                     readOnly: true,
                     newAssignment: false,
-                    currentClass: this.state.currentClass
                   })}>
                     <View style={styles.prevAssignmentCard} key={index}>
                       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
