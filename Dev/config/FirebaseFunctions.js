@@ -183,49 +183,13 @@ export default class FirebaseFunctions {
 
     }
 
-    //This method will allow a student to join a class. It will take in a student object and a classID.
-    //It will add that student to the array of students within the class object. Then it will add
-    //the classID to the array of classes withint the student object. Then it will finally update
-    //the "currentClassID" property within the student object. If the class does not exist, the method
-    //will return a value of -1, otherwise it will return 0;
-    static async joinClass(student, classID) {
-
-        const studentID = student.ID;
-
-        const classToJoin = await this.classes.doc(classID).get();
-        if (!classToJoin.exists) {
-            return -1;
-        }
-
-        await this.updateClassObject(classID, {
-            students: firebase.firestore.FieldValue.arrayUnion({
-                ID: studentID,
-                assignmentHistory: [],
-                attendanceHistory: [],
-                averageRating: 0,
-                currentAssignment: 'None',
-                isReady: true,
-                name: student.name,
-                totalAssignments: 0
-            })
-        });
-
-        await this.updateStudentObject(studentID, {
-            classes: firebase.firestore.FieldValue.arrayUnion(classID),
-            currentClassID: classID
-        });
-
-        return 0;
-
-    }
-
     //This function will update the assignment status of a particular student within a class. It will
     //simply reverse whatever the property is at the moment (true --> false & vice verca). This property
     //is located within a student object that is within a class object
     static async updateStudentAssignmentStatus(classID, studentID) {
 
         let currentClass = await this.getClassByID(classID);
-        
+
         let arrayOfStudents = currentClass.students;
         let studentIndex = arrayOfStudents.findIndex((student) => {
             return student.ID === studentID;
@@ -269,7 +233,7 @@ export default class FirebaseFunctions {
     //to the array of the student's assignment history. Also increments the total assignment
     //count by 1. Then it calculates the new average grade for the student.
     static async completeCurrentAssignment(classID, studentID, evaluationDetails) {
-        
+
 
         let currentClass = await this.getClassByID(classID);
 
@@ -293,7 +257,7 @@ export default class FirebaseFunctions {
         });
 
         return 0;
-        
+
     }
 
     //This function will take in an assignment details object and overwrite an old evaluation with the new data.
@@ -318,7 +282,89 @@ export default class FirebaseFunctions {
 
         return 0;
 
-    } 
+    }
+
+    //This method will take in a classID & a specific date as well as an array of absent students
+    //It will then save the attendance for each student that day. The attendace will be saved in the class version
+    //of the student object because attendance is per class
+    static async saveAttendanceForClass(absentStudents, selectedDate, classID) {
+
+        let currentClass = await this.getClassByID(classID);
+        let arrayOfStudents = currentClass.students;
+        let updatedArrayOfStudents = arrayOfStudents.map((student) => {
+
+            //If the attendance already exists, then the code will automatically replace
+            //the old attendance with this one
+            student.attendanceHistory[selectedDate] = (absentStudents.includes(student.ID) ? false : true);
+
+        });
+
+        await this.updateClassObject(classID, {
+            students: updatedArrayOfStudents
+        });
+
+        return 0;
+
+    }
+
+    //This function takes in a date as a parameter and returns an array of students that were absent for this specifc
+    //date. If a particular student does not have an attendance saved for this date, then they will not be added to the
+    //array of absent students. To locate the particular class to return the attendance to, the classID will also be
+    //a paremeter
+    async getAbsentStudentsByDate(date, classID) {
+
+        let absentStudents = [];
+        let currentClass = await this.getClassByID(classID);
+
+        currentClass.students.map((student) => {
+
+            let studentAttendanceHistory = student.attendanceHistory;
+            if (studentAttendanceHistory[date] && studentAttendanceHistory[date] === false) {
+                absentStudents.push(student.ID);
+            }
+
+        });
+
+        return absentStudents;
+
+    }
+
+    //This method will allow a student to join a class. It will take in a student object and a classID.
+    //It will add that student to the array of students within the class object. Then it will add
+    //the classID to the array of classes withint the student object. Then it will finally update
+    //the "currentClassID" property within the student object. If the class does not exist, the method
+    //will return a value of -1, otherwise it will return 0;
+    static async joinClass(student, classID) {
+
+        const studentID = student.ID;
+
+        const classToJoin = await this.classes.doc(classID).get();
+        if (!classToJoin.exists) {
+            return -1;
+        }
+
+        await this.updateClassObject(classID, {
+            students: firebase.firestore.FieldValue.arrayUnion({
+                ID: studentID,
+                assignmentHistory: [],
+                attendanceHistory: {},
+                averageRating: 0,
+                currentAssignment: 'None',
+                isReady: true,
+                profileImageID: student.profileImageID,
+                name: student.name,
+                totalAssignments: 0
+            })
+        });
+
+        await this.updateStudentObject(studentID, {
+            classes: firebase.firestore.FieldValue.arrayUnion(classID),
+            currentClassID: classID
+        });
+
+        return 0;
+
+    }
 
     //This function will take in a student ID & a class ID and remove the connection between that student
     //and the class 

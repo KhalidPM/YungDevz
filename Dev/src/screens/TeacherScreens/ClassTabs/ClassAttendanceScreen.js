@@ -12,47 +12,44 @@ import studentImages from 'config/studentImages'
 import strings from 'config/strings';
 import mapStateToCurrentClassProps from 'screens/TeacherScreens/helpers/mapStateToCurrentClassProps'
 import QcParentScreen from 'screens/QcParentScreen';
+import FirebaseFunctions from 'config/FirebaseFunctions';
 
 export class ClassAttendanceScreen extends QcParentScreen {
 
+    state = {
+        isLoading: true,
+        currentClass: '',
+        currentClassID: '',
+        students: '',
+        absentStudents: [],
+        selectedDate: new Date().toLocaleDateString("en-US")
+    }
 
-    //This method will set the state of the attendance screen based on the isHere property
-    //from each student's attendance history based on the corresponding date
-    getAttendance = (date) => {
-        const { students, attendance } = this.props;
-        let absent = [];
-        //Capture absent students to flag them in the UI.
-        students.map((student, i) => {
-            let wasHere = attendance.byStudentId[student.id][date];
-            if (wasHere === false) {
-                absent.push(i);
-            }
-        })
+    //Sets the screen name for firebase analytics and gets the initial students
+    async componentDidMount() {
+
+        FirebaseFunctions.setCurrentScreen("Class Attendance Screen", "ClassAttendanceScreen");
+
+        const { currentClassID } = this.props.navigation.state.params.teacher;
+        const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
+        const { students } = currentClass;
+        const { selectedDate } = this.state;
+        const absentStudents = await FirebaseFunctions.getAbsentStudentsByDate(selectedDate, currentClassID);
 
         this.setState({
-            absentStudents: absent,
-            selectedDate: date
-        })
+            isLoading: false,
+            currentClass,
+            currentClassID,
+            students,
+            absentStudents
+        });
 
-        return absent;
-    }
-
-    name = "ClassAttendanceScreen";
-
-    todaysDate = this.props.defaultDate ? this.props.defaultDate : new Date().toLocaleDateString("en-US")
-    state = {
-        absentStudents: [],
-        selectedDate: this.todaysDate
-    }
-
-    componentDidMount() {
-        this.setState({ absentStudents: this.getAttendance(this.todaysDate) });
     }
 
     //This method will set the student selected property to the opposite of whatever it was
     //by either removing the student or adding them to the array of selected students
     //based on if they are already in the array or not
-    onStudentSelected = (id) => {
+    onStudentSelected(id) {
         let tmp = this.state.absentStudents;
 
         if (tmp.includes(id)) {
@@ -70,32 +67,15 @@ export class ClassAttendanceScreen extends QcParentScreen {
 
     //fetches the current selected students and the current selected date and adds the current
     //attendance to the database
-    saveAttendance = () => {
-        let absent = this.state.absentStudents;
-        let date = this.state.selectedDate;
-        let attendanceInfo = {};
+    async saveAttendance() {
 
-        this.props.students.map((student, index) => {
-            attendanceInfo = {
-                ...attendanceInfo,
-                [student.id]: {
-                    [date]: !absent.includes(index)
-                }
-            }
-        });
-
-        this.props.addAttendance(
-            this.props.classId,
-            date,
-            attendanceInfo,
-        );
-
+        let { absentStudents, selectedDate, currentClassID } = this.state;
+        await FirebaseFunctions.saveAttendanceForClass(absentStudents, selectedDate, currentClassID);
         this.refs.toast.show(strings.AttendanceFor + date + strings.HasBeenSaved, DURATION.LENGTH_SHORT);
+
     }
 
     render() {
-
-        const { classId } = this.props;
 
         return (
             //The scroll view will have at the top a date picker which will be defaulted to the current
@@ -110,9 +90,19 @@ export class ClassAttendanceScreen extends QcParentScreen {
                         format="MM-DD-YYYY"
                         duration={300}
                         style={{ paddingLeft: 15 }}
-                        maxDate={this.todaysDate}
+                        maxDate={new Date().toLocaleDateString("en-US")}
                         customStyles={{ dateInput: { borderColor: colors.lightGrey } }}
-                        onDateChange={(date) => this.getAttendance(date)}
+                        onDateChange={(date) => {
+                            this.setState({
+                                selectedDate: date,
+                                isLoading: true
+                            });
+                            const absentStudents = await FirebaseFunctions.getAbsentStudentsByDate(this.state.selectedDate, this.state.currentClassID);
+                            this.setState({
+                                isLoading: false,
+                                absentStudents
+                            });
+                        }}
                     />
                     <QcActionButton
                         text={strings.SaveAttendance}
@@ -121,16 +111,15 @@ export class ClassAttendanceScreen extends QcParentScreen {
                         screen={this.name}
                     />
                 </View>
-                {this.props.students.map((student, i) => {
-                    let color = this.state.absentStudents.includes(i) ? colors.red : colors.green;
+                {this.state.students.map((student) => {
+                    let color = this.state.absentStudents.includes(student.ID) ? colors.red : colors.green;
                     return (
                         <StudentCard
-                            key={i}
                             studentName={student.name}
-                            profilePic={studentImages.images[student.imageId]}
-                            currentAssignment={this.props.currentAssignments.byStudentId[student.id][0].name}
+                            profilePic={studentImages.images[student.profileImageID]}
+                            currentAssignment={student.currentAssignment}
                             background={color}
-                            onPress={() => this.onStudentSelected(i)}
+                            onPress={() => this.onStudentSelected(student.ID)}
                         />
                     );
                 })}
@@ -157,16 +146,4 @@ const styles = StyleSheet.create({
     }
 });
 
-const mapStateToProps = (state) => {
-    let props = mapStateToCurrentClassProps(state)
-    let attendance = state.data.attendance.byClassId[props.classId];
-    return { ...props, attendance }
-};
-
-const mapDispatchToProps = dispatch => (
-    bindActionCreators({
-        addAttendance
-    }, dispatch)
-);
-
-export default connect(mapStateToProps, mapDispatchToProps)(ClassAttendanceScreen);
+export default ClassAttendanceScreen;
