@@ -60,7 +60,7 @@ export class AddClassScreen extends QcParentScreen {
     return false;
   }
 
-  // saves the class into redux
+  // saves the class into firebase
   async addNewClass() {
 
     if (!this.state.className || this.state.className.trim().length === 0) {

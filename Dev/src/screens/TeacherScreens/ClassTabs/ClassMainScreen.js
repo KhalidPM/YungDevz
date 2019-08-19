@@ -1,6 +1,5 @@
 import React from "react";
-import { ScrollView, StyleSheet, FlatList, View, Text, TouchableOpacity, Image } from "react-native";
-import { connect } from "react-redux";
+import { ScrollView, StyleSheet, FlatList, View, Text, Image } from "react-native";
 import StudentCard from "components/StudentCard";
 import colors from "config/colors";
 import studentImages from "config/studentImages"
@@ -65,7 +64,7 @@ export class ClassMainScreen extends QcParentScreen {
               <TopBanner
                 LeftIconName="navicon"
                 LeftOnPress={() => navigation.openDrawer()}
-                Title={strings.titleNotPassed}
+                Title={"Quran Connect"}
               />
             )
           }

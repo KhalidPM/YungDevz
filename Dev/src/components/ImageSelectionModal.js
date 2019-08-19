@@ -4,7 +4,6 @@ import PropTypes from 'prop-types'
 import ImageSelectionGrid from 'components/ImageSelectionGrid'
 import TouchableText from 'components/TouchableText'
 import colors from 'config/colors'
-import analyticsEvents from 'config/analyticsEvents'
 
 //-------------------------------------------------------------
 // A Modal dialog that renders passed in data over ImageSelectionGrid

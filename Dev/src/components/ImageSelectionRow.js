@@ -4,7 +4,6 @@ import { Icon } from 'react-native-elements';
 import TouchableAvatar from 'components/TouchableAvatar';
 import colors from 'config/colors';
 import PropTypes from 'prop-types';
-import analyticsEvents from 'config/analyticsEvents'
 
 //---------------------------------------------------------
 // Renders set of passed in images in a single row, and adds 

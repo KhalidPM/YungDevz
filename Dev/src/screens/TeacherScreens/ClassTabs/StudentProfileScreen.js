@@ -60,7 +60,6 @@ class StudentProfileScreen extends QcParentScreen {
     this.setState({ isDialogVisible: visible })
   }
 
-  //this method saves the new profile information to the redux database
   getRatingCaption() {
     let caption = strings.GetStarted;
 

@@ -43,7 +43,7 @@ export class TeacherProfileScreen extends QcParentScreen {
         this.setModalVisible(true);
     }
 
-    //this method saves the new profile information to the redux database
+    //this method saves the new profile information to the firestore database
     async saveProfileInfo() {
         let { userID, name, phoneNumber, emailAddress, profileImageID } = this.state;
         name = name.trim();

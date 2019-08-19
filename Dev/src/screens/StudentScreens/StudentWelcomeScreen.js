@@ -2,7 +2,6 @@ import React from "react";
 import { StyleSheet, View, Image, TouchableWithoutFeedback, TouchableOpacity, KeyboardAvoidingView, Keyboard, Alert, Modal, ScrollView, LayoutAnimation, Platform } from "react-native";
 import QcActionButton from "components/QcActionButton";
 import Toast, { DURATION } from "react-native-easy-toast";
-import { connect } from "react-redux";
 import colors from "config/colors";
 import ImageSelectionRow from "components/ImageSelectionRow";
 import ImageSelectionModal from "components/ImageSelectionModal";
@@ -52,13 +51,13 @@ export class StudentWelcomeScreen extends QcParentScreen {
 
   //--- state captures the inputted user info ------------------
   state = {
-    phoneNumber: this.props.phoneNumber === undefined ? "" : this.props.phoneNumber.trim(),
-    emailAddress: this.props.emailAddress === undefined ? "" : this.props.emailAddress.trim(),
-    name: this.props.name === undefined ? "" : this.props.name.trim(),
+    phoneNumber: "",
+    emailAddress: "",
+    name: "",
     profileImageID: this.initialDefaultImageId,
     highlightedImagesIndices: this.getHighlightedImages(),
     modalVisible: false,
-    isPhoneValid: this.props.phoneNumber === undefined ? false : true, //todo: this should be properly validated or saved
+    isPhoneValid: false, //todo: this should be properly validated or saved
   };
 
   //--- event handlers, handle user interaction ------------------
@@ -82,7 +81,7 @@ export class StudentWelcomeScreen extends QcParentScreen {
     this.setModalVisible(false);
   }
 
-  //this method saves the new profile information to the redux database
+  //this method saves the new profile information to the firestore database
   // This is reused for student profile page and studnet welcome page
   // In studnet welcome page, student ID will be passed as undefined, in which case
   // we will generate a new ID before saving to the store.
@@ -313,12 +312,5 @@ const styles = StyleSheet.create({
   }
 });
 
-//-------------- Redux hooks ----------------------------------------------------
-const mapStateToProps = state => {
-  const { name, phoneNumber, emailAddress, profileImageId } = state.data.teacher;
-  return { name, phoneNumber, emailAddress, profileImageId };
-};
 
-export default connect(
-  mapStateToProps,
-)(StudentWelcomeScreen);
+export default StudentWelcomeScreen;
