@@ -67,7 +67,7 @@ class LeftNavPane extends QcParentScreen {
 
 
         //navigate to the selected class
-        this.props.navigation.push("CurrentClass");
+        this.props.navigation.push("StudentCurrentClass");
         this.props.navigation.closeDrawer();
     };
 

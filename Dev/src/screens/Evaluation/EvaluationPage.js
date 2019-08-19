@@ -68,7 +68,7 @@ export class EvaluationPage extends QcParentScreen {
     const currentClass = await FirebaseFunctions.getClassByID(this.state.classID);
     this.setState({ isLoading: false });
 
-    this.props.navigation.push("StudentProfile", {
+    this.props.navigation.push("TeacherStudentProfile", {
       studentID: this.state.studentID,
       currentClass,
       classID: this.state.classID
@@ -91,7 +91,7 @@ export class EvaluationPage extends QcParentScreen {
     await FirebaseFunctions.overwriteOldEvaluation(classID, studentID, evaluationID, evaluationDetails);
 
     const currentClass = await FirebaseFunctions.getClassByID(this.state.classID);
-    this.props.navigation.push("StudentProfile", {
+    this.props.navigation.push("TeacherStudentProfile", {
       studentID: this.state.studentID,
       currentClass,
       classID: this.state.classID

@@ -1,8 +1,8 @@
 //This will be the drawer going to all the different possible student screens
 import { createDrawerNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
 import LeftNavPane from './LeftNavPane';
-import SettingsNavigator from '../SettingsScreen/SettingsNavigator';
-import StudentMainScreenNavigator from './StudentMainScreenNavigator';
+import allSettingsScreen from '../SettingsScreen/allSettingsScreen';
+import StudentMainScreen from './StudentMainScreen';
 
 const routeConfig = {
     /*
@@ -12,10 +12,10 @@ const routeConfig = {
     },
     */
     CurrentClass: {
-        screen: StudentMainScreenNavigator,
+        screen: StudentMainScreen,
     },
     Settings: {
-        screen: SettingsNavigator,
+        screen: allSettingsScreen,
     }
 };
 

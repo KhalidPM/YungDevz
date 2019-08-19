@@ -1,10 +1,11 @@
 import { createDrawerNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
-import AddClassNavigator from './AddClass/AddClassNavigator';
-import ClassHeaderNavigator from './ClassTabs/ClassHeaderNavigator';
 import LeftNavPane from './LeftNavPane';
 import SettingsNavigator from '../SettingsScreen/SettingsNavigator';
 import TeacherProfileNavigator from './TeacherProfile/TeacherProfileNavigator';
-import strings from '../../../config/strings'
+import ClassTabsNavigator from './ClassTabs/ClassTabsNavigator';
+import strings from '../../../config/strings';
+import AddClassScreen from './AddClass/AddClassScreen';
+import allSettingsScreen from '../SettingsScreen/allSettingsScreen';
 
 const routeConfig = {
   TeacherProfile: {
@@ -14,21 +15,21 @@ const routeConfig = {
     })
   },
   CurrentClass: {
-    screen: ClassHeaderNavigator,
+    screen: ClassTabsNavigator,
     path: 'teacher/class/tabs',
     navigationOptions: ({ navigation }) => ({
       title: 'Quran Class',
     }),
   },
   AddClass: {
-    screen: AddClassNavigator,
+    screen: AddClassScreen,
     path: 'teacher/class/new',
     navigationOptions: ({ navigation }) => ({
       title: strings.AddNewClass,
     }),
   },
   Settings: {
-    screen: SettingsNavigator,
+    screen: allSettingsScreen,
     navigationOptions: ({ navigation }) => ({
       title: 'Settings',
     })

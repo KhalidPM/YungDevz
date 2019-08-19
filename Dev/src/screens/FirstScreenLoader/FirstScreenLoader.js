@@ -10,7 +10,7 @@ class FirstScreenLoader extends Component {
 
     await FirebaseFunctions.auth.onAuthStateChanged(async (user) => {
       if (!user) {
-        this.props.navigation.push("FirstRun");
+        this.props.navigation.push("FirstRunScreen");
         return;
       }
       const student = await FirebaseFunctions.getStudentByID(user.uid);
