@@ -9,7 +9,7 @@ import studentImages from 'config/studentImages'
 import strings from 'config/strings';
 import QcParentScreen from 'screens/QcParentScreen';
 import FirebaseFunctions from 'config/FirebaseFunctions';
-import LoadingSpinner from 'config/FirebaseFunctions';
+import LoadingSpinner from 'components/LoadingSpinner';
 
 export class ClassAttendanceScreen extends QcParentScreen {
 
@@ -97,7 +97,7 @@ export class ClassAttendanceScreen extends QcParentScreen {
                         style={{ paddingLeft: 15 }}
                         maxDate={new Date().toLocaleDateString("en-US")}
                         customStyles={{ dateInput: { borderColor: colors.lightGrey } }}
-                        onDateChange={(date) => {
+                        onDateChange={async (date) => {
                             this.setState({
                                 selectedDate: date,
                                 isLoading: true

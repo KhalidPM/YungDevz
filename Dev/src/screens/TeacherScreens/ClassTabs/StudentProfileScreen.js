@@ -4,7 +4,6 @@ import colors from 'config/colors';
 import { Rating } from 'react-native-elements';
 import strings from 'config/strings';
 import studentImages from 'config/studentImages';
-import LoadingSpinner from 'components/LoadingSpinner';
 import QcParentScreen from 'screens/QcParentScreen';
 import AssignmentEntryComponent from 'components/AssignmentEntryComponent';
 import FirebaseFunctions from 'config/FirebaseFunctions';
