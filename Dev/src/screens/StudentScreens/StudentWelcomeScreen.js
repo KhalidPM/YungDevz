@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Image, Text, TouchableWithoutFeedback, TouchableOpacity, KeyboardAvoidingView, Keyboard, Alert, Modal, ScrollView, LayoutAnimation, Platform } from "react-native";
+import { StyleSheet, View, Image, TouchableWithoutFeedback, TouchableOpacity, KeyboardAvoidingView, Keyboard, Alert, Modal, ScrollView, LayoutAnimation, Platform } from "react-native";
 import QcActionButton from "components/QcActionButton";
 import Toast, { DURATION } from "react-native-easy-toast";
 import { connect } from "react-redux";
@@ -12,19 +12,10 @@ import strings from "config/strings";
 import QcParentScreen from "screens/QcParentScreen";
 import FadeInView from "../../components/FadeInView";
 import FirebaseFunctions from 'config/FirebaseFunctions';
-import { Input, Icon } from 'react-native-elements'
+import { Icon } from 'react-native-elements'
 
-const initialState = {
-  authCode: '',
-  password: ''
-}
 
-//To-Do: All info in this class is static, still needs to be hooked up to data base in order
-//to function dynamically
 export class StudentWelcomeScreen extends QcParentScreen {
-  state = initialState;
-
-  name = "StudentWelcomeScreen";
 
   getRandomGenderNeutralImage = () => {
     index = Math.floor(Math.random() * Math.floor(studentImages.genderNeutralImages.length));
@@ -165,6 +156,7 @@ export class StudentWelcomeScreen extends QcParentScreen {
   }
 
   componentWillMount() {
+    FirebaseFunctions.setCurrentScreen("Student Welcome Screen", "StudentWelcomeScreen");
     if (Platform.OS === 'ios') {
       LayoutAnimation.easeInEaseOut();
     }

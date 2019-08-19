@@ -2,17 +2,14 @@ import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import Toast, { DURATION } from 'react-native-easy-toast'
 import DatePicker from 'react-native-datepicker';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import StudentCard from 'components/StudentCard';
 import QcActionButton from 'components/QcActionButton';
-import { addAttendance } from 'model/actions/addAttendance';
 import colors from 'config/colors';
 import studentImages from 'config/studentImages'
 import strings from 'config/strings';
-import mapStateToCurrentClassProps from 'screens/TeacherScreens/helpers/mapStateToCurrentClassProps'
 import QcParentScreen from 'screens/QcParentScreen';
 import FirebaseFunctions from 'config/FirebaseFunctions';
+import LoadingSpinner from 'config/FirebaseFunctions';
 
 export class ClassAttendanceScreen extends QcParentScreen {
 
@@ -76,6 +73,14 @@ export class ClassAttendanceScreen extends QcParentScreen {
     }
 
     render() {
+
+        if (this.state.isLoading === true) {
+            return (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <LoadingSpinner isVisible={true} />
+                </View>
+            )
+        }
 
         return (
             //The scroll view will have at the top a date picker which will be defaulted to the current

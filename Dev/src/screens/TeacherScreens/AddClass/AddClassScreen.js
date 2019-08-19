@@ -5,11 +5,7 @@ import classImages from "config/classImages";
 import QcActionButton from "components/QcActionButton";
 import QcParentScreen from "screens/QcParentScreen";
 import ImageSelectionModal from "components/ImageSelectionModal"
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
 import LoadingSpinner from 'components/LoadingSpinner';
-import { addClass } from "model/actions/addClass";
-import { saveTeacherInfo } from "model/actions/saveTeacherInfo";
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import strings from 'config/strings';
 
@@ -197,26 +193,4 @@ const styles = StyleSheet.create({
 }
 );
 
-const getTeacherClassNames = (classIds, classes) => {
-  return Object.values(classes).filter(c => classIds.includes(c.id)).map(cls => { return cls.name })
-}
-
-const mapStateToProps = state => {
-  const { classes, teacher } = state.data;
-  const teacherClassNames = getTeacherClassNames(teacher.classes, classes);
-  return { teacherClassNames };
-};
-
-export const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      addClass,
-      saveTeacherInfo
-    },
-    dispatch
-  );
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AddClassScreen);
+export default AddClassScreen;

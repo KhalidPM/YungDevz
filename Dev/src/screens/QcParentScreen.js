@@ -1,4 +1,3 @@
-import analyticsEvents from 'config/analyticsEvents'
 import FontLoadingComponent from 'components/FontLoadingComponent';
 
 class QcParentScreen extends FontLoadingComponent {

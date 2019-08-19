@@ -56,7 +56,10 @@ export class ClassEditScreen extends QcParentScreen {
                   type='font-awesome'
                   color={colors.primaryDark}
                   size={20}
-                  onPress={() => { Share.share({ message: strings.JoinMyClass + classID }) }} />
+                  onPress={() => { 
+                    FirebaseFunctions.logEvent("TEACHER_SHARE_CLASS_CODE");
+                    Share.share({ message: strings.JoinMyClass + classID }) 
+                    }} />
               </View>
               <View style={{ flex: 1 }}></View>
             </View>

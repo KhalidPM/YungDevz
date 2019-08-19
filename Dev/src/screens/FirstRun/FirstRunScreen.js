@@ -4,6 +4,7 @@ import QcActionButton from "components/QcActionButton";
 import QcAppBanner from "components/QcAppBanner";
 import strings from "../../../config/strings";
 import QcParentScreen from "screens/QcParentScreen";
+import FirebaseFunctions from 'config/FirebaseFunctions';
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const SCREEN_HEIGHT = Dimensions.get("window").height;
@@ -11,10 +12,13 @@ const SCREEN_HEIGHT = Dimensions.get("window").height;
 const BG_IMAGE = require("assets/images/read_child_bg.jpg");
 
 class FirstRunScreen extends QcParentScreen {
-  name = "FirstRunScreen";
 
+  componentDidMount() {
+    FirebaseFunctions.setCurrentScreen("First Run Screen", "FirstRunScreen");
+  }
+
+  //Navigates to the teacher side
   onTeacherFlow = () => {
-    //todo: get the first class to show from redux persist (current class)
     this.props.navigation.push('LoginScreen', {
       isTeacher: true
     });
@@ -22,7 +26,6 @@ class FirstRunScreen extends QcParentScreen {
 
   //Navigates to the student side
   onStudentFlow = () => {
-    //todo: Change this to a login so that the correct student can be displayed
     this.props.navigation.push('LoginScreen', {
       isTeacher: false
     });

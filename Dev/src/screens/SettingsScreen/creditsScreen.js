@@ -4,12 +4,15 @@ import { View, StyleSheet, Text, ScrollView, Dimensions, Linking } from 'react-n
 import colors from 'config/colors';
 import strings from 'config/strings';
 import QcParentScreen from "screens/QcParentScreen";
+import FirebaseFunctions from 'config/FirebaseFunctions';
 
 export default class CreditsScreen extends QcParentScreen {
 
-    name = "CreditsScreen";
+    componentDidMount() {
 
+        FirebaseFunctions.setCurrentScreen("Credits Screen", "CreditsScreen");
 
+    }
 
     render() {
 

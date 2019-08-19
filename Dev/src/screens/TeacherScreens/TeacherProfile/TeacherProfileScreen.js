@@ -4,9 +4,6 @@ import Toast, { DURATION } from 'react-native-easy-toast'
 import QcActionButton from 'components/QcActionButton';
 import TouchableText from 'components/TouchableText'
 import teacherImages from 'config/teacherImages'
-import { saveTeacherInfo } from "model/actions/saveTeacherInfo";
-import { bindActionCreators } from 'redux';
-import { connect } from "react-redux";
 import colors from 'config/colors';
 import ImageSelectionModal from 'components/ImageSelectionModal'
 import TeacherInfoEntries from 'components/TeacherInfoEntries';

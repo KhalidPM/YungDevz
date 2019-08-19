@@ -64,6 +64,7 @@ export default class FirebaseFunctions {
     //This function takes in a user's email and sends them a code to reset their password (not async)
     static sendForgotPasswordCode(email) {
 
+        this.logEvent("SEND_FORGOT_PASSWORD_EMAIL");
         this.auth.sendPasswordResetEmail(email);
 
     }
@@ -179,6 +180,7 @@ export default class FirebaseFunctions {
             classes: firebase.firestore.FieldValue.arrayUnion(newClass.id)
         })
         await this.batch.commit();
+        this.logEvent("ADD_NEW_CLASS");
         return 0;
 
     }
@@ -200,7 +202,7 @@ export default class FirebaseFunctions {
         await this.updateClassObject(classID, {
             students: arrayOfStudents
         });
-
+        this.logEvent("UPDATE_ASSIGNMENT_STATUS");
         return 0;
 
     }
@@ -223,7 +225,7 @@ export default class FirebaseFunctions {
         await this.updateClassObject(classID, {
             students: arrayOfStudents
         });
-
+        this.logEvent("UPDATE_CURRENT_ASSIGNMENT");
         return 0;
 
     }
@@ -255,6 +257,7 @@ export default class FirebaseFunctions {
         await this.updateClassObject(classID, {
             students: arrayOfStudents
         });
+        this.logEvent("COMPLETE_CURRENT_ASSIGNMENT");
 
         return 0;
 
@@ -279,6 +282,7 @@ export default class FirebaseFunctions {
         await this.updateClassObject(classID, {
             students: arrayOfStudents
         });
+        this.logEvent("OVERWRITE_PAST_EVALUATION");
 
         return 0;
 
@@ -302,6 +306,7 @@ export default class FirebaseFunctions {
         await this.updateClassObject(classID, {
             students: updatedArrayOfStudents
         });
+        this.logEvent("SAVE_ATTENDANCE");
 
         return 0;
 
@@ -324,6 +329,7 @@ export default class FirebaseFunctions {
             }
 
         });
+        this.logEvent("GET_ATTENDANCE_BY_DATE");
 
         return absentStudents;
 
@@ -361,6 +367,7 @@ export default class FirebaseFunctions {
             classes: firebase.firestore.FieldValue.arrayUnion(classID),
             currentClassID: classID
         });
+        this.logEvent("JOIN_CLASS");
 
         return 0;
 
@@ -391,6 +398,7 @@ export default class FirebaseFunctions {
         await this.updateStudentObject(studentID, {
             classes: arrayOfClassStudents
         });
+        this.logEvent("TEACHER_REMOVE_STUDENT");
 
         return 0;
 
