@@ -9,12 +9,11 @@ import FontLoadingComponent from './FontLoadingComponent';
 // params: 
 class QcDrawerItem extends FontLoadingComponent {
   render() {
-    const { title, image, icon, onPress } = this.props;
-
+    const { title, image, icon, onPress, backColor } = this.props;
+    let containerBg = backColor ? backColor : colors.white;
     return (
       <ListItem
-        backgroundColor={colors.white}
-        containerStyle={styles.cardStyle}
+        containerStyle={[styles.cardStyle,{backgroundColor:containerBg}]}
         title={title}
         fontFamily='regular'
         leftAvatar={image ? {
@@ -40,7 +39,8 @@ QcDrawerItem.propTypes = {
   title: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
   image: PropTypes.number,
-  icon: PropTypes.string
+  icon: PropTypes.string,
+  backColor:PropTypes.string
 }
 
 //Styles that control the look of the card, and everything within it
