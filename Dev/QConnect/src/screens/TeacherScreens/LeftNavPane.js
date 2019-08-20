@@ -11,9 +11,17 @@ import QcDrawerItem from "components/QcDrawerItem";
 import teacherImages from "../../../config/teacherImages";
 import strings from '../../../config/strings';
 import QcParentScreen from "screens/QcParentScreen";
+import QcActionButton from 'components/QcActionButton';
 
 class LeftNavPane extends QcParentScreen {
   name = "LeftNavPane";
+
+  state = {
+    deleteOrStopDeleteText: strings.deleteClass,
+    backColor : colors.white,
+    deleteBool : false
+
+  }
 
   openClass = (id, className) => {
     //update current class index in redux
@@ -26,14 +34,46 @@ class LeftNavPane extends QcParentScreen {
     this.props.navigation.closeDrawer();
   };
 
+
+
+  triggerDeleteClass(){
+    let newText = this.state.deleteOrStopDeleteText === strings.deleteClass ? strings.finishDeleteClass : strings.deleteClass;
+    let newColor = this.state.backColor === colors.white ? colors.red : colors.white;
+    this.setState((oldState) => ({
+      deleteOrStopDeleteText : newText,
+      backColor: newColor,
+      deleteBool: !oldState.deleteBool
+    }));
+
+  }
+
+
+  //Go to teacher page method resets the delete class button.
+  goToTeacherPage(){
+    if(this.state.deleteBool){
+     this.triggerDeleteClass();
+    }
+    this.props.navigation.push("TeacherProfile");
+  }
+
+  handleClassPress(item){
+    if (this.state.deleteBool){
+      //delete class method to go in here.
+    }else{
+
+      this.openClass(item.id, item.name);
+    }
+  }
+
+
   //todo: change the ListItem header and footer below to the shared drawer component intead
   // generalize the QcDrawerItem to accept either an image or an icon
   render() {
     const { name, profileImageId } = this.props;
 
+
     const profileCaption = name + strings.sProfile
     const teacherImageId = profileImageId ? profileImageId : 0
-
     return (
       <ScrollView style={{ flex: 1, backgroundColor: colors.lightGrey }}>
         <SafeAreaView
@@ -54,17 +94,20 @@ class LeftNavPane extends QcParentScreen {
           <QcDrawerItem
             title={profileCaption}
             image={teacherImages.images[teacherImageId]}
-            onPress={() => this.props.navigation.push("TeacherProfile")}
+            onPress={this.goToTeacherPage.bind(this)}
+
           />
 
           <FlatList
             data={this.props.classes}
-            keyExtractor={(item, index) => item.name} // fix, should be item.id (add id to classes)
+            extraData = {this.state.deleteOrStopDeleteText}
+            keyExtractor={(item, index) =>  item.name } // fix, should be item.id (add id to classes)
             renderItem={({ item, index }) => (
               <QcDrawerItem
                 title={item.name}
                 image={classImages.images[item.imageId]}
-                onPress={() => this.openClass(item.id, item.name)}
+                onPress={() => this.handleClassPress(item)}
+                backColor = {this.state.backColor}
               />
             )} />
 
@@ -75,10 +118,12 @@ class LeftNavPane extends QcParentScreen {
 
           <QcDrawerItem
             title={strings.Settings}
-            icon="cogs"
+            icon="cogs" 
             onPress={() => this.props.navigation.push("Settings")} />
 
-          
+          <QcActionButton
+          text={this.state.deleteOrStopDeleteText}
+          onPress = {this.triggerDeleteClass.bind(this)}/>
 
         </SafeAreaView>
       </ScrollView>

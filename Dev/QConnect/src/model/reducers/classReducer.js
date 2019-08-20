@@ -104,6 +104,13 @@ export const classReducer = (state = INITIAL_STATE, action) => {
 
         return newState;
       }
+      
+      //Delete class case 
+      case actionTypes.DELETE_CLASS:{
+        
+      }
+
+      
     case actionTypes.ADD_CLASS:
       {
         newState = update(baseState, { classes: { $merge: { [action.classInfo.id]: action.classInfo } } });

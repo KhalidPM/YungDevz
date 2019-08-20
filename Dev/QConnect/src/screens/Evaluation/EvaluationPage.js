@@ -7,7 +7,6 @@ import { connect } from "react-redux";
 import QcActionButton from 'components/QcActionButton';
 import { completeCurrentAssignment } from 'model/actions/completeCurrentAssignment';
 import { editCurrentAssignment } from 'model/actions/editCurrentAssignment';
-import TopBanner from 'components/TopBanner';
 import strings from 'config/strings';
 import studentImages from 'config/studentImages';
 import QcParentScreen from 'screens/QcParentScreen';

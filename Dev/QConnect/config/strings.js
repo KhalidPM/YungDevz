@@ -138,6 +138,8 @@ export default {
     //--------------------- Left Nav Pane ---------------------
     sProfile: '\'s profile',
     Settings: 'Settings',
+    deleteClass: 'Remove a Class',
+    finishDeleteClass: "Finish Removing Classes",
 
     //----------------------Error string codes: used to indicate errors in string params -----------
     titleNotPassed: "no_title_code_500",
