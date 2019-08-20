@@ -316,7 +316,7 @@ export default class FirebaseFunctions {
     //date. If a particular student does not have an attendance saved for this date, then they will not be added to the
     //array of absent students. To locate the particular class to return the attendance to, the classID will also be
     //a paremeter
-    async getAbsentStudentsByDate(date, classID) {
+    static async getAbsentStudentsByDate(date, classID) {
 
         let absentStudents = [];
         let currentClass = await this.getClassByID(classID);

@@ -49,53 +49,61 @@ export class ClassMainScreen extends QcParentScreen {
     //---------------------------------no class state---------------------------------
     else if (currentClass === -1 || currentClassID === "") {
       return (
-        <View style={[styles.container, { alignItems: "center", justifyContent: "center" }]}>
-          {(this.props.navigation.state.params && this.props.navigation.state.params.classTitle) ? (
-            <TopBanner
-              LeftIconName="navicon"
-              LeftOnPress={() => this.props.navigation.openDrawer()}
-              Title={this.props.navigation.state.params.classTitle}
-              RightIconName="edit"
-              RightOnPress={() => this.props.navigation.push('ClassEdit', {
-                classID: currentClassID,
-                currentClass
-              })}
+        <View style={styles.container}>
+          <View style={{ flex: 1 }}>
+            {(this.props.navigation.state.params && this.props.navigation.state.params.classTitle) ? (
+              <View>
+                <TopBanner
+                  LeftIconName="navicon"
+                  LeftOnPress={() => this.props.navigation.openDrawer()}
+                  Title={this.props.navigation.state.params.classTitle}
+                  RightIconName="edit"
+                  RightOnPress={() => this.props.navigation.push('ClassEdit', {
+                    classID: currentClassID,
+                    currentClass
+                  })}
+                />
+              </View>
+            ) : (
+                <View>
+                  <TopBanner
+                    LeftIconName="navicon"
+                    LeftOnPress={() => this.props.navigation.openDrawer()}
+                    Title={"Quran Connect"}
+                  />
+                </View>
+              )
+            }
+          </View>
+          <View style={{ alignItems: "center", justifyContent: "flex-start", alignSelf: 'center', flex: 2 }}>
+            <Image
+              source={require('assets/emptyStateIdeas/ghostGif.gif')}
+              style={{
+                width: 300,
+                height: 150,
+                resizeMode: 'contain',
+              }}
             />
-          ) : (
-              <TopBanner
-                LeftIconName="navicon"
-                LeftOnPress={() => navigation.openDrawer()}
-                Title={"Quran Connect"}
-              />
-            )
-          }
-          <Image
-            source={require('assets/emptyStateIdeas/ghostGif.gif')}
-            style={{
-              width: 300,
-              height: 150,
-              resizeMode: 'contain',
-            }}
-          />
 
-          <Text
-            style={{
-              fontSize: 30,
-              color: colors.primaryDark,
-              flexDirection: "row",
-            }}
-          >
-            {strings.NoClass}
-          </Text>
+            <Text
+              style={{
+                fontSize: 30,
+                color: colors.primaryDark,
+                flexDirection: "row",
+              }}
+            >
+              {strings.NoClass}
+            </Text>
 
-          <QcActionButton
-            text={strings.AddClassButton}
-            onPress={() => {
-              this.props.navigation.push("AddClass", {
-                userID: this.state.userID,
-                teacher: this.state.teacher
-              })
-            }} />
+            <QcActionButton
+              text={strings.AddClassButton}
+              onPress={() => {
+                this.props.navigation.push("AddClass", {
+                  userID: this.state.userID,
+                  teacher: this.state.teacher
+                })
+              }} />
+          </View>
         </View>
       )
     }
@@ -115,34 +123,59 @@ export class ClassMainScreen extends QcParentScreen {
        * if it is, then there is no students in the class, and thus the class is empty,
        * triggering the message. */
       return (
-        <View
-          style={[styles.container, { alignItems: "center", justifyContent: "center" }]}>
+        <View style={styles.container}>
+          <View style={{ flex: 1 }}>
+            {(this.props.navigation.state.params && this.props.navigation.state.params.classTitle) ? (
+              <View>
+                <TopBanner
+                  LeftIconName="navicon"
+                  LeftOnPress={() => this.props.navigation.openDrawer()}
+                  Title={this.props.navigation.state.params.classTitle}
+                  RightIconName="edit"
+                  RightOnPress={() => this.props.navigation.push('ClassEdit', {
+                    classID: currentClassID,
+                    currentClass
+                  })}
+                />
+              </View>
+            ) : (
+                <View>
+                  <TopBanner
+                    LeftIconName="navicon"
+                    LeftOnPress={() => this.props.navigation.openDrawer()}
+                    Title={"Quran Connect"}
+                  />
+                </View>
+              )
+            }
+          </View>
+          <View style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'center' }}>
+            <Image
+              source={require('assets/emptyStateIdeas/ghostGif.gif')}
+              style={{
+                width: 300,
+                height: 150,
+                resizeMode: 'contain',
+              }}
+            />
 
-          <Image
-            source={require('assets/emptyStateIdeas/ghostGif.gif')}
-            style={{
-              width: 300,
-              height: 150,
-              resizeMode: 'contain',
-            }}
-          />
+            <Text
+              style={{
+                fontSize: 30,
+                color: colors.primaryDark,
+                flexDirection: "row",
+              }}
+            >
+              {strings.EmptyClass}
+            </Text>
 
-          <Text
-            style={{
-              fontSize: 30,
-              color: colors.primaryDark,
-              flexDirection: "row",
-            }}
-          >
-            {strings.EmptyClass}
-          </Text>
-
-          <QcActionButton
-            text={strings.AddStudentButton}
-            onPress={() => this.props.navigation.push("ClassEdit", {
-              classID: currentClassID,
-              currentClass
-            })} />
+            <QcActionButton
+              text={strings.AddStudentButton}
+              onPress={() => this.props.navigation.push("ClassEdit", {
+                classID: currentClassID,
+                currentClass
+              })} />
+          </View>
         </View>
       )
     }
@@ -152,6 +185,29 @@ export class ClassMainScreen extends QcParentScreen {
 
       return (
         <ScrollView style={styles.container}>
+          {(this.props.navigation.state.params && this.props.navigation.state.params.classTitle) ? (
+            <View>
+              <TopBanner
+                LeftIconName="navicon"
+                LeftOnPress={() => this.props.navigation.openDrawer()}
+                Title={this.props.navigation.state.params.classTitle}
+                RightIconName="edit"
+                RightOnPress={() => this.props.navigation.push('ClassEdit', {
+                  classID: currentClassID,
+                  currentClass
+                })}
+              />
+            </View>
+          ) : (
+              <View>
+                <TopBanner
+                  LeftIconName="navicon"
+                  LeftOnPress={() => this.props.navigation.openDrawer()}
+                  Title={"Quran Connect"}
+                />
+              </View>
+            )
+          }
           <FlatList
             data={currentClass.students}
             keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
@@ -184,7 +240,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
     backgroundColor: colors.lightGrey,
-    flex: 3
+    flex: 3,
   },
   classTitle: {
     color: colors.primaryDark,

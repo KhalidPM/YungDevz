@@ -4,33 +4,41 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 
 class FirstScreenLoader extends Component {
 
+  state = {
+    alreadyCalled: false
+  }
+
   //Checks if a user has been logged in. If a user has, it navigates the correct screen depending if they
   //are a student or a teacher
   async componentDidMount() {
 
     await FirebaseFunctions.auth.onAuthStateChanged(async (user) => {
-      if (!user) {
-        this.props.navigation.push("FirstRunScreen");
-        return;
-      }
-      const student = await FirebaseFunctions.getStudentByID(user.uid);
-      if (student !== -1) {
-        const classes = await FirebaseFunctions.getClassesByIDs(student.classes);
-        this.props.navigation.push("StudentScreens", {
+      if (this.state.alreadyCalled === false) {
+        this.setState({ alreadyCalled: true });
+        if (!user) {
+          this.props.navigation.push("FirstRunScreen");
+          return;
+        }
+        const student = await FirebaseFunctions.getStudentByID(user.uid);
+        if (student !== -1) {
+          const classes = await FirebaseFunctions.getClassesByIDs(student.classes);
+          this.props.navigation.push("StudentScreens", {
+            userID: user.uid,
+            student,
+            classes
+          });
+          return;
+        }
+        const teacher = await FirebaseFunctions.getTeacherByID(user.uid);
+        const classes = await FirebaseFunctions.getClassesByIDs(teacher.classes);
+        this.props.navigation.push("TeacherScreens", {
           userID: user.uid,
-          student,
+          teacher,
           classes
         });
         return;
       }
-      const teacher = await FirebaseFunctions.getTeacherByID(user.uid);
-      const classes = await FirebaseFunctions.getClassesByIDs(teacher.classes);
-      this.props.navigation.push("TeacherScreens", {
-        userID: user.uid,
-        teacher,
-        classes
-      });
-      return;
+
     });
 
   }
