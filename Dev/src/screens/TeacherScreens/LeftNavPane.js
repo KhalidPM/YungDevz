@@ -17,6 +17,9 @@ class LeftNavPane extends QcParentScreen {
     teacher: this.props.teacher,
     userID: this.props.userID,
     classes: this.props.classes,
+    deleteOrStopDeleteText: strings.deleteClass,
+    backColor: colors.white,
+    deleteBool: false
   }
 
   //Sets the screen name
@@ -38,6 +41,17 @@ class LeftNavPane extends QcParentScreen {
     this.props.navigation.closeDrawer();
   };
 
+  triggerDeleteClass() {
+    let newText = this.state.deleteOrStopDeleteText === strings.deleteClass ? strings.finishDeleteClass : strings.deleteClass;
+    let newColor = this.state.backColor === colors.white ? colors.red : colors.white;
+    this.setState({
+      deleteOrStopDeleteText: newText,
+      backColor: newColor,
+      deleteBool: !oldState.deleteBool
+    });
+
+  }
+
   //todo: change the ListItem header and footer below to the shared drawer component intead
   // generalize the QcDrawerItem to accept either an image or an icon
   render() {
@@ -47,59 +61,74 @@ class LeftNavPane extends QcParentScreen {
     const teacherImageId = profileImageID ? profileImageID : 0;
 
     return (
-        <ScrollView style={{ flex: 1, backgroundColor: colors.lightGrey }}>
-          <SafeAreaView
-            style={styles.container}
-            forceInset={{ top: "always", horizontal: "never" }}
+      <ScrollView style={{ flex: 1, backgroundColor: colors.lightGrey }}>
+        <SafeAreaView
+          style={styles.container}
+          forceInset={{ top: "always", horizontal: "never" }}
+        >
+          <View
+            style={{
+              padding: 10,
+              alignContent: "center",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
           >
-            <View
-              style={{
-                padding: 10,
-                alignContent: "center",
-                alignItems: "center",
-                justifyContent: "center"
-              }}
-            >
-              <QcAppBanner />
-            </View>
+            <QcAppBanner />
+          </View>
 
-            <QcDrawerItem
-              title={profileCaption}
-              image={teacherImages.images[teacherImageId]}
-              onPress={() => this.props.navigation.push("TeacherProfile", {
+          <QcDrawerItem
+            title={profileCaption}
+            image={teacherImages.images[teacherImageId]}
+            onPress={() => {
+              this.triggerDeleteClass();
+              this.props.navigation.push("TeacherProfile", {
                 teacher: this.state.teacher,
                 userID: this.state.userID
-              })}
-            />
+              })
+            }}
+          />
 
-            <FlatList
-              data={classes}
-              keyExtractor={(item, index) => item.name} // fix, should be item.id (add id to classes)
-              renderItem={({ item, index }) => (
-                <QcDrawerItem
-                  title={item.name}
-                  image={classImages.images[item.classImageID]}
-                  onPress={() => this.openClass(item.ID)}
-                />
-              )} />
+          <FlatList
+            data={classes}
+            extraData={this.state.deleteOrStopDeleteText}
+            keyExtractor={(item, index) => item.name} // fix, should be item.id (add id to classes)
+            renderItem={({ item, index }) => (
+              <QcDrawerItem
+                title={item.name}
+                image={classImages.images[item.classImageID]}
+                onPress={() => {
+                  if (this.state.deleteBool === true) {
+                    //Deletes the class
 
-            <QcDrawerItem
-              title={strings.AddNewClass}
-              icon="plus"
-              onPress={() => {
-                this.props.navigation.push("AddClass", {
-                  userID: this.state.userID,
-                  teacher: this.state.teacher
-                })
-              }} />
+                  }
+                  this.openClass(item.ID);
+                }}
+                backColor={this.state.backColor}
+              />
+            )} />
 
-            <QcDrawerItem
-              title={strings.Settings}
-              icon="cogs"
-              onPress={() => this.props.navigation.push("Settings")} />
+          <QcDrawerItem
+            title={strings.AddNewClass}
+            icon="plus"
+            onPress={() => {
+              this.props.navigation.push("AddClass", {
+                userID: this.state.userID,
+                teacher: this.state.teacher
+              })
+            }} />
 
-          </SafeAreaView>
-        </ScrollView>
+          <QcDrawerItem
+            title={strings.Settings}
+            icon="cogs"
+            onPress={() => this.props.navigation.push("Settings")} />
+
+          <QcActionButton
+            text={this.state.deleteOrStopDeleteText}
+            onPress={this.triggerDeleteClass()} />
+
+        </SafeAreaView>
+      </ScrollView>
     );
   }
 }
