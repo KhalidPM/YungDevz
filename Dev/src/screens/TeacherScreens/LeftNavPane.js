@@ -14,9 +14,9 @@ import QcParentScreen from "screens/QcParentScreen";
 class LeftNavPane extends QcParentScreen {
 
   state = {
-    teacher: this.props.navigation.state.params.teacher,
-    userID: this.props.navigation.state.params.userID,
-    classes: this.props.navigation.state.params.classes
+    teacher: this.props.teacher,
+    userID: this.props.userID,
+    classes: this.props.classes,
   }
 
   //Sets the screen name
@@ -43,64 +43,63 @@ class LeftNavPane extends QcParentScreen {
   render() {
     const { name, profileImageID } = this.state.teacher;
     const { classes } = this.state;
-
-    const profileCaption = name + strings.sProfile
-    const teacherImageId = profileImageID ? profileImageID : 0
+    const profileCaption = name + strings.sProfile;
+    const teacherImageId = profileImageID ? profileImageID : 0;
 
     return (
-      <ScrollView style={{ flex: 1, backgroundColor: colors.lightGrey }}>
-        <SafeAreaView
-          style={styles.container}
-          forceInset={{ top: "always", horizontal: "never" }}
-        >
-          <View
-            style={{
-              padding: 10,
-              alignContent: "center",
-              alignItems: "center",
-              justifyContent: "center"
-            }}
+        <ScrollView style={{ flex: 1, backgroundColor: colors.lightGrey }}>
+          <SafeAreaView
+            style={styles.container}
+            forceInset={{ top: "always", horizontal: "never" }}
           >
-            <QcAppBanner />
-          </View>
+            <View
+              style={{
+                padding: 10,
+                alignContent: "center",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+            >
+              <QcAppBanner />
+            </View>
 
-          <QcDrawerItem
-            title={profileCaption}
-            image={teacherImages.images[teacherImageId]}
-            onPress={() => this.props.navigation.push("TeacherProfile", {
-              teacher: this.state.teacher,
-              userID: this.state.userID
-            })}
-          />
+            <QcDrawerItem
+              title={profileCaption}
+              image={teacherImages.images[teacherImageId]}
+              onPress={() => this.props.navigation.push("TeacherProfile", {
+                teacher: this.state.teacher,
+                userID: this.state.userID
+              })}
+            />
 
-          <FlatList
-            data={classes}
-            keyExtractor={(item, index) => item.name} // fix, should be item.id (add id to classes)
-            renderItem={({ item, index }) => (
-              <QcDrawerItem
-                title={item.name}
-                image={classImages.images[item.classImageID]}
-                onPress={() => this.openClass(item.ID)}
-              />
-            )} />
+            <FlatList
+              data={classes}
+              keyExtractor={(item, index) => item.name} // fix, should be item.id (add id to classes)
+              renderItem={({ item, index }) => (
+                <QcDrawerItem
+                  title={item.name}
+                  image={classImages.images[item.classImageID]}
+                  onPress={() => this.openClass(item.ID)}
+                />
+              )} />
 
-          <QcDrawerItem
-            title={strings.AddNewClass}
-            icon="plus"
-            onPress={() => {
-              this.props.navigation.push("AddClass", {
-                userID: this.state.userID,
-                teacher: this.state.teacher
-              })
-            }} />
+            <QcDrawerItem
+              title={strings.AddNewClass}
+              icon="plus"
+              onPress={() => {
+                this.props.navigation.push("AddClass", {
+                  userID: this.state.userID,
+                  teacher: this.state.teacher
+                })
+              }} />
 
-          <QcDrawerItem
-            title={strings.Settings}
-            icon="cogs"
-            onPress={() => this.props.navigation.push("Settings")} />
+            <QcDrawerItem
+              title={strings.Settings}
+              icon="cogs"
+              onPress={() => this.props.navigation.push("Settings")} />
 
-        </SafeAreaView>
-      </ScrollView>
+          </SafeAreaView>
+        </ScrollView>
     );
   }
 }

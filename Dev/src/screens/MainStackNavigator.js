@@ -38,13 +38,6 @@ routeConfig = {
         }),
     },
 
-    TeacherScreens: {
-        screen: TeacherMenu,
-        navigationOptions: ({ navigation }) => ({
-            header: null
-        }),
-    },
-
     StudentScreens: {
         screen: StudentMenu,
         navigationOptions: ({ navigation }) => ({
