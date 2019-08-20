@@ -39,7 +39,7 @@ routeConfig = {
     },
 
     TeacherScreens: {
-        screen: ClassTabsNavigator,
+        screen: TeacherMenu,
         navigationOptions: ({ navigation }) => ({
             header: null
         }),
