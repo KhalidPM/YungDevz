@@ -8,6 +8,7 @@ import strings from 'config/strings';
 import QcParentScreen from "screens/QcParentScreen";
 import QcActionButton from "components/QcActionButton";
 import FirebaseFunctions from 'config/FirebaseFunctions';
+import TopBanner from 'components/TopBanner';
 
 export class ClassMainScreen extends QcParentScreen {
 
@@ -40,7 +41,7 @@ export class ClassMainScreen extends QcParentScreen {
     const { isLoading, teacher, userID, currentClass, currentClassID } = this.state;
     if (isLoading === true) {
       return (
-        <View style={styles.container}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
           <LoadingSpinner isVisible={true} />
         </View>
       )
@@ -49,7 +50,7 @@ export class ClassMainScreen extends QcParentScreen {
     else if (currentClass === -1 || currentClassID === "") {
       return (
         <View style={[styles.container, { alignItems: "center", justifyContent: "center" }]}>
-          {(this.props.navigation.state.params && navigation.state.params.classTitle) ? (
+          {(this.props.navigation.state.params && this.props.navigation.state.params.classTitle) ? (
             <TopBanner
               LeftIconName="navicon"
               LeftOnPress={() => this.props.navigation.openDrawer()}

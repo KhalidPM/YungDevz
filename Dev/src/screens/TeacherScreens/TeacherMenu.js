@@ -1,7 +1,6 @@
 import { createDrawerNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
 import LeftNavPane from './LeftNavPane';
-import SettingsNavigator from '../SettingsScreen/SettingsNavigator';
-import TeacherProfileNavigator from './TeacherProfile/TeacherProfileNavigator';
+import TeacherProfileScreen from './TeacherProfile/TeacherProfileScreen';
 import ClassTabsNavigator from './ClassTabs/ClassTabsNavigator';
 import strings from '../../../config/strings';
 import AddClassScreen from './AddClass/AddClassScreen';
@@ -9,7 +8,7 @@ import allSettingsScreen from '../SettingsScreen/allSettingsScreen';
 
 const routeConfig = {
   TeacherProfile: {
-    screen: TeacherProfileNavigator,
+    screen: TeacherProfileScreen,
     navigationOptions: ({ navigation }) => ({
       title: 'Teacher',
     })

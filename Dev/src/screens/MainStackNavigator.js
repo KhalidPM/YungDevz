@@ -5,7 +5,7 @@ import TeacherMenu from './TeacherScreens/TeacherMenu';
 import FirstScreenLoader from './FirstScreenLoader/FirstScreenLoader';
 import StudentMenu from './StudentScreens/StudentMenu';
 import LoginScreen from './AuthenticationScreens/LoginScreen';
-import FirstRunScreen from './FirstRunScreen';
+import FirstRunScreen from './FirstRun/FirstRunScreen';
 import TeacherWelcomeScreen from './TeacherScreens/TeacherWelcomeScreen';
 import AddClassScreen from './TeacherScreens/AddClass/AddClassScreen';
 import ForgotPassword from './AuthenticationScreens/ForgotPassword';
@@ -14,7 +14,7 @@ import allSettingsScreen from './SettingsScreen/allSettingsScreen';
 import creditsScreen from './SettingsScreen/creditsScreen';
 import TeacherProfileScreen from './TeacherScreens/TeacherProfile/TeacherProfileScreen';
 import StudentMainScreen from './StudentScreens/StudentMainScreen';
-import ClassTabsNavigator from './TeacherScreens/ClassTabsNavigator';
+import ClassTabsNavigator from './TeacherScreens/ClassTabs/ClassTabsNavigator';
 import StudentProfileScreen from './TeacherScreens/ClassTabs/StudentProfileScreen';
 import ClassEditScreen from './TeacherScreens/ClassTabs/ClassEditScreen';
 import EvaluationPage from './Evaluation/EvaluationPage';
@@ -39,7 +39,7 @@ routeConfig = {
     },
 
     TeacherScreens: {
-        screen: TeacherMenu,
+        screen: ClassTabsNavigator,
         navigationOptions: ({ navigation }) => ({
             header: null
         }),

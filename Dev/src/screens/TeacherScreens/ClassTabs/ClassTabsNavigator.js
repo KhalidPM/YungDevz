@@ -9,7 +9,6 @@ import strings from '../../../../config/strings';
 const routeConfig = {
   AttendanceTab: {
     screen: ClassAttendanceScreen,
-    path: '/first_run',
     navigationOptions: {
       tabBarLabel: strings.Attendance,
       tabBarIcon: ({ tintColor, focused }) => (
@@ -24,7 +23,6 @@ const routeConfig = {
   },
   ClassStudentsTab: {
     screen: ClassMainScreen,
-    path: '/class',
     navigationOptions: {
       tabBarLabel: strings.Class,
       tabBarIcon: ({ tintColor, focused }) => (
