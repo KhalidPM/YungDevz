@@ -71,21 +71,13 @@ class LoginScreen extends Component {
       const userID = account.uid;
       if (this.state.isTeacher === true) {
         FirebaseFunctions.logEvent("TEACHER_LOG_IN");
-        const teacher = await FirebaseFunctions.getTeacherByID(userID);
-        const classes = await FirebaseFunctions.getClassesByIDs(teacher.classes);
         this.props.navigation.push("TeacherCurrentClass", {
-          teacher,
           userID,
-          classes
         })
       } else {
         FirebaseFunctions.logEvent("STUDENT_LOG_IN");
-        const student = await FirebaseFunctions.getTeacherByID(userID);
-        const classes = await FirebaseFunctions.getClassesByIDs(student.classes);
         this.props.navigation.push("StudentCurrentClass", {
-          student,
           userID,
-          classes
         });
       }
     }

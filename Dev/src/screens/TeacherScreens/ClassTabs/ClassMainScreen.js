@@ -27,7 +27,8 @@ export class ClassMainScreen extends QcParentScreen {
 
     FirebaseFunctions.setCurrentScreen("Class Main Screen", "ClassMainScreen");
     this.setState({ isLoading: true });
-    const { teacher, userID } = this.props.navigation.state.params;
+    const { userID } = this.props.navigation.state.params;
+    const teacher = await FirebaseFunctions.getTeacherByID(userID);
     const { currentClassID } = teacher;
     const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
     this.setState({
@@ -55,7 +56,7 @@ export class ClassMainScreen extends QcParentScreen {
         <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
           teacher={teacher}
           userID={userID}
-          classes={this.props.navigation.state.params.classes}
+          classes={teacher.classes}
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
           <View style={styles.container}>
@@ -137,7 +138,7 @@ export class ClassMainScreen extends QcParentScreen {
         <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
           teacher={teacher}
           userID={userID}
-          classes={this.props.navigation.state.params.classes}
+          classes={teacher.classes}
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
           <View style={styles.container}>
@@ -205,7 +206,7 @@ export class ClassMainScreen extends QcParentScreen {
         <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
           teacher={teacher}
           userID={userID}
-          classes={this.props.navigation.state.params.classes}
+          classes={classes}
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
           <ScrollView style={styles.container}>

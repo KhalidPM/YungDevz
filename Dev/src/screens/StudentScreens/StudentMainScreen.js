@@ -11,6 +11,7 @@ import TopBanner from 'components/TopBanner'
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import QcActionButton from 'components/QcActionButton';
 import LeftNavPane from './LeftNavPane';
+import SideMenu from 'react-native-side-menu';
 
 class StudentMainScreen extends QcParentScreen {
 
@@ -32,7 +33,8 @@ class StudentMainScreen extends QcParentScreen {
         //Sets the screen name in firebase analytics
         FirebaseFunctions.setCurrentScreen("Student Main Screen", "StudentMainScreen");
 
-        const { student, userID } = this.props.navigation.state.params;
+        const { userID } = this.props.navigation.state.params;
+        const student = await FirebaseFunctions.getStudentByID(userID);
         const { currentClassID } = student;
         if (currentClassID === "") {
             this.setState({
@@ -91,174 +93,188 @@ class StudentMainScreen extends QcParentScreen {
 
         if (this.state.noCurrentClass) {
             return (
-                <View style={styles.container}>
-                    <View style={{ flex: 1 }}>
-                        <TopBanner
-                            LeftIconName="navicon"
-                            LeftOnPress={() => this.setState({ isOpen: true })}
-                            Title={"Quran Connect"} />
-
-                    </View>
-                    <View style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'center' }}>
-                        <Image
-                            source={require('assets/emptyStateIdeas/ghostGif.gif')}
-                            style={{
-                                width: 300,
-                                height: 150,
-                                resizeMode: 'contain',
-                            }} />
-
-                        <Text
-                            style={{
-                                fontSize: 30,
-                                color: colors.primaryDark,
-                                flexDirection: "row",
-                            }} >
-                            {strings.HaventJoinedClassYet}
-                        </Text>
-
-                        <QcActionButton
-                            text={strings.JoinClass}
-                            onPress={() => this.props.navigation.push("ClassEdit", {
-                                classID: currentClassID,
-                                currentClass
-                            })} />
-                    </View>
-                    <Modal
-                        transparent={true}
-                        visible={this.state.modalVisible}
-                        onRequestClode={() => { }}>
-                        <View style={styles.modal}>
-                            {
-                                this.state.isLoading === true ? (
-                                    <View>
-                                        <LoadingSpinner isVisible={true} />
-                                    </View>
-                                ) : (
-                                        <View>
-                                            <Text style={styles.confirmationMessage}>{strings.TypeInAClassCode}</Text>
-                                            <Input
-                                                type='authCode'
-                                                keyboardType='numeric'
-                                                onChangeText={(text) => { this.setState({ classCode: text }) }}
-                                                value={this.state.classCode}
-                                                keyboardType='numeric' />
-                                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 5 }}>
-                                                <QcActionButton
-                                                    text={strings.Cancel}
-                                                    onPress={() => { this.setState({ modalVisible: false }) }} />
-                                                <QcActionButton
-                                                    text={strings.Confirm}
-                                                    onPress={() => {
-                                                        //Joins the class
-                                                        this.joinClass();
-                                                    }} />
-                                            </View>
-                                        </View>
-                                    )
-                            }
+                <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
+                    student={student}
+                    userID={userID}
+                    classes={student.classes}
+                    edgeHitWidth={0}
+                    navigation={this.props.navigation} />}>
+                    <View style={styles.container}>
+                        <View style={{ flex: 1 }}>
+                            <TopBanner
+                                LeftIconName="navicon"
+                                LeftOnPress={() => this.setState({ isOpen: true })}
+                                Title={"Quran Connect"} />
 
                         </View>
-                    </Modal>
-                </View>
+                        <View style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'center' }}>
+                            <Image
+                                source={require('assets/emptyStateIdeas/ghostGif.gif')}
+                                style={{
+                                    width: 300,
+                                    height: 150,
+                                    resizeMode: 'contain',
+                                }} />
+
+                            <Text
+                                style={{
+                                    fontSize: 30,
+                                    color: colors.primaryDark,
+                                    flexDirection: "row",
+                                }} >
+                                {strings.HaventJoinedClassYet}
+                            </Text>
+
+                            <QcActionButton
+                                text={strings.JoinClass}
+                                onPress={() => this.props.navigation.push("ClassEdit", {
+                                    classID: currentClassID,
+                                    currentClass
+                                })} />
+                        </View>
+                        <Modal
+                            transparent={true}
+                            visible={this.state.modalVisible}
+                            onRequestClode={() => { }}>
+                            <View style={styles.modal}>
+                                {
+                                    this.state.isLoading === true ? (
+                                        <View>
+                                            <LoadingSpinner isVisible={true} />
+                                        </View>
+                                    ) : (
+                                            <View>
+                                                <Text style={styles.confirmationMessage}>{strings.TypeInAClassCode}</Text>
+                                                <Input
+                                                    type='authCode'
+                                                    keyboardType='numeric'
+                                                    onChangeText={(text) => { this.setState({ classCode: text }) }}
+                                                    value={this.state.classCode}
+                                                    keyboardType='numeric' />
+                                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 5 }}>
+                                                    <QcActionButton
+                                                        text={strings.Cancel}
+                                                        onPress={() => { this.setState({ modalVisible: false }) }} />
+                                                    <QcActionButton
+                                                        text={strings.Confirm}
+                                                        onPress={() => {
+                                                            //Joins the class
+                                                            this.joinClass();
+                                                        }} />
+                                                </View>
+                                            </View>
+                                        )
+                                }
+
+                            </View>
+                        </Modal>
+                    </View>
+                </SideMenu>
             )
         }
 
         return (
-            <View style={styles.container}>
-                <TopBanner
-                    LeftIconName="navicon"
-                    LeftOnPress={() => this.setState({ isOpen: true })}
-                    Title={currentClass.name}
-                />
-                <View style={styles.topView}>
-                    <View style={styles.profileInfo}>
-                        <View style={styles.profileInfoTop}>
-                            <View style={{ width: 100 }}>
-                            </View>
-                            <View style={styles.profileInfoTopRight}>
-                                <Text numberOfLines={1} style={styles.bigText}>{student.name.toUpperCase()}</Text>
-                                <View style={{ flexDirection: 'row', height: 25 }}>
-                                    <Rating readonly={true} startingValue={thisClassInfo.averageRating} imageSize={25} />
-                                    <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-                                        <Text style={styles.ratingText}>{thisClassInfo.averageRating === 0 ? "" : parseFloat(thisClassInfo.averageRating).toFixed(1)}</Text>
-                                    </View>
+            <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
+                teacher={teacher}
+                userID={userID}
+                classes={student.classes}
+                edgeHitWidth={0}
+                navigation={this.props.navigation} />}>
+                <View style={styles.container}>
+                    <TopBanner
+                        LeftIconName="navicon"
+                        LeftOnPress={() => this.setState({ isOpen: true })}
+                        Title={currentClass.name}
+                    />
+                    <View style={styles.topView}>
+                        <View style={styles.profileInfo}>
+                            <View style={styles.profileInfoTop}>
+                                <View style={{ width: 100 }}>
                                 </View>
-                                <Text style={styles.ratingDescText}>{this.getRatingCaption()}</Text>
+                                <View style={styles.profileInfoTopRight}>
+                                    <Text numberOfLines={1} style={styles.bigText}>{student.name.toUpperCase()}</Text>
+                                    <View style={{ flexDirection: 'row', height: 25 }}>
+                                        <Rating readonly={true} startingValue={thisClassInfo.averageRating} imageSize={25} />
+                                        <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+                                            <Text style={styles.ratingText}>{thisClassInfo.averageRating === 0 ? "" : parseFloat(thisClassInfo.averageRating).toFixed(1)}</Text>
+                                        </View>
+                                    </View>
+                                    <Text style={styles.ratingDescText}>{this.getRatingCaption()}</Text>
+                                </View>
                             </View>
-                        </View>
-                        <View style={styles.profileInfoBottom}>
-                            <View style={styles.profileInfoTopLeft}>
-                                <Image
-                                    style={styles.profilePic}
-                                    source={studentImages.images[student.profileImageID]} />
-                            </View>
-                            <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'column', height: 59 }}>
-                                <Text numberOfLines={1} style={styles.assignmentTextLarge}>{thisClassInfo.currentAssignment.toUpperCase()}</Text>
-                                <Text style={styles.assignmentTextLarge}>{strings.TotalAssignments + " " + thisClassInfo.totalAssignments + "  "}</Text>
+                            <View style={styles.profileInfoBottom}>
+                                <View style={styles.profileInfoTopLeft}>
+                                    <Image
+                                        style={styles.profilePic}
+                                        source={studentImages.images[student.profileImageID]} />
+                                </View>
+                                <View style={{ flex: 1, justifyContent: 'space-between', flexDirection: 'column', height: 59 }}>
+                                    <Text numberOfLines={1} style={styles.assignmentTextLarge}>{thisClassInfo.currentAssignment.toUpperCase()}</Text>
+                                    <Text style={styles.assignmentTextLarge}>{strings.TotalAssignments + " " + thisClassInfo.totalAssignments + "  "}</Text>
+                                </View>
                             </View>
                         </View>
                     </View>
-                </View>
-                <View style={[styles.middleView, { backgroundColor: (isReady === true ? colors.green : colors.red) }]}>
-                    <TouchableOpacity style={{ flex: 1 }} onPress={() => {
-                        //To-Do: Updates the state of the assignment & communicates it with the teacher
-                        if (thisClassInfo.currentAssignment !== "None") {
-                            FirebaseFunctions.updateStudentAssignmentStatus(currentClassID, userID);
-                            this.setState({ isReady: !isReady });
-                        }
-                    }}>
-                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                            <Text>{" "}</Text>
-                            <Text>{" "}</Text>
-                            <Text style={styles.studentNameStyle}>{strings.CurrentAssignment}</Text>
-                            <Text>{" "}</Text>
-                            <Text style={[styles.studentNameStyle, { fontSize: 20 }]}>{thisClassInfo.currentAssignment}</Text>
-                        </View>
-                        <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
-                            <Text>{"  "}</Text>
-                            <Text style={styles.ratingDescText}>{isReady ? strings.Ready : strings.NotReady}</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.bottomView}>
-                    <View style={{ flex: 0.1 }}></View>
-                    <ScrollView style={styles.prevAssignments}>
-                        <FlatList
-                            data={thisClassInfo.assignmentHistory}
-                            keyExtractor={(item, index) => item.name + index}
-                            renderItem={({ item, index }) => (
-                                <TouchableOpacity onPress={() => {
-                                    //To-Do: Navigates to more specific evaluation for this assignment
-                                }}>
-                                    <View style={styles.prevAssignmentCard} key={index}>
-                                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                                            <Text style={styles.subText}>{item.completionDate}</Text>
-                                            <View style={{ alignItems: 'center', flexWrap: 'wrap', alignSelf: 'baseline', flex: 1 }}>
-                                                <Text numberOfLines={1} style={styles.prevAssignmentTitleText}>{item.name}</Text>
+                    <View style={[styles.middleView, { backgroundColor: (isReady === true ? colors.green : colors.red) }]}>
+                        <TouchableOpacity style={{ flex: 1 }} onPress={() => {
+                            //To-Do: Updates the state of the assignment & communicates it with the teacher
+                            if (thisClassInfo.currentAssignment !== "None") {
+                                FirebaseFunctions.updateStudentAssignmentStatus(currentClassID, userID);
+                                this.setState({ isReady: !isReady });
+                            }
+                        }}>
+                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                <Text>{" "}</Text>
+                                <Text>{" "}</Text>
+                                <Text style={styles.studentNameStyle}>{strings.CurrentAssignment}</Text>
+                                <Text>{" "}</Text>
+                                <Text style={[styles.studentNameStyle, { fontSize: 20 }]}>{thisClassInfo.currentAssignment}</Text>
+                            </View>
+                            <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', flexDirection: 'row' }}>
+                                <Text>{"  "}</Text>
+                                <Text style={styles.ratingDescText}>{isReady ? strings.Ready : strings.NotReady}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.bottomView}>
+                        <View style={{ flex: 0.1 }}></View>
+                        <ScrollView style={styles.prevAssignments}>
+                            <FlatList
+                                data={thisClassInfo.assignmentHistory}
+                                keyExtractor={(item, index) => item.name + index}
+                                renderItem={({ item, index }) => (
+                                    <TouchableOpacity onPress={() => {
+                                        //To-Do: Navigates to more specific evaluation for this assignment
+                                    }}>
+                                        <View style={styles.prevAssignmentCard} key={index}>
+                                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                <Text style={styles.subText}>{item.completionDate}</Text>
+                                                <View style={{ alignItems: 'center', flexWrap: 'wrap', alignSelf: 'baseline', flex: 1 }}>
+                                                    <Text numberOfLines={1} style={styles.prevAssignmentTitleText}>{item.name}</Text>
+                                                </View>
+                                                <Rating style={{ paddingRight: 10, paddingTop: 3 }} readonly={true}
+                                                    startingValue={item.evaluation.grade} imageSize={17} />
                                             </View>
-                                            <Rating style={{ paddingRight: 10, paddingTop: 3 }} readonly={true}
-                                                startingValue={item.evaluation.grade} imageSize={17} />
+                                            {item.evaluation.notes ?
+                                                <Text numberOfLines={2} style={styles.notesText}>{"Notes: " + item.evaluation.notes}</Text>
+                                                : <View />
+                                            }
+                                            {item.evaluation.improvementAreas && item.evaluation.improvementAreas.length > 0 ?
+                                                <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                                                    <Text style={{ height: 20, marginTop: 5 }}>{strings.ImprovementAreas}</Text>
+                                                    {item.evaluation.improvementAreas.map((tag) => { return (<Text key={tag} style={styles.corner}>{tag}</Text>) })}
+                                                </View>
+                                                : <View />
+                                            }
                                         </View>
-                                        {item.evaluation.notes ?
-                                            <Text numberOfLines={2} style={styles.notesText}>{"Notes: " + item.evaluation.notes}</Text>
-                                            : <View />
-                                        }
-                                        {item.evaluation.improvementAreas && item.evaluation.improvementAreas.length > 0 ?
-                                            <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                                                <Text style={{ height: 20, marginTop: 5 }}>{strings.ImprovementAreas}</Text>
-                                                {item.evaluation.improvementAreas.map((tag) => { return (<Text key={tag} style={styles.corner}>{tag}</Text>) })}
-                                            </View>
-                                            : <View />
-                                        }
-                                    </View>
 
-                                </TouchableOpacity>
-                            )}
-                        />
-                    </ScrollView>
+                                    </TouchableOpacity>
+                                )}
+                            />
+                        </ScrollView>
+                    </View>
                 </View>
-            </View>
+            </SideMenu>
         )
     }
 }

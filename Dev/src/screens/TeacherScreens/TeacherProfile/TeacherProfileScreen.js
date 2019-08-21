@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Image, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Alert, ScrollView} from 'react-native';
+import { StyleSheet, View, Image, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Alert, ScrollView } from 'react-native';
 import Toast, { DURATION } from 'react-native-easy-toast'
 import QcActionButton from 'components/QcActionButton';
 import TouchableText from 'components/TouchableText'
@@ -9,12 +9,14 @@ import ImageSelectionModal from 'components/ImageSelectionModal'
 import TeacherInfoEntries from 'components/TeacherInfoEntries';
 import strings from 'config/strings';
 import QcParentScreen from 'screens/QcParentScreen';
-import FirebaseFunctions from 'config/FirebaseFunctions'
+import FirebaseFunctions from 'config/FirebaseFunctions';
+import SideMenu from 'react-native-side-menu';
+import LeftNavPane from '../LeftNavPane';
 
 //To-Do: All info in this class is static, still needs to be hooked up to data base in order
 //to function dynamically
 export class TeacherProfileScreen extends QcParentScreen {
-    
+
     //Sets the current screen for firebase analytics
     componentDidMount() {
 
@@ -30,7 +32,8 @@ export class TeacherProfileScreen extends QcParentScreen {
         phoneNumber: this.props.navigation.state.params.teacher.phoneNumber,
         emailAddress: this.props.navigation.state.params.teacher.emailAddress,
         profileImageID: this.props.navigation.state.params.teacher.profileImageID,
-        isPhoneValid: true
+        isPhoneValid: true,
+        isOpen: true
 
     }
 
@@ -67,7 +70,9 @@ export class TeacherProfileScreen extends QcParentScreen {
             });
             this.refs.toast.show(strings.YourProfileHasBeenSaved, DURATION.LENGTH_SHORT);
             //Just goes to the first class
-            this.props.navigation.push('CurrentClass');
+            this.props.navigation.push('TeacherCurrentClass', {
+                userID: userID
+            });
         }
     }
 
@@ -80,7 +85,7 @@ export class TeacherProfileScreen extends QcParentScreen {
         this.setState({
             isPhoneValid: phone.isValidNumber(),
             phoneNumber: phone.getValue()
-          });
+        });
     }
 
     onEmailAddressChanged = (value) => {
@@ -97,55 +102,66 @@ export class TeacherProfileScreen extends QcParentScreen {
 
         const { ID, emailAddress, name, phoneNumber, profileImageID } = this.state;
         return (
+            <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
+                teacher={this.state.teacher}
+                userID={userID}
+                classes={this.state.teacher.classes}
+                edgeHitWidth={0}
+                navigation={this.props.navigation} />}>
             <View>
-            <ScrollView>
-            <KeyboardAvoidingView style={styles.container} behavior="padding">
-                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                    <View style={styles.container}>
-                        <ImageSelectionModal
-                            visible={this.state.modalVisible}
-                            images={teacherImages.images}
-                            cancelText={strings.Cancel}
-                            setModalVisible={this.setModalVisible.bind(this)}
-                            onImageSelected={this.onImageSelected.bind(this)}
-                        />
-                        <View style={styles.picContainer}>
-                            <Image
-                                style={styles.profilePic}
-                                source={teacherImages.images[profileImageID]} />
-                            <TouchableText
-                                text={strings.UpdateProfileImage}
-                                onPress={() => this.editProfilePic()} />
-                        </View>
+                <TopBanner
+                    LeftIconName="navicon"
+                    LeftOnPress={() => this.setState({ isOpen: true })}
+                    Title={strings.MyProfile} />
+                <ScrollView>
+                    <KeyboardAvoidingView style={styles.container} behavior="padding">
+                        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                            <View style={styles.container}>
+                                <ImageSelectionModal
+                                    visible={this.state.modalVisible}
+                                    images={teacherImages.images}
+                                    cancelText={strings.Cancel}
+                                    setModalVisible={this.setModalVisible.bind(this)}
+                                    onImageSelected={this.onImageSelected.bind(this)}
+                                />
+                                <View style={styles.picContainer}>
+                                    <Image
+                                        style={styles.profilePic}
+                                        source={teacherImages.images[profileImageID]} />
+                                    <TouchableText
+                                        text={strings.UpdateProfileImage}
+                                        onPress={() => this.editProfilePic()} />
+                                </View>
 
-                        <TeacherInfoEntries
-                            name={name}
-                            phoneNumber={phoneNumber}
-                            emailAddress={emailAddress}
-                            onNameChanged={this.onNameChanged}
-                            onPhoneNumberChanged={this.onPhoneNumberChanged}
-                            onEmailAddressChanged={this.onEmailAddressChanged}
-                        />
-                        <View style={styles.buttonsContainer}>
-                            <QcActionButton
-                                text={strings.Cancel}
-                                onPress={() => {
-                                    //Just goes back without saving anything
-                                    this.props.navigation.push('CurrentClass');
-                                }}
-                            />
-                            <QcActionButton
-                                text={strings.Save}
-                                onPress={() => this.saveProfileInfo()}
-                            />
-                        </View>
-                        <View style={styles.filler}></View>
-                        <Toast ref="toast" />
-                    </View>
-                </TouchableWithoutFeedback>
-            </KeyboardAvoidingView>
-            </ScrollView>
+                                <TeacherInfoEntries
+                                    name={name}
+                                    phoneNumber={phoneNumber}
+                                    emailAddress={emailAddress}
+                                    onNameChanged={this.onNameChanged}
+                                    onPhoneNumberChanged={this.onPhoneNumberChanged}
+                                    onEmailAddressChanged={this.onEmailAddressChanged}
+                                />
+                                <View style={styles.buttonsContainer}>
+                                    <QcActionButton
+                                        text={strings.Cancel}
+                                        onPress={() => {
+                                            //Just goes back without saving anything
+                                            this.props.navigation.push('CurrentClass');
+                                        }}
+                                    />
+                                    <QcActionButton
+                                        text={strings.Save}
+                                        onPress={() => this.saveProfileInfo()}
+                                    />
+                                </View>
+                                <View style={styles.filler}></View>
+                                <Toast ref="toast" />
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </KeyboardAvoidingView>
+                </ScrollView>
             </View>
+            </SideMenu>
         )
     }
 

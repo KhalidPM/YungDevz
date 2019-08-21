@@ -75,26 +75,14 @@ routeConfig = {
     AddClass: {
         screen: AddClassScreen,
         navigationOptions: ({ navigation }) => ({
-            header: (
-                <TopBanner
-                    LeftIconName="navicon"
-                    LeftOnPress={() => navigation.openDrawer()}
-                    Title={strings.AddNewClass}
-                />
-            )
+            header: null
         }),
     },
 
     Settings: {
         screen: allSettingsScreen,
         navigationOptions: ({ navigation }) => ({
-            header: (
-                <TopBanner
-                    LeftIconName="navicon"
-                    LeftOnPress={() => navigation.openDrawer()}
-                    Title={strings.Settings}
-                />
-            )
+            header: null
         }),
     },
 
@@ -114,13 +102,7 @@ routeConfig = {
     TeacherProfile: {
         screen: TeacherProfileScreen,
         navigationOptions: ({ navigation }) => ({
-            header: (
-                <TopBanner
-                    LeftIconName="navicon"
-                    LeftOnPress={() => navigation.openDrawer()}
-                    Title={strings.MyProfile}
-                />
-            )
+            header: null
         })
     },
 

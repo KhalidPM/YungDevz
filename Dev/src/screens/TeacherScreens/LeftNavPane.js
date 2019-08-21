@@ -37,9 +37,10 @@ class LeftNavPane extends QcParentScreen {
     });
     FirebaseFunctions.logEvent("TEACHER_OPEN_CLASS");
 
-    //navigate to the selected class
-    this.props.navigation.push("CurrentClass");
-    this.props.navigation.closeDrawer();
+    //navigate to the selected class by first getting the new teacher object
+    this.props.navigation.push("TeacherCurrentClass", {
+      userID
+    });
   };
 
   triggerDeleteClass() {
@@ -121,7 +122,11 @@ class LeftNavPane extends QcParentScreen {
           <QcDrawerItem
             title={strings.Settings}
             icon="cogs"
-            onPress={() => this.props.navigation.push("Settings")} />
+            onPress={() => this.props.navigation.push("Settings", {
+              isTeacher: true,
+              teacher: this.state.teacher,
+              userID: this.state.userID
+            })} />
 
           <QcActionButton
             text={this.state.deleteOrStopDeleteText}

@@ -118,12 +118,8 @@ export class TeacherWelcomeScreen extends QcParentScreen {
     }
 
     const ID = await FirebaseFunctions.signUp(emailAddress, password, true, teacherObject);
-    const teacher = await FirebaseFunctions.getTeacherByID(ID);
-    const classes = await FirebaseFunctions.getClassesByIDs(teacher.classes);
     this.props.navigation.push("TeacherCurrentClass", {
       userID: ID,
-      teacher,
-      classes
     });
 
   };

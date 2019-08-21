@@ -6,8 +6,17 @@ import { Icon } from 'react-native-elements';
 import strings from 'config/strings';
 import QcParentScreen from "screens/QcParentScreen";
 import FirebaseFunctions from 'config/FirebaseFunctions';
+import TeacherLeftNavPane from '../TeacherScreens/LeftNavPane';
+import StudentLeftNavPane from '../StudentScreens/LeftNavPane';
+import SideMenu from 'react-native-side-menu';
+import TopBanner from 'components/TopBanner';
 
 export default class AllSettingsScreen extends QcParentScreen {
+
+    //The state controlling the side menu
+    state = {
+        isOpen: false
+    }
 
     //Sets the screen for firebase analytics
     componentDidMount() {
@@ -17,8 +26,13 @@ export default class AllSettingsScreen extends QcParentScreen {
     }
 
     render() {
-        return (
+
+        const content = (
             <View style={styles.container}>
+                <TopBanner
+                    LeftIconName="navicon"
+                    LeftOnPress={() => this.setState({ isOpen: true })}
+                    Title={strings.Settings} />
                 <TouchableOpacity style={[styles.cardStyle, { marginTop: 25 }]} onPress={() => {
                     this.props.navigation.push("CreditsScreen");
                 }}>
@@ -53,7 +67,28 @@ export default class AllSettingsScreen extends QcParentScreen {
                         color={colors.primaryDark} />
                 </TouchableOpacity>
             </View>
+        );
 
+        return (
+            this.props.navigation.state.params.isTeacher ? (
+                <SideMenu isOpen={this.state.isOpen} menu={<TeacherLeftNavPane
+                    teacher={this.props.navigation.state.params.teacher}
+                    userID={this.props.navigation.state.params.userID}
+                    classes={this.props.navigation.state.params.teacher.classes}
+                    edgeHitWidth={0}
+                    navigation={this.props.navigation} />}>
+                    {content}
+                </SideMenu>
+            ) : (
+                    <SideMenu isOpen={this.state.isOpen} menu={<StudentLeftNavPane
+                        student={this.props.navigation.state.params.student}
+                        userID={this.props.navigation.state.params.userID}
+                        classes={this.props.navigation.state.params.student.classes}
+                        edgeHitWidth={0}
+                        navigation={this.props.navigation} />}>
+                        {content}
+                    </SideMenu>
+                )
         )
     }
 }

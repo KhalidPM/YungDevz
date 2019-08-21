@@ -8,6 +8,9 @@ import ImageSelectionModal from "components/ImageSelectionModal"
 import LoadingSpinner from 'components/LoadingSpinner';
 import FirebaseFunctions from 'config/FirebaseFunctions';
 import strings from 'config/strings';
+import TopBanner from 'components/TopBanner';
+import LeftNavPane from '../LeftNavPane';
+import SideMenu from 'react-native-side-menu';
 
 export class AddClassScreen extends QcParentScreen {
 
@@ -18,7 +21,8 @@ export class AddClassScreen extends QcParentScreen {
     modalVisible: false,
     isLoading: true,
     userID: "",
-    teacher: ""
+    teacher: "",
+    isOpen: false
   };
 
   //Sets the current screen for firebase analytics
@@ -102,53 +106,63 @@ export class AddClassScreen extends QcParentScreen {
       )
     }
     return (
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <KeyboardAvoidingView style={styles.container} behavior="padding">
-          <View
-            style={styles.container}
-          >
+      <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
+        teacher={this.state.teacher}
+        userID={this.state.userID}
+        classes={this.state.teacher.classes}
+        edgeHitWidth={0}
+        navigation={this.props.navigation} />}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <KeyboardAvoidingView style={styles.container} behavior="padding">
+            <View
+              style={styles.container}>
+              <TopBanner
+                LeftIconName="navicon"
+                LeftOnPress={() => this.setState({ isOpen: true })}
+                Title={strings.AddNewClass} />
 
-            <ImageSelectionModal
-              visible={this.state.modalVisible}
-              images={classImages.images}
-              cancelText={strings.Cancel}
-              setModalVisible={this.setModalVisible.bind(this)}
-              onImageSelected={this.onImageSelected.bind(this)}
-              screen={this.name}
-            />
-
-            <View style={styles.picContainer}>
-              <Image
-                style={styles.profilePic}
-                source={classImages.images[this.state.classImageId]}
-                ResizeMode="contain" />
-              <TouchableText
-                text={strings.EditClassImage}
-                onPress={() => this.setModalVisible(true)} />
-            </View>
-
-            <View style={styles.bottomContainer}>
-              <TextInput
-                style={styles.textInputStyle}
-                placeholder={strings.WriteClassNameHere}
-                onChangeText={classInput =>
-                  this.setState({
-                    className: classInput
-                  })
-                }
-              />
-
-              <QcActionButton
-                text={strings.AddClass}
-                onPress={() => {
-                  this.addNewClass();
-                }}
+              <ImageSelectionModal
+                visible={this.state.modalVisible}
+                images={classImages.images}
+                cancelText={strings.Cancel}
+                setModalVisible={this.setModalVisible.bind(this)}
+                onImageSelected={this.onImageSelected.bind(this)}
                 screen={this.name}
               />
+
+              <View style={styles.picContainer}>
+                <Image
+                  style={styles.profilePic}
+                  source={classImages.images[this.state.classImageId]}
+                  ResizeMode="contain" />
+                <TouchableText
+                  text={strings.EditClassImage}
+                  onPress={() => this.setModalVisible(true)} />
+              </View>
+
+              <View style={styles.bottomContainer}>
+                <TextInput
+                  style={styles.textInputStyle}
+                  placeholder={strings.WriteClassNameHere}
+                  onChangeText={classInput =>
+                    this.setState({
+                      className: classInput
+                    })
+                  }
+                />
+
+                <QcActionButton
+                  text={strings.AddClass}
+                  onPress={() => {
+                    this.addNewClass();
+                  }}
+                  screen={this.name}
+                />
+              </View>
             </View>
-          </View>
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+      </SideMenu>
     );
   }
 }

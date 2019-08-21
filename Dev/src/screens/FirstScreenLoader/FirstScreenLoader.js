@@ -21,20 +21,13 @@ class FirstScreenLoader extends Component {
         }
         const student = await FirebaseFunctions.getStudentByID(user.uid);
         if (student !== -1) {
-          const classes = await FirebaseFunctions.getClassesByIDs(student.classes);
           this.props.navigation.push("StudentCurrentClass", {
             userID: user.uid,
-            student,
-            classes
           });
           return;
         }
-        const teacher = await FirebaseFunctions.getTeacherByID(user.uid);
-        const classes = await FirebaseFunctions.getClassesByIDs(teacher.classes);
         this.props.navigation.push("TeacherCurrentClass", {
           userID: user.uid,
-          teacher,
-          classes
         });
         return;
       }

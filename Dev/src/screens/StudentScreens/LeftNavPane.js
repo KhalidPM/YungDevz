@@ -18,9 +18,9 @@ import LoadingSpinner from 'components/LoadingSpinner';
 class LeftNavPane extends QcParentScreen {
 
     state = {
-        student: this.props.navigation.state.params.student,
-        userID: this.props.navigation.state.params.userID,
-        classes: this.props.navigation.state.params.classes,
+        student: this.props.student,
+        userID: this.props.userID,
+        classes: this.props.classes,
         modalVisible: false,
         classCode: "",
         isLoading: false
@@ -46,14 +46,12 @@ class LeftNavPane extends QcParentScreen {
             Alert.alert(strings.Whoops, strings.IncorrectClassCode);
         } else {
             //Refetches the student object to reflect the updated database
-            const student = await FirebaseFunctions.getStudentByID(userID);
             this.setState({
                 isLoading: false,
                 modalVisible: false
             })
-            this.props.navigation.push("CurrentClass", {
+            this.props.navigation.push("StudentCurrentClass", {
                 userID,
-                student
             });
         }
 
@@ -67,8 +65,9 @@ class LeftNavPane extends QcParentScreen {
 
 
         //navigate to the selected class
-        this.props.navigation.push("StudentCurrentClass");
-        this.props.navigation.closeDrawer();
+        this.props.navigation.push("StudentCurrentClass", {
+            userID: this.state.userID
+        });
     };
 
     //todo: change the ListItem header and footer below to the shared drawer component intead
@@ -115,13 +114,16 @@ class LeftNavPane extends QcParentScreen {
                         title={strings.JoinClass}
                         icon="plus"
                         onPress={() => {
-                            this.props.navigation.closeDrawer();
                             this.setState({ modalVisible: true });
                         }} />
                     <QcDrawerItem
                         title={strings.Settings}
                         icon="cogs"
-                        onPress={() => this.props.navigation.push("Settings")} />
+                        onPress={() => this.props.navigation.push("Settings", {
+                            isStudent: true,
+                            userID: this.state.userID,
+                            student: this.state.student
+                        })} />
 
                     <Modal
                         transparent={true}
