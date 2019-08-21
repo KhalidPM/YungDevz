@@ -56,7 +56,8 @@ export class ClassMainScreen extends QcParentScreen {
           teacher={teacher}
           userID={userID}
           classes={this.props.navigation.state.params.classes}
-          edgeHitWidth={0} />}>
+          edgeHitWidth={0}
+          navigation={this.props.navigation} />}>
           <View style={styles.container}>
 
             <View style={{ flex: 1 }}>
@@ -64,7 +65,7 @@ export class ClassMainScreen extends QcParentScreen {
                 <View>
                   <TopBanner
                     LeftIconName="navicon"
-                    LeftOnPress={() => this.props.navigation.openDrawer()}
+                    LeftOnPress={() => this.setState({ isOpen: true })}
                     Title={this.props.navigation.state.params.classTitle}
                     RightIconName="edit"
                     RightOnPress={() => this.props.navigation.push('ClassEdit', {
@@ -133,13 +134,86 @@ export class ClassMainScreen extends QcParentScreen {
        * if it is, then there is no students in the class, and thus the class is empty,
        * triggering the message. */
       return (
-        <View style={styles.container}>
-          <View style={{ flex: 1 }}>
+        <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
+          teacher={teacher}
+          userID={userID}
+          classes={this.props.navigation.state.params.classes}
+          edgeHitWidth={0}
+          navigation={this.props.navigation} />}>
+          <View style={styles.container}>
+            <View style={{ flex: 1 }}>
+              {(this.props.navigation.state.params && this.props.navigation.state.params.classTitle) ? (
+                <View>
+                  <TopBanner
+                    LeftIconName="navicon"
+                    LeftOnPress={() => this.setState({ isOpen: true })}
+                    Title={this.props.navigation.state.params.classTitle}
+                    RightIconName="edit"
+                    RightOnPress={() => this.props.navigation.push('ClassEdit', {
+                      classID: currentClassID,
+                      currentClass
+                    })}
+                  />
+                </View>
+              ) : (
+                  <View>
+                    <TopBanner
+                      LeftIconName="navicon"
+                      LeftOnPress={() => this.setState({ isOpen: true })}
+                      Title={"Quran Connect"}
+                    />
+                  </View>
+                )
+              }
+            </View>
+            <View style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'center' }}>
+              <Image
+                source={require('assets/emptyStateIdeas/ghostGif.gif')}
+                style={{
+                  width: 300,
+                  height: 150,
+                  resizeMode: 'contain',
+                }}
+              />
+
+              <Text
+                style={{
+                  fontSize: 30,
+                  color: colors.primaryDark,
+                  flexDirection: "row",
+                }}
+              >
+                {strings.EmptyClass}
+              </Text>
+
+              <QcActionButton
+                text={strings.AddStudentButton}
+                onPress={() => this.props.navigation.push("ClassEdit", {
+                  classID: currentClassID,
+                  currentClass
+                })} />
+            </View>
+          </View>
+        </SideMenu>
+      )
+    }
+
+
+    else {
+
+      return (
+        <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
+          teacher={teacher}
+          userID={userID}
+          classes={this.props.navigation.state.params.classes}
+          edgeHitWidth={0}
+          navigation={this.props.navigation} />}>
+          <ScrollView style={styles.container}>
             {(this.props.navigation.state.params && this.props.navigation.state.params.classTitle) ? (
               <View>
                 <TopBanner
                   LeftIconName="navicon"
-                  LeftOnPress={() => this.props.navigation.openDrawer()}
+                  LeftOnPress={() => this.setState({ isOpen: true })}
                   Title={this.props.navigation.state.params.classTitle}
                   RightIconName="edit"
                   RightOnPress={() => this.props.navigation.push('ClassEdit', {
@@ -152,93 +226,34 @@ export class ClassMainScreen extends QcParentScreen {
                 <View>
                   <TopBanner
                     LeftIconName="navicon"
-                    LeftOnPress={() => this.props.navigation.openDrawer()}
+                    LeftOnPress={() => this.setState({ isOpen: true })}
                     Title={"Quran Connect"}
                   />
                 </View>
               )
             }
-          </View>
-          <View style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'center' }}>
-            <Image
-              source={require('assets/emptyStateIdeas/ghostGif.gif')}
-              style={{
-                width: 300,
-                height: 150,
-                resizeMode: 'contain',
-              }}
-            />
-
-            <Text
-              style={{
-                fontSize: 30,
-                color: colors.primaryDark,
-                flexDirection: "row",
-              }}
-            >
-              {strings.EmptyClass}
-            </Text>
-
-            <QcActionButton
-              text={strings.AddStudentButton}
-              onPress={() => this.props.navigation.push("ClassEdit", {
-                classID: currentClassID,
-                currentClass
-              })} />
-          </View>
-        </View>
-      )
-    }
-
-
-    else {
-
-      return (
-        <ScrollView style={styles.container}>
-          {(this.props.navigation.state.params && this.props.navigation.state.params.classTitle) ? (
-            <View>
-              <TopBanner
-                LeftIconName="navicon"
-                LeftOnPress={() => this.props.navigation.openDrawer()}
-                Title={this.props.navigation.state.params.classTitle}
-                RightIconName="edit"
-                RightOnPress={() => this.props.navigation.push('ClassEdit', {
-                  classID: currentClassID,
-                  currentClass
-                })}
-              />
-            </View>
-          ) : (
-              <View>
-                <TopBanner
-                  LeftIconName="navicon"
-                  LeftOnPress={() => this.props.navigation.openDrawer()}
-                  Title={"Quran Connect"}
+            <FlatList
+              data={currentClass.students}
+              keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
+              renderItem={({ item }) => (
+                <StudentCard
+                  key={item.id}
+                  studentName={item.name}
+                  background={colors.white}
+                  profilePic={studentImages.images[item.profileImageID]}
+                  currentAssignment={item.currentAssignment}
+                  onPress={() =>
+                    this.props.navigation.push("TeacherStudentProfile", {
+                      studentID: item.ID,
+                      currentClass: currentClass,
+                      classID: currentClassID
+                    })
+                  }
                 />
-              </View>
-            )
-          }
-          <FlatList
-            data={currentClass.students}
-            keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)
-            renderItem={({ item }) => (
-              <StudentCard
-                key={item.id}
-                studentName={item.name}
-                background={colors.white}
-                profilePic={studentImages.images[item.profileImageID]}
-                currentAssignment={item.currentAssignment}
-                onPress={() =>
-                  this.props.navigation.push("TeacherStudentProfile", {
-                    studentID: item.ID,
-                    currentClass: currentClass,
-                    classID: currentClassID
-                  })
-                }
-              />
-            )}
-          />
-        </ScrollView>
+              )}
+            />
+          </ScrollView>
+        </SideMenu>
       );
     }
 

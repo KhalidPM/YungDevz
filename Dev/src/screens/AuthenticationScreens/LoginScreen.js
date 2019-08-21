@@ -82,7 +82,7 @@ class LoginScreen extends Component {
         FirebaseFunctions.logEvent("STUDENT_LOG_IN");
         const student = await FirebaseFunctions.getTeacherByID(userID);
         const classes = await FirebaseFunctions.getClassesByIDs(student.classes);
-        this.props.navigation.push("StudentScreens", {
+        this.props.navigation.push("StudentCurrentClass", {
           student,
           userID,
           classes

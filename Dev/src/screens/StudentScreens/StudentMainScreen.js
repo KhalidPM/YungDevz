@@ -2,12 +2,15 @@
 //sign up or log in
 import React from 'react';
 import QcParentScreen from "../QcParentScreen";
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView, Modal } from 'react-native';
 import studentImages from 'config/studentImages';
 import { Rating } from 'react-native-elements';
 import colors from 'config/colors'
 import strings from 'config/strings';
+import TopBanner from 'components/TopBanner'
 import FirebaseFunctions from 'config/FirebaseFunctions';
+import QcActionButton from 'components/QcActionButton';
+import LeftNavPane from './LeftNavPane';
 
 class StudentMainScreen extends QcParentScreen {
 
@@ -18,7 +21,7 @@ class StudentMainScreen extends QcParentScreen {
         currentClass: '',
         currentClassID: '',
         thisClassInfo: '',
-        isReady: ''
+        isReady: '',
     }
 
     //Fetches all the values for the state from the firestore database
@@ -31,20 +34,28 @@ class StudentMainScreen extends QcParentScreen {
 
         const { student, userID } = this.props.navigation.state.params;
         const { currentClassID } = student;
-        const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
-        const thisClassInfo = currentClass.students.find((student) => {
-            return student.ID === userID;
-        });
-        const { isReady } = thisClassInfo;
-        this.setState({
-            student,
-            userID,
-            currentClass,
-            currentClassID,
-            thisClassInfo,
-            isReady
-        });
-
+        if (currentClassID === "") {
+            this.setState({
+                isLoading: false,
+                noCurrentClass: true
+            });
+        } else {
+            const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
+            const thisClassInfo = currentClass.students.find((student) => {
+                return student.ID === userID;
+            });
+            const { isReady } = thisClassInfo;
+            this.setState({
+                student,
+                userID,
+                currentClass,
+                currentClassID,
+                thisClassInfo,
+                isReady,
+                isLoading: false,
+                isOpen: false
+            });
+        }
     }
 
     //Returns the correct caption based on the student's average grade
@@ -68,7 +79,7 @@ class StudentMainScreen extends QcParentScreen {
     //Renders the screen
     render() {
 
-        const { userID, isLoading, student, currentClassID, thisClassInfo, isReady } = this.state;
+        const { userID, isLoading, student, currentClassID, thisClassInfo, isReady, currentClass } = this.state;
 
         if (isLoading === true) {
             return (
@@ -78,8 +89,88 @@ class StudentMainScreen extends QcParentScreen {
             )
         }
 
+        if (this.state.noCurrentClass) {
+            return (
+                <View style={styles.container}>
+                    <View style={{ flex: 1 }}>
+                        <TopBanner
+                            LeftIconName="navicon"
+                            LeftOnPress={() => this.setState({ isOpen: true })}
+                            Title={"Quran Connect"} />
+
+                    </View>
+                    <View style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'center' }}>
+                        <Image
+                            source={require('assets/emptyStateIdeas/ghostGif.gif')}
+                            style={{
+                                width: 300,
+                                height: 150,
+                                resizeMode: 'contain',
+                            }} />
+
+                        <Text
+                            style={{
+                                fontSize: 30,
+                                color: colors.primaryDark,
+                                flexDirection: "row",
+                            }} >
+                            {strings.HaventJoinedClassYet}
+                        </Text>
+
+                        <QcActionButton
+                            text={strings.JoinClass}
+                            onPress={() => this.props.navigation.push("ClassEdit", {
+                                classID: currentClassID,
+                                currentClass
+                            })} />
+                    </View>
+                    <Modal
+                        transparent={true}
+                        visible={this.state.modalVisible}
+                        onRequestClode={() => { }}>
+                        <View style={styles.modal}>
+                            {
+                                this.state.isLoading === true ? (
+                                    <View>
+                                        <LoadingSpinner isVisible={true} />
+                                    </View>
+                                ) : (
+                                        <View>
+                                            <Text style={styles.confirmationMessage}>{strings.TypeInAClassCode}</Text>
+                                            <Input
+                                                type='authCode'
+                                                keyboardType='numeric'
+                                                onChangeText={(text) => { this.setState({ classCode: text }) }}
+                                                value={this.state.classCode}
+                                                keyboardType='numeric' />
+                                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 5 }}>
+                                                <QcActionButton
+                                                    text={strings.Cancel}
+                                                    onPress={() => { this.setState({ modalVisible: false }) }} />
+                                                <QcActionButton
+                                                    text={strings.Confirm}
+                                                    onPress={() => {
+                                                        //Joins the class
+                                                        this.joinClass();
+                                                    }} />
+                                            </View>
+                                        </View>
+                                    )
+                            }
+
+                        </View>
+                    </Modal>
+                </View>
+            )
+        }
+
         return (
             <View style={styles.container}>
+                <TopBanner
+                    LeftIconName="navicon"
+                    LeftOnPress={() => this.setState({ isOpen: true })}
+                    Title={currentClass.name}
+                />
                 <View style={styles.topView}>
                     <View style={styles.profileInfo}>
                         <View style={styles.profileInfoTop}>

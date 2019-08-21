@@ -1,9 +1,8 @@
 //This stack navigator will be the base line for all screens across the app (with the exception of the
 //tabs navigator in the teacher screens & the drawerNavigators).
+import React from 'react';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
-import TeacherMenu from './TeacherScreens/TeacherMenu';
 import FirstScreenLoader from './FirstScreenLoader/FirstScreenLoader';
-import StudentMenu from './StudentScreens/StudentMenu';
 import LoginScreen from './AuthenticationScreens/LoginScreen';
 import FirstRunScreen from './FirstRun/FirstRunScreen';
 import TeacherWelcomeScreen from './TeacherScreens/TeacherWelcomeScreen';
@@ -38,8 +37,8 @@ routeConfig = {
         }),
     },
 
-    StudentScreens: {
-        screen: StudentMenu,
+    StudentCurrentClass: {
+        screen: StudentMainScreen,
         navigationOptions: ({ navigation }) => ({
             header: null
         }),
@@ -86,7 +85,6 @@ routeConfig = {
         }),
     },
 
-
     Settings: {
         screen: allSettingsScreen,
         navigationOptions: ({ navigation }) => ({
@@ -124,21 +122,6 @@ routeConfig = {
                 />
             )
         })
-    },
-
-    StudentCurrentClass: {
-        screen: StudentMainScreen,
-        navigationOptions: ({ navigation }) => ({
-            header: (
-                <TopBanner
-                    LeftIconName="navicon"
-                    LeftOnPress={() => { navigation.openDrawer() }}
-                    Title={
-                        //Todo: Make sure an actual class name is passed and not a hard coded one
-                        "Tuesday Hifth Class"
-                    } />
-            ),
-        }),
     },
 
     TeacherCurrentClass: {

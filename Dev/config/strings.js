@@ -83,6 +83,7 @@ export default {
 
     //--------------------- Join Class Screen ---------------------
     JoinClass: 'Join Class',
+    HaventJoinedClassYet: 'You haven\'t joined a class yet',
     TypeInAClassCode: 'Type in a class code...',
     IncorrectClassCode: 'There doesn\'t seem to be a class with this code',
 

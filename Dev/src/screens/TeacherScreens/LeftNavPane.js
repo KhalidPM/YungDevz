@@ -10,6 +10,7 @@ import QcDrawerItem from "components/QcDrawerItem";
 import teacherImages from "../../../config/teacherImages";
 import strings from '../../../config/strings';
 import QcParentScreen from "screens/QcParentScreen";
+import QcActionButton from 'components/QcActionButton';
 
 class LeftNavPane extends QcParentScreen {
 
@@ -47,9 +48,8 @@ class LeftNavPane extends QcParentScreen {
     this.setState({
       deleteOrStopDeleteText: newText,
       backColor: newColor,
-      deleteBool: !oldState.deleteBool
+      deleteBool: !this.state.deleteBool
     });
-
   }
 
   //todo: change the ListItem header and footer below to the shared drawer component intead
@@ -125,7 +125,7 @@ class LeftNavPane extends QcParentScreen {
 
           <QcActionButton
             text={this.state.deleteOrStopDeleteText}
-            onPress={this.triggerDeleteClass()} />
+            onPress={() => this.triggerDeleteClass()} />
 
         </SafeAreaView>
       </ScrollView>
