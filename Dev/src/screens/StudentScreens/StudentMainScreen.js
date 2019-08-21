@@ -2,7 +2,7 @@
 //sign up or log in
 import React from 'react';
 import QcParentScreen from "../QcParentScreen";
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView, Modal } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList, ScrollView, Modal, Alert } from 'react-native';
 import studentImages from 'config/studentImages';
 import { Rating } from 'react-native-elements';
 import colors from 'config/colors'
@@ -12,6 +12,8 @@ import FirebaseFunctions from 'config/FirebaseFunctions';
 import QcActionButton from 'components/QcActionButton';
 import LeftNavPane from './LeftNavPane';
 import SideMenu from 'react-native-side-menu';
+import LoadingSpinner from 'components/LoadingSpinner';
+import { Input } from 'react-native-elements';
 
 class StudentMainScreen extends QcParentScreen {
 
@@ -23,6 +25,34 @@ class StudentMainScreen extends QcParentScreen {
         currentClassID: '',
         thisClassInfo: '',
         isReady: '',
+        modalVisible: false,
+        classCode: '',
+        classes: ''
+    }
+
+    //Joins the class by first testing if this class exists. If the class doesn't exist, then it will
+    //alert the user that it does not exist. If the class does exist, then it will join the class, and
+    //navigate to the current class screen.
+    async joinClass() {
+
+        this.setState({ isLoading: true });
+        const { userID, classCode, student } = this.state;
+
+        const didJoinClass = await FirebaseFunctions.joinClass(student, classCode);
+        if (didJoinClass === -1) {
+            Alert.alert(strings.Whoops, strings.IncorrectClassCode);
+            this.setState({ isLoading: false, modalVisible: false });
+        } else {
+            //Refetches the student object to reflect the updated database
+            this.setState({
+                isLoading: false,
+                modalVisible: false
+            })
+            this.props.navigation.push("StudentCurrentClass", {
+                userID,
+            });
+        }
+
     }
 
     //Fetches all the values for the state from the firestore database
@@ -39,7 +69,11 @@ class StudentMainScreen extends QcParentScreen {
         if (currentClassID === "") {
             this.setState({
                 isLoading: false,
-                noCurrentClass: true
+                noCurrentClass: true,
+                student,
+                userID,
+                isOpen: false,
+                classes: []
             });
         } else {
             const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
@@ -47,6 +81,7 @@ class StudentMainScreen extends QcParentScreen {
                 return student.ID === userID;
             });
             const { isReady } = thisClassInfo;
+            const classes = await FirebaseFunctions.getClassesByIDs(student.classes);
             this.setState({
                 student,
                 userID,
@@ -55,7 +90,8 @@ class StudentMainScreen extends QcParentScreen {
                 thisClassInfo,
                 isReady,
                 isLoading: false,
-                isOpen: false
+                isOpen: false,
+                classes
             });
         }
     }
@@ -85,7 +121,7 @@ class StudentMainScreen extends QcParentScreen {
 
         if (isLoading === true) {
             return (
-                <View style={{ flex: 1 }}>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <LoadingSpinner isVisible={true} />
                 </View>
             )
@@ -96,7 +132,7 @@ class StudentMainScreen extends QcParentScreen {
                 <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
                     student={student}
                     userID={userID}
-                    classes={student.classes}
+                    classes={this.state.classes}
                     edgeHitWidth={0}
                     navigation={this.props.navigation} />}>
                     <View style={styles.container}>
@@ -127,10 +163,7 @@ class StudentMainScreen extends QcParentScreen {
 
                             <QcActionButton
                                 text={strings.JoinClass}
-                                onPress={() => this.props.navigation.push("ClassEdit", {
-                                    classID: currentClassID,
-                                    currentClass
-                                })} />
+                                onPress={() => this.setState({ modalVisible: true })} />
                         </View>
                         <Modal
                             transparent={true}
@@ -177,7 +210,7 @@ class StudentMainScreen extends QcParentScreen {
             <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
                 teacher={teacher}
                 userID={userID}
-                classes={student.classes}
+                classes={this.state.classes}
                 edgeHitWidth={0}
                 navigation={this.props.navigation} />}>
                 <View style={styles.container}>
@@ -423,6 +456,26 @@ const styles = StyleSheet.create({
         fontFamily: 'regular',
         color: colors.darkGrey,
         marginLeft: 10,
+    },
+    modal: {
+        backgroundColor: colors.white,
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        marginTop: 230,
+        borderWidth: 1,
+        borderRadius: 2,
+        borderColor: colors.grey,
+        borderBottomWidth: 1,
+        shadowColor: colors.darkGrey,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 3,
+        elevation: 2,
+        marginLeft: 45,
+        marginRight: 45,
+        paddingRight: 5,
+        paddingLeft: 5
     },
 });
 

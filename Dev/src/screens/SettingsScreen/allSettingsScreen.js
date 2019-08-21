@@ -55,8 +55,8 @@ export default class AllSettingsScreen extends QcParentScreen {
                         color={colors.primaryDark} />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={[styles.cardStyle, { marginTop: 25 }]} onPress={() => {
-                    FirebaseFunctions.logOut();
+                <TouchableOpacity style={[styles.cardStyle, { marginTop: 25 }]} onPress={async () => {
+                    await FirebaseFunctions.logOut();
                     this.props.navigation.push("FirstScreenLoader");
                 }}>
                     <Text style={styles.textStyle}>{strings.LogOut}</Text>
@@ -74,7 +74,7 @@ export default class AllSettingsScreen extends QcParentScreen {
                 <SideMenu isOpen={this.state.isOpen} menu={<TeacherLeftNavPane
                     teacher={this.props.navigation.state.params.teacher}
                     userID={this.props.navigation.state.params.userID}
-                    classes={this.props.navigation.state.params.teacher.classes}
+                    classes={this.props.navigation.state.params.classes}
                     edgeHitWidth={0}
                     navigation={this.props.navigation} />}>
                     {content}
@@ -83,7 +83,7 @@ export default class AllSettingsScreen extends QcParentScreen {
                     <SideMenu isOpen={this.state.isOpen} menu={<StudentLeftNavPane
                         student={this.props.navigation.state.params.student}
                         userID={this.props.navigation.state.params.userID}
-                        classes={this.props.navigation.state.params.student.classes}
+                        classes={this.props.navigation.state.params.classes}
                         edgeHitWidth={0}
                         navigation={this.props.navigation} />}>
                         {content}

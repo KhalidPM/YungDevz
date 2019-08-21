@@ -5,6 +5,7 @@ import QcActionButton from 'components/QcActionButton';
 import TouchableText from 'components/TouchableText'
 import teacherImages from 'config/teacherImages'
 import colors from 'config/colors';
+import TopBanner from 'components/TopBanner';
 import ImageSelectionModal from 'components/ImageSelectionModal'
 import TeacherInfoEntries from 'components/TeacherInfoEntries';
 import strings from 'config/strings';
@@ -22,6 +23,7 @@ export class TeacherProfileScreen extends QcParentScreen {
 
         FirebaseFunctions.setCurrentScreen("Teacher Profile Screen", "TeacherProfileScreen");
 
+
     }
 
     state = {
@@ -32,8 +34,10 @@ export class TeacherProfileScreen extends QcParentScreen {
         phoneNumber: this.props.navigation.state.params.teacher.phoneNumber,
         emailAddress: this.props.navigation.state.params.teacher.emailAddress,
         profileImageID: this.props.navigation.state.params.teacher.profileImageID,
+        classes: this.props.navigation.state.params.classes,
         isPhoneValid: true,
-        isOpen: true
+        isOpen: false,
+        modalVisible: false
 
     }
 
@@ -100,12 +104,12 @@ export class TeacherProfileScreen extends QcParentScreen {
     //-----------renders the teacher profile UI ------------------------------------
     render() {
 
-        const { ID, emailAddress, name, phoneNumber, profileImageID } = this.state;
+        const { userID, emailAddress, name, phoneNumber, profileImageID } = this.state;
         return (
             <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
                 teacher={this.state.teacher}
                 userID={userID}
-                classes={this.state.teacher.classes}
+                classes={this.state.classes}
                 edgeHitWidth={0}
                 navigation={this.props.navigation} />}>
             <View>
@@ -146,7 +150,9 @@ export class TeacherProfileScreen extends QcParentScreen {
                                         text={strings.Cancel}
                                         onPress={() => {
                                             //Just goes back without saving anything
-                                            this.props.navigation.push('CurrentClass');
+                                            this.props.navigation.push('TeacherCurrentClass', {
+                                                userID: this.state.userID
+                                            });
                                         }}
                                     />
                                     <QcActionButton

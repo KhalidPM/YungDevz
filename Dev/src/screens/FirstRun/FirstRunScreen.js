@@ -18,14 +18,14 @@ class FirstRunScreen extends QcParentScreen {
   }
 
   //Navigates to the teacher side
-  onTeacherFlow = () => {
+  onTeacherFlow() {
     this.props.navigation.push('LoginScreen', {
       isTeacher: true
     });
   }
 
   //Navigates to the student side
-  onStudentFlow = () => {
+  onStudentFlow() {
     this.props.navigation.push('LoginScreen', {
       isTeacher: false
     });
@@ -43,14 +43,14 @@ class FirstRunScreen extends QcParentScreen {
             <QcActionButton
               navigation={navigation}
               text={strings.IAmATeacher}
-              onPress={this.onTeacherFlow}
+              onPress={() => this.onTeacherFlow()}
               screen={this.name}
             />
-            <View style={{ flex: 1 }}/>
+            <View style={{ flex: 1 }} />
             <QcActionButton
               navigation={navigation}
               text={strings.IAmAStudent}
-              onPress={this.onStudentFlow}
+              onPress={() => this.onStudentFlow()}
               screen={this.name}
             />
           </View>

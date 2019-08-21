@@ -22,17 +22,20 @@ export class AddClassScreen extends QcParentScreen {
     isLoading: true,
     userID: "",
     teacher: "",
-    isOpen: false
+    isOpen: false,
+    classes: ''
   };
 
   //Sets the current screen for firebase analytics
   async componentDidMount() {
 
     if (this.props.navigation.state.params && this.props.navigation.state.params.userID && this.props.navigation.state.params.teacher) {
+      const classes = await FirebaseFunctions.getClassesByIDs(this.props.navigation.state.params.teacher.classes);
       this.setState({
         isLoading: false,
         userID: this.props.navigation.state.params.userID,
-        teacher: this.props.navigation.state.params.teacher
+        teacher: this.props.navigation.state.params.teacher,
+        classes
       })
     } else {
       this.setState({ isLoading: true });
@@ -109,7 +112,7 @@ export class AddClassScreen extends QcParentScreen {
       <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
         teacher={this.state.teacher}
         userID={this.state.userID}
-        classes={this.state.teacher.classes}
+        classes={this.state.classes}
         edgeHitWidth={0}
         navigation={this.props.navigation} />}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>

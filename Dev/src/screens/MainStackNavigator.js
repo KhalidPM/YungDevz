@@ -30,7 +30,7 @@ routeConfig = {
         }),
     },
 
-    Login: {
+    LoginScreen: {
         screen: LoginScreen,
         navigationOptions: ({ navigation }) => ({
             header: null

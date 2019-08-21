@@ -20,7 +20,8 @@ export class ClassMainScreen extends QcParentScreen {
     userID: '',
     currentClass: '',
     currentClassID: '',
-    isOpen: false
+    isOpen: false,
+    classes: ''
   }
 
   async componentDidMount() {
@@ -31,12 +32,14 @@ export class ClassMainScreen extends QcParentScreen {
     const teacher = await FirebaseFunctions.getTeacherByID(userID);
     const { currentClassID } = teacher;
     const currentClass = await FirebaseFunctions.getClassByID(currentClassID);
+    const classes = await FirebaseFunctions.getClassesByIDs(teacher.classes);
     this.setState({
       isLoading: false,
       teacher,
       userID,
       currentClass,
-      currentClassID
+      currentClassID,
+      classes
     });
 
   }
@@ -56,7 +59,7 @@ export class ClassMainScreen extends QcParentScreen {
         <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
           teacher={teacher}
           userID={userID}
-          classes={teacher.classes}
+          classes={this.state.classes}
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
           <View style={styles.container}>
@@ -138,7 +141,7 @@ export class ClassMainScreen extends QcParentScreen {
         <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
           teacher={teacher}
           userID={userID}
-          classes={teacher.classes}
+          classes={this.state.classes}
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
           <View style={styles.container}>

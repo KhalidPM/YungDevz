@@ -70,10 +70,10 @@ export default class FirebaseFunctions {
     }
 
     //This functions will log out whatever user is currently signed into the device
-    static logOut() {
+    static async logOut() {
 
         this.logEvent("LOG_OUT");
-        this.auth.signOut();
+        await this.auth.signOut();
 
     }
 
@@ -120,11 +120,11 @@ export default class FirebaseFunctions {
     //be fetched from firestore
     static async getClassesByIDs(classIDs) {
 
-        let arrayOfClassObjects = await classIDs.map(async (classID) => {
-            const classObject = await this.getClassByID(classID);
-            return classObject;
-        });
-
+        let arrayOfClassObjects = [];
+        for (let i = 0; i < classIDs.length; i++) {
+            const classObject = await this.getClassByID(classIDs[i]);
+            arrayOfClassObjects.push(classObject);
+        }
         return arrayOfClassObjects;
 
     }
