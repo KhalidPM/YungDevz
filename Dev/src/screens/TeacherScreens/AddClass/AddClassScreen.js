@@ -57,7 +57,7 @@ export class AddClassScreen extends QcParentScreen {
 
   //---- helper function to determine if the entered class name is duplicate -------
   classNameAlreadyExists() {
-    let { classes } = this.state.teacher;
+    let { classes } = this.state;
     for (let i = 0; i < classes.length; i++) {
       if (classes[i].name.toLowerCase() === this.state.className.toLowerCase()) {
         return true;
@@ -99,7 +99,8 @@ export class AddClassScreen extends QcParentScreen {
     //Navigates to the class
     this.props.navigation.push("ClassEdit", {
       classID: newClassID,
-      currentClass: newClass
+      currentClass: newClass,
+      userID: this.state.userID
     });
   }
 

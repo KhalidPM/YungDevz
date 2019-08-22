@@ -119,7 +119,9 @@ routeConfig = {
             header: (
                 <TopBanner
                     LeftIconName="angle-left"
-                    LeftOnPress={() => navigation.goBack()}
+                    LeftOnPress={() => navigation.push('TeacherCurrentClass', {
+                        userID: navigation.state.params.userID
+                    })}
                     Title={strings.StudentProfile}
                 />
             )
@@ -140,7 +142,9 @@ routeConfig = {
                 <TopBanner
                     Title={strings.EditClass}
                     RightTextName={strings.Done}
-                    RightOnPress={() => navigation.goBack()}
+                    RightOnPress={() => navigation.push('TeacherCurrentClass', {
+                        userID: navigation.state.params.userID
+                    })}
                 />
             )
         })

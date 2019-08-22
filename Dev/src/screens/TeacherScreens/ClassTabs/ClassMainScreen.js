@@ -137,7 +137,8 @@ export class ClassMainScreen extends QcParentScreen {
                   RightIconName="edit"
                   RightOnPress={() => this.props.navigation.push('ClassEdit', {
                     classID: currentClassID,
-                    currentClass
+                    currentClass,
+                    userID: this.state.userID
                   })}
                 />
               </View>
@@ -166,7 +167,8 @@ export class ClassMainScreen extends QcParentScreen {
                 text={strings.AddStudentButton}
                 onPress={() => this.props.navigation.push("ClassEdit", {
                   classID: currentClassID,
-                  currentClass
+                  currentClass,
+                  userID: this.state.userID
                 })} />
             </View>
           </View>
@@ -193,7 +195,8 @@ export class ClassMainScreen extends QcParentScreen {
                 RightIconName="edit"
                 RightOnPress={() => this.props.navigation.push('ClassEdit', {
                   classID: currentClassID,
-                  currentClass
+                  currentClass,
+                  userID: this.state.userID
                 })}
               />
             </View>
@@ -209,6 +212,7 @@ export class ClassMainScreen extends QcParentScreen {
                   currentAssignment={item.currentAssignment}
                   onPress={() =>
                     this.props.navigation.push("TeacherStudentProfile", {
+                      userID: userID,
                       studentID: item.ID,
                       currentClass: currentClass,
                       classID: currentClassID
