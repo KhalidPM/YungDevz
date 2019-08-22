@@ -37,20 +37,26 @@ export default TeacherInfoEntries = (props) => {
                     />
                 </View>
             </View>
-            <View style={styles.infoRow}>
-                <Text style={styles.infoTitle}>{strings.emailPlaceHolder}</Text>
-                <View style={{ flex: 1 }}>
-                    <TextInput
-                        style={styles.infoTextInput}
-                        keyboardType='email-address'
-                        autoCapitalize='none'
-                        textContentType='emailAddress'
-                        onChangeText={props.onEmailAddressChanged}
-                        value={props.emailAddress}
-                        autoCapitalize="none"
-                    />
-                </View>
-            </View>
+            {
+                !props.noEmailField ? (
+                    <View style={styles.infoRow}>
+                        <Text style={styles.infoTitle}>{strings.emailPlaceHolder}</Text>
+                        <View style={{ flex: 1 }}>
+                            <TextInput
+                                style={styles.infoTextInput}
+                                keyboardType='email-address'
+                                autoCapitalize='none'
+                                textContentType='emailAddress'
+                                onChangeText={props.onEmailAddressChanged}
+                                value={props.emailAddress}
+                                autoCapitalize="none"
+                            />
+                        </View>
+                    </View>
+                ) : (
+                        <View></View>
+                    )
+            }
             {props.showPasswordField &&
                 <View style={styles.infoRow}>
                     <Text style={styles.infoTitle}>{strings.password}</Text>
