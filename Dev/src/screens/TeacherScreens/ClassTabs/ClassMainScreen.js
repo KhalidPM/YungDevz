@@ -63,31 +63,14 @@ export class ClassMainScreen extends QcParentScreen {
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
           <View style={styles.container}>
-
             <View style={{ flex: 1 }}>
-              {(this.props.navigation.state.params && this.props.navigation.state.params.classTitle) ? (
-                <View>
-                  <TopBanner
-                    LeftIconName="navicon"
-                    LeftOnPress={() => this.setState({ isOpen: true })}
-                    Title={this.props.navigation.state.params.classTitle}
-                    RightIconName="edit"
-                    RightOnPress={() => this.props.navigation.push('ClassEdit', {
-                      classID: currentClassID,
-                      currentClass
-                    })}
-                  />
-                </View>
-              ) : (
-                  <View>
-                    <TopBanner
-                      LeftIconName="navicon"
-                      LeftOnPress={() => this.setState({ isOpen: true })}
-                      Title={"Quran Connect"}
-                    />
-                  </View>
-                )
-              }
+              <View>
+                <TopBanner
+                  LeftIconName="navicon"
+                  LeftOnPress={() => this.setState({ isOpen: true })}
+                  Title={"Quran Connect"}
+                />
+              </View>
             </View>
             <View style={{ alignItems: "center", justifyContent: "flex-start", alignSelf: 'center', flex: 2 }}>
               <Image
@@ -146,29 +129,18 @@ export class ClassMainScreen extends QcParentScreen {
           navigation={this.props.navigation} />}>
           <View style={styles.container}>
             <View style={{ flex: 1 }}>
-              {(this.props.navigation.state.params && this.props.navigation.state.params.classTitle) ? (
-                <View>
-                  <TopBanner
-                    LeftIconName="navicon"
-                    LeftOnPress={() => this.setState({ isOpen: true })}
-                    Title={this.props.navigation.state.params.classTitle}
-                    RightIconName="edit"
-                    RightOnPress={() => this.props.navigation.push('ClassEdit', {
-                      classID: currentClassID,
-                      currentClass
-                    })}
-                  />
-                </View>
-              ) : (
-                  <View>
-                    <TopBanner
-                      LeftIconName="navicon"
-                      LeftOnPress={() => this.setState({ isOpen: true })}
-                      Title={"Quran Connect"}
-                    />
-                  </View>
-                )
-              }
+              <View>
+                <TopBanner
+                  LeftIconName="navicon"
+                  LeftOnPress={() => this.setState({ isOpen: true })}
+                  Title={this.state.currentClass.name}
+                  RightIconName="edit"
+                  RightOnPress={() => this.props.navigation.push('ClassEdit', {
+                    classID: currentClassID,
+                    currentClass
+                  })}
+                />
+              </View>
             </View>
             <View style={{ flex: 2, justifyContent: 'flex-start', alignItems: 'center', alignSelf: 'center' }}>
               <Image
@@ -213,29 +185,18 @@ export class ClassMainScreen extends QcParentScreen {
           edgeHitWidth={0}
           navigation={this.props.navigation} />}>
           <ScrollView style={styles.container}>
-            {(this.props.navigation.state.params && this.props.navigation.state.params.classTitle) ? (
-              <View>
-                <TopBanner
-                  LeftIconName="navicon"
-                  LeftOnPress={() => this.setState({ isOpen: true })}
-                  Title={this.props.navigation.state.params.classTitle}
-                  RightIconName="edit"
-                  RightOnPress={() => this.props.navigation.push('ClassEdit', {
-                    classID: currentClassID,
-                    currentClass
-                  })}
-                />
-              </View>
-            ) : (
-                <View>
-                  <TopBanner
-                    LeftIconName="navicon"
-                    LeftOnPress={() => this.setState({ isOpen: true })}
-                    Title={"Quran Connect"}
-                  />
-                </View>
-              )
-            }
+            <View>
+              <TopBanner
+                LeftIconName="navicon"
+                LeftOnPress={() => this.setState({ isOpen: true })}
+                Title={this.state.currentClass}
+                RightIconName="edit"
+                RightOnPress={() => this.props.navigation.push('ClassEdit', {
+                  classID: currentClassID,
+                  currentClass
+                })}
+              />
+            </View>
             <FlatList
               data={currentClass.students}
               keyExtractor={(item) => item.name} // fix, should be item.id (add id to classes)

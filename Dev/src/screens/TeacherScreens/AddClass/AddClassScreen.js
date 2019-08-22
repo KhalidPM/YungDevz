@@ -93,10 +93,14 @@ export class AddClassScreen extends QcParentScreen {
       teachers: [this.state.userID]
     };
 
-    await FirebaseFunctions.addNewClass(classInfo, this.state.teacher);
+    const newClassID = await FirebaseFunctions.addNewClass(classInfo, this.state.userID);
+    const newClass = await FirebaseFunctions.getClassByID(newClassID);
 
     //Navigates to the class
-    this.props.navigation.push("ClassEdit");
+    this.props.navigation.push("ClassEdit", {
+      classID: newClassID,
+      currentClass: newClass
+    });
   }
 
   // ------------ renders the UI of the screen ---------------------------

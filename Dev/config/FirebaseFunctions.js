@@ -134,8 +134,7 @@ export default class FirebaseFunctions {
     static async updateTeacherObject(ID, newObject) {
 
         let docRef = this.teachers.doc(ID);
-        this.batch.update(docRef, newObject);
-        await this.batch.commit();
+        await docRef.update(newObject);
         return 0;
 
     }
@@ -145,8 +144,7 @@ export default class FirebaseFunctions {
     static async updateClassObject(ID, newObject) {
 
         let docRef = this.classes.doc(ID);
-        this.batch.update(docRef, newObject);
-        await this.batch.commit();
+        await docRef.update(newObject);
         return 0;
 
     }
@@ -156,8 +154,7 @@ export default class FirebaseFunctions {
     static async updateStudentObject(ID, newObject) {
 
         let docRef = this.students.doc(ID);
-        this.batch.update(docRef, newObject);
-        await this.batch.commit();
+        await docRef.update(newObject);
         return 0;
 
     }
@@ -165,23 +162,23 @@ export default class FirebaseFunctions {
     //This function will take in a new class object, and a teacher object and create a new class
     //that belongs to that teacher in the firestore database. It will do this by creating a new document
     //in the "classes" collection, then linking that class to a certain teacher by relating them through
-    //IDs
+    //IDs. This method returns the new ID of the class
     static async addNewClass(newClassObject, teacherID) {
 
         //Adds the new class document and makes sure it has a reference to its own ID
         let newClass = await this.classes.add(newClassObject);
+        const ID = currentClassID = newClass.id + "";
         await this.updateClassObject(newClass.id, {
-            ID: newClass.id
+            ID
         });
         //Appends the class ID to the array of classes belonging to this teacher
         let ref = this.teachers.doc(teacherID);
-        this.batch.update(ref, {
-            currentClassID: newClass.id,
-            classes: firebase.firestore.FieldValue.arrayUnion(newClass.id)
-        })
-        await this.batch.commit();
+        await ref.update({
+            currentClassID,
+            classes: firebase.firestore.FieldValue.arrayUnion(ID)
+        });
         this.logEvent("ADD_NEW_CLASS");
-        return 0;
+        return ID;
 
     }
 
