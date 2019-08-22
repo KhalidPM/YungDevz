@@ -39,7 +39,7 @@ class LeftNavPane extends QcParentScreen {
 
     //navigate to the selected class by first getting the new teacher object
     this.props.navigation.push("TeacherCurrentClass", {
-      userID
+      userID: this.state.userID
     });
   };
 
