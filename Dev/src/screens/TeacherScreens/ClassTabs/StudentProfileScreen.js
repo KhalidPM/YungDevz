@@ -16,7 +16,7 @@ class StudentProfileScreen extends QcParentScreen {
   state = {
     studentID: this.props.navigation.state.params.studentID,
     currentClass: this.props.navigation.state.params.currentClass,
-    classID: this.props.navigation.state.params.currentClassID,
+    classID: this.props.navigation.state.params.classID,
     currentAssignment: '',
     classStudent: '',
     isDialogVisible: false,
@@ -24,11 +24,11 @@ class StudentProfileScreen extends QcParentScreen {
   }
 
   //Sets the screen for firebase analytics & fetches the correct student from this class
-  componentDidMount() {
+  async componentDidMount() {
 
     FirebaseFunctions.setCurrentScreen("Student Profile Screen", "StudentProfileScreen");
     const { currentClass, studentID } = this.state;
-    const student = currentClass.students.find((eachStudent) => {
+    const student = await currentClass.students.find((eachStudent) => {
       return eachStudent.ID === studentID;
     });
 
@@ -48,6 +48,7 @@ class StudentProfileScreen extends QcParentScreen {
     } else {
 
       const { classID, studentID } = this.state;
+      console.log(classID);
       //Updates the local state then pushes to firestore
       this.setState({ isDialogVisible: false, currentAssignment: newAssignmentName });
       FirebaseFunctions.updateStudentCurrentAssignment(classID, studentID, newAssignmentName);
@@ -61,6 +62,8 @@ class StudentProfileScreen extends QcParentScreen {
 
   getRatingCaption() {
     let caption = strings.GetStarted;
+
+    const { averageRating } = this.state.classStudent;
 
     if (averageRating > 4) {
       caption = strings.OutStanding
@@ -80,7 +83,7 @@ class StudentProfileScreen extends QcParentScreen {
   render() {
     const { classStudent, isLoading, classID, studentID } = this.state;
     const { currentAssignment, assignmentsHistory, averageRating, name } = classStudent;
-    const hasCurrentAssignment = currentAssignment.name === 'None' ? false : true;
+    const hasCurrentAssignment = currentAssignment === 'None' ? false : true;
 
     //If the screen is loading, a spinner will display
     if (isLoading === true) {
@@ -100,109 +103,101 @@ class StudentProfileScreen extends QcParentScreen {
             this.editAssignment(inputText)}
           onCancel={() => this.setDialogueVisible(false)}
         />
+        <View style={styles.studentInfoContainer}>
 
-        {this.state.fontLoaded ? (
-          <View style={styles.studentInfoContainer}>
+          <View style={styles.profileInfo}>
 
-            <View style={styles.profileInfo}>
+            <View style={styles.profileInfoTop}>
+              <View style={{ width: 100 }}>
 
-              <View style={styles.profileInfoTop}>
-                <View style={{ width: 100 }}>
-
-                </View>
-                <View style={styles.profileInfoTopRight}>
-                  <Text numberOfLines={1} style={styles.bigText}>{name.toUpperCase()}</Text>
-                  <View style={{ flexDirection: 'row', height: 25 }}>
-                    <Rating readonly={true} startingValue={averageRating} imageSize={25} />
-                    <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
-                      <Text style={styles.ratingText}>{averageRating === 0 ? "" : parseFloat(averageRating).toFixed(1)}</Text>
-                    </View>
-                  </View>
-                  <Text style={styles.ratingDescText}>{this.getRatingCaption()}</Text>
-                </View>
               </View>
-
-              <View style={styles.profileInfoBottom}>
-                <View style={styles.profileInfoTopLeft}>
-                  <Image
-                    style={styles.profilePic}
-                    source={studentImages.images[this.state.profileImageId >= 0 ? this.state.profileImageId : currentStudent.imageId]} />
-                </View>
-                <View style={{ flex: 1, flexDirection: 'column', height: 59 }}>
-                  <Text numberOfLines={1} style={styles.assignmentTextLarge}>{currentAssignment.name.toUpperCase()}</Text>
-                  <View style={{ flexDirection: 'row' }}>
-                    <TouchableHighlight
-                      onPress={() => { this.setState({ isDialogVisible: true }) }} >
-                      <Text style={styles.assignmentActionText}>{strings.EditAssignment}</Text>
-                    </TouchableHighlight>
-
-                    {hasCurrentAssignment ? <TouchableHighlight onPress={() =>
-                      this.props.navigation.push("EvaluationPage", {
-                        classID: classID,
-                        studentID: studentID,
-                        assignmentName: currentAssignment,
-                        classStudent: classStudent,
-                        newAssignment: true,
-                        readOnly: false,
-                      })} >
-                      <Text style={styles.assignmentActionText}>{strings.Grade}</Text>
-                    </TouchableHighlight> : <View />}
+              <View style={styles.profileInfoTopRight}>
+                <Text numberOfLines={1} style={styles.bigText}>{name.toUpperCase()}</Text>
+                <View style={{ flexDirection: 'row', height: 25 }}>
+                  <Rating readonly={true} startingValue={averageRating} imageSize={25} />
+                  <View style={{ flexDirection: 'column', justifyContent: 'center' }}>
+                    <Text style={styles.ratingText}>{averageRating === 0 ? "" : parseFloat(averageRating).toFixed(1)}</Text>
                   </View>
                 </View>
+                <Text style={styles.ratingDescText}>{this.getRatingCaption()}</Text>
               </View>
-
             </View>
 
-            <ScrollView style={styles.prevAssignments}>
+            <View style={styles.profileInfoBottom}>
+              <View style={styles.profileInfoTopLeft}>
+                <Image
+                  style={styles.profilePic}
+                  source={studentImages.images[classStudent.profileImageID]} />
+              </View>
+              <View style={{ flex: 1, flexDirection: 'column', height: 59 }}>
+                <Text numberOfLines={1} style={styles.assignmentTextLarge}>{this.state.currentAssignment.toUpperCase()}</Text>
+                <View style={{ flexDirection: 'row' }}>
+                  <TouchableHighlight
+                    onPress={() => { this.setState({ isDialogVisible: true }) }} >
+                    <Text style={styles.assignmentActionText}>{strings.EditAssignment}</Text>
+                  </TouchableHighlight>
 
-              <FlatList
-                data={assignmentsHistory}
-                keyExtractor={(item, index) => item.name + index}
-                renderItem={({ item, index }) => (
-                  <TouchableOpacity onPress={() => this.props.navigation.push("EvaluationPage", {
-                    classID: classID,
-                    studentID: studentID,
-                    classStudent: classStudent,
-                    assignmentName: item.name,
-                    completionDate: item.completionDate,
-                    rating: item.evaluation.grade,
-                    notes: item.evaluation.notes,
-                    improvementAreas: item.evaluation.improvementAreas,
-                    readOnly: true,
-                    newAssignment: false,
-                  })}>
-                    <View style={styles.prevAssignmentCard} key={index}>
-                      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Text style={[styles.subText]}>{item.completionDate}</Text>
-                        <View style={{ alignItems: 'center', flexWrap: 'wrap', alignSelf: 'baseline', flex: 1 }}>
-                          <Text numberOfLines={1} style={styles.prevAssignmentTitleText}>{item.name}</Text>
-                        </View>
-                        <Rating style={{ paddingRight: 10, paddingTop: 3 }} readonly={true}
-                          startingValue={item.evaluation.grade} imageSize={17} />
-                      </View>
-                      {item.evaluation.notes ?
-                        <Text numberOfLines={2} style={styles.notesText}>{"Notes: " + item.evaluation.notes}</Text>
-                        : <View />
-                      }
-                      {item.evaluation.improvementAreas && item.evaluation.improvementAreas.length > 0 ?
-                        <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
-                          <Text style={{ height: 20, marginTop: 5 }}>{strings.ImprovementAreas}</Text>
-                          {item.evaluation.improvementAreas.map((tag) => { return (<Text key={tag} style={styles.corner}>{tag}</Text>) })}
-                        </View>
-                        : <View />
-                      }
-                    </View>
-                  </TouchableOpacity>
-                )}
-              />
-            </ScrollView>
+                  {hasCurrentAssignment ? <TouchableHighlight onPress={() =>
+                    this.props.navigation.push("EvaluationPage", {
+                      classID: classID,
+                      studentID: studentID,
+                      assignmentName: currentAssignment,
+                      classStudent: classStudent,
+                      newAssignment: true,
+                      readOnly: false,
+                    })} >
+                    <Text style={styles.assignmentActionText}>{strings.Grade}</Text>
+                  </TouchableHighlight> : <View />}
+                </View>
+              </View>
+            </View>
+
           </View>
-        ) : (
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-              <LoadingSpinner isVisible={!this.state.fontLoaded} />
-            </View>
-          )
-        }
+
+          <ScrollView style={styles.prevAssignments}>
+
+            <FlatList
+              data={assignmentsHistory}
+              keyExtractor={(item, index) => item.name + index}
+              renderItem={({ item, index }) => (
+                <TouchableOpacity onPress={() => this.props.navigation.push("EvaluationPage", {
+                  classID: classID,
+                  studentID: studentID,
+                  classStudent: classStudent,
+                  assignmentName: item.name,
+                  completionDate: item.completionDate,
+                  rating: item.evaluation.grade,
+                  notes: item.evaluation.notes,
+                  improvementAreas: item.evaluation.improvementAreas,
+                  readOnly: true,
+                  newAssignment: false,
+                })}>
+                  <View style={styles.prevAssignmentCard} key={index}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <Text style={[styles.subText]}>{item.completionDate}</Text>
+                      <View style={{ alignItems: 'center', flexWrap: 'wrap', alignSelf: 'baseline', flex: 1 }}>
+                        <Text numberOfLines={1} style={styles.prevAssignmentTitleText}>{item.name}</Text>
+                      </View>
+                      <Rating style={{ paddingRight: 10, paddingTop: 3 }} readonly={true}
+                        startingValue={item.evaluation.grade} imageSize={17} />
+                    </View>
+                    {item.evaluation.notes ?
+                      <Text numberOfLines={2} style={styles.notesText}>{"Notes: " + item.evaluation.notes}</Text>
+                      : <View />
+                    }
+                    {item.evaluation.improvementAreas && item.evaluation.improvementAreas.length > 0 ?
+                      <View style={{ flexDirection: 'row', justifyContent: 'flex-start' }}>
+                        <Text style={{ height: 20, marginTop: 5 }}>{strings.ImprovementAreas}</Text>
+                        {item.evaluation.improvementAreas.map((tag) => { return (<Text key={tag} style={styles.corner}>{tag}</Text>) })}
+                      </View>
+                      : <View />
+                    }
+                  </View>
+                </TouchableOpacity>
+              )}
+            />
+          </ScrollView>
+        </View>
       </View>
     );
   }

@@ -209,14 +209,13 @@ export default class FirebaseFunctions {
     //and finally, the name of the new assignment which it will set the currentAssignment property 
     //to
     static async updateStudentCurrentAssignment(classID, studentID, newAssignmentName) {
-
+        
         let currentClass = await this.getClassByID(classID);
 
         let arrayOfStudents = currentClass.students;
         let studentIndex = arrayOfStudents.findIndex((student) => {
             return student.ID === studentID;
         });
-
         arrayOfStudents[studentIndex].currentAssignment = newAssignmentName;
 
         await this.updateClassObject(classID, {

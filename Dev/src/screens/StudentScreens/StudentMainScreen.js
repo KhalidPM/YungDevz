@@ -14,6 +14,7 @@ import LeftNavPane from './LeftNavPane';
 import SideMenu from 'react-native-side-menu';
 import LoadingSpinner from 'components/LoadingSpinner';
 import { Input } from 'react-native-elements';
+import { TextInput } from 'react-native-gesture-handler';
 
 class StudentMainScreen extends QcParentScreen {
 
@@ -178,12 +179,9 @@ class StudentMainScreen extends QcParentScreen {
                                     ) : (
                                             <View>
                                                 <Text style={styles.confirmationMessage}>{strings.TypeInAClassCode}</Text>
-                                                <Input
-                                                    type='authCode'
-                                                    keyboardType='numeric'
+                                                <TextInput
                                                     onChangeText={(text) => { this.setState({ classCode: text }) }}
-                                                    value={this.state.classCode}
-                                                    keyboardType='numeric' />
+                                                    value={this.state.classCode} />
                                                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 5 }}>
                                                     <QcActionButton
                                                         text={strings.Cancel}
@@ -208,7 +206,7 @@ class StudentMainScreen extends QcParentScreen {
 
         return (
             <SideMenu isOpen={this.state.isOpen} menu={<LeftNavPane
-                teacher={teacher}
+                student={student}
                 userID={userID}
                 classes={this.state.classes}
                 edgeHitWidth={0}
