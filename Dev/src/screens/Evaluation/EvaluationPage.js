@@ -26,7 +26,7 @@ export class EvaluationPage extends QcParentScreen {
     classStudent: this.props.navigation.state.params.classStudent,
     assignmentName: this.props.navigation.state.params.assignmentName,
     isLoading: true,
-    rating: this.props.navigation.state.params.rating ? rating : 0,
+    rating: this.props.navigation.state.params.rating ? this.props.navigation.state.params.rating : 0,
     studentObject: ''
   }
 
@@ -43,7 +43,7 @@ export class EvaluationPage extends QcParentScreen {
 
     //Fetches the ID for the evaluation (if there is none, it is created)
     const evaluationID = this.props.navigation.state.params.evaluationID ? this.props.navigation.state.params.evaluationID : (this.state.studentID + (this.state.classStudent.totalAssignments + 1) + "");
-    this.state({ studentObject, isLoading: false });
+    this.setState({ studentObject, isLoading: false, evaluationID });
 
   }
   // --------------  Updates state to reflect a change in a category rating --------------
@@ -138,7 +138,7 @@ export class EvaluationPage extends QcParentScreen {
     }
     const { notes, improvementAreas, readOnly, rating, classID, studentID, classStudent, assignmentName, isLoading, studentObject } = this.state;
     const { profileImageID } = studentObject;
-    headerTitle = readOnly ? strings.Completed + ": " + completionDate : strings.HowWas + classStudent.name + strings.sTasmee3;
+    headerTitle = readOnly ? strings.Completed + ": " + this.props.navigation.state.params.completionDate : strings.HowWas + classStudent.name + strings.sTasmee3;
     return (
       //----- outer view, gray background ------------------------
       //Makes it so keyboard is dismissed when clicked somewhere else

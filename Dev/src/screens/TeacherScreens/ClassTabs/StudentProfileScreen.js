@@ -82,7 +82,7 @@ class StudentProfileScreen extends QcParentScreen {
   //---------- main UI render ===============================
   render() {
     const { classStudent, isLoading, classID, studentID } = this.state;
-    const { currentAssignment, assignmentsHistory, averageRating, name } = classStudent;
+    const { currentAssignment, assignmentHistory, averageRating, name } = classStudent;
     const hasCurrentAssignment = currentAssignment === 'None' ? false : true;
 
     //If the screen is loading, a spinner will display
@@ -141,7 +141,7 @@ class StudentProfileScreen extends QcParentScreen {
                     this.props.navigation.push("EvaluationPage", {
                       classID: classID,
                       studentID: studentID,
-                      assignmentName: currentAssignment,
+                      assignmentName: this.state.currentAssignment,
                       classStudent: classStudent,
                       newAssignment: true,
                       readOnly: false,
@@ -157,7 +157,7 @@ class StudentProfileScreen extends QcParentScreen {
           <ScrollView style={styles.prevAssignments}>
 
             <FlatList
-              data={assignmentsHistory}
+              data={assignmentHistory}
               keyExtractor={(item, index) => item.name + index}
               renderItem={({ item, index }) => (
                 <TouchableOpacity onPress={() => this.props.navigation.push("EvaluationPage", {
@@ -166,9 +166,10 @@ class StudentProfileScreen extends QcParentScreen {
                   classStudent: classStudent,
                   assignmentName: item.name,
                   completionDate: item.completionDate,
-                  rating: item.evaluation.grade,
+                  rating: item.evaluation.rating,
                   notes: item.evaluation.notes,
                   improvementAreas: item.evaluation.improvementAreas,
+                  evaluationID: item.ID,
                   readOnly: true,
                   newAssignment: false,
                 })}>
@@ -179,7 +180,7 @@ class StudentProfileScreen extends QcParentScreen {
                         <Text numberOfLines={1} style={styles.prevAssignmentTitleText}>{item.name}</Text>
                       </View>
                       <Rating style={{ paddingRight: 10, paddingTop: 3 }} readonly={true}
-                        startingValue={item.evaluation.grade} imageSize={17} />
+                        startingValue={item.evaluation.rating} imageSize={17} />
                     </View>
                     {item.evaluation.notes ?
                       <Text numberOfLines={2} style={styles.notesText}>{"Notes: " + item.evaluation.notes}</Text>
