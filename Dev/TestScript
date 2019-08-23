@@ -31,8 +31,7 @@ All these features should be functional before every release
 5. Student is able to view their current assignment within a particular class
 6. Student is able to change the status of their current assignment
 7. Student is able to view a list of their current assignments & their grades
-8. Student is able to view & edit their profile information
-9. Student is able to view the privacy policy
-10. Student is able to view the credits screen
-11. Student is able to log out
-12. Student is able to change their password
+8. Student is able to view the privacy policy
+9. Student is able to view the credits screen
+10. Student is able to log out
+11. Student is able to change their password
