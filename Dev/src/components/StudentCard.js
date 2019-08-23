@@ -18,39 +18,32 @@ export default class StudentCard extends FontLoadingComponent {
         return (
             //The style of the card as a whole. Inside the card, you have the image,
             //student name, and student assignment
-            <View>
-                {this.state.fontLoaded ? (
-                    <TouchableOpacity
-                        style={[styles.cardStyle, { backgroundColor: background }]}
-                        borderColor={colors.black}
-                        //The on press function is for when the teacher clicks the card, the color of it 
-                        //should change depending on the behavior (i.e attendance screen)
-                        onPress={() => { onPress() }}>
-                        <Image
-                            style={styles.profilePicStyle}
-                            source={profilePic} />
-                        <View
-                            style={styles.infoStyle}>
-                            {currentAssignment ? (
-                                <View>
-                                    <Text numberOfLines={1} style={styles.studentNameStyle}>{studentName}</Text>
-                                    <Text numberOfLines={1} style={styles.assignmentStyle}>{currentAssignment}</Text>
-                                </View>
-                            ) : (
-                                    <View>
-                                        <Text numberOfLines={1} style={styles.studentNameStyle}>{studentName}</Text>
-                                    </View>
-                                )}
+            <TouchableOpacity
+                style={[styles.cardStyle, { backgroundColor: background }]}
+                borderColor={colors.black}
+                //The on press function is for when the teacher clicks the card, the color of it 
+                //should change depending on the behavior (i.e attendance screen)
+                onPress={() => { onPress() }}>
+                <Image
+                    style={styles.profilePicStyle}
+                    source={profilePic} />
+                <View
+                    style={styles.infoStyle}>
+                    {currentAssignment ? (
+                        <View>
+                            <Text numberOfLines={1} style={styles.studentNameStyle}>{studentName}</Text>
+                            <Text numberOfLines={1} style={styles.assignmentStyle}>{currentAssignment}</Text>
                         </View>
-                        <View style={styles.removeStudentStyle}>
-                            {comp}
-                        </View>
-                    </TouchableOpacity>
-                ) : (
-                        <View></View>
-                    )
-                }
-            </View>
+                    ) : (
+                            <View>
+                                <Text numberOfLines={1} style={styles.studentNameStyle}>{studentName}</Text>
+                            </View>
+                        )}
+                </View>
+                <View style={styles.removeStudentStyle}>
+                    {comp}
+                </View>
+            </TouchableOpacity>
         );
     }
 }

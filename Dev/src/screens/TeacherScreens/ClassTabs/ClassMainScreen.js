@@ -218,6 +218,7 @@ export class ClassMainScreen extends QcParentScreen {
                       classID: currentClassID
                     })
                   }
+                  background={item.isReady === true ? colors.green : colors.red}
                 />
               )}
             />
