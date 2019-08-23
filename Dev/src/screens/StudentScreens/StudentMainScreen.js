@@ -284,7 +284,7 @@ class StudentMainScreen extends QcParentScreen {
                                                     <Text numberOfLines={1} style={styles.prevAssignmentTitleText}>{item.name}</Text>
                                                 </View>
                                                 <Rating style={{ paddingRight: 10, paddingTop: 3 }} readonly={true}
-                                                    startingValue={item.evaluation.grade} imageSize={17} />
+                                                    startingValue={item.evaluation.rating} imageSize={17} />
                                             </View>
                                             {item.evaluation.notes ?
                                                 <Text numberOfLines={2} style={styles.notesText}>{"Notes: " + item.evaluation.notes}</Text>
