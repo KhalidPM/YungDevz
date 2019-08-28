@@ -1,4 +1,4 @@
-package com.quranconnect;
+package com.yungdevz.quranconnect;
 
 import com.facebook.react.ReactActivity;
 

@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:613685750998:android:88d50c329f1b432f",
+        "mobilesdk_app_id": "1:613685750998:android:cb3bbf620cd8323c",
         "android_client_info": {
-          "package_name": "com.quranconnect"
+          "package_name": "com.yungdevz.quranconnect"
         }
       },
       "oauth_client": [
@@ -32,10 +32,10 @@
               "client_type": 3
             },
             {
-              "client_id": "613685750998-o44g1tfc0cjheeoc9mj4llq11pprg78o.apps.googleusercontent.com",
+              "client_id": "613685750998-fivajubp6arauov4q7pjlaj5o9bkbegm.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.quranconnect",
+                "bundle_id": "com.yungdevz.quranconnect",
                 "app_store_id": "1459057386"
               }
             }
