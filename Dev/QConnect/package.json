@@ -13,7 +13,7 @@
     "aws-amplify-react-native": "^2.1.14",
     "expo": "^32.0.5",
     "immutability-helper": "^3.0.0",
-    "nanoid": "^2.0.2",
+    "nanoid": "^3.1.31",
     "react": "16.5.0",
     "react-devtools": "^3.6.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
